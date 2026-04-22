@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y \
 # Enable Apache rewrite
 RUN a2enmod rewrite
 
-# 🔥 FIX: MySQL support
-RUN docker-php-ext-install mysqli pdo pdo_mysql openssl
+# Install PHP extensions
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 # Change Apache to Cloud Run port
 RUN sed -i 's/80/8080/g' /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf
