@@ -10,11 +10,11 @@ $allowedOrigins = [
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
 if (in_array($origin, $allowedOrigins)) {
-    header("Access-Control-Allow-Origin: $origin");
+    header("Access-Control-Allow-Origin: *");//$origin
     header("Vary: Origin");
 } else {
     // IMPORTANT: fail-safe for debugging (remove later if needed)
-    header("Access-Control-Allow-Origin: http://localhost/Easymarket");
+    header("Access-Control-Allow-Origin: *");
 }
 
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
