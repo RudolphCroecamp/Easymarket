@@ -48,8 +48,6 @@
     //get userID from session
     $userID = $_SESSION['userID'];
 
-    echo $userID;
-
     //start a transaction so we can revert all inserts if one fails
     $conn->begin_transaction();
 
@@ -184,6 +182,8 @@
             "success"=>false,
             "error"=>$th->getMessage()
         ]);
+
+        var_dump($conn->error);
     }
 
     //Close statements and connection
