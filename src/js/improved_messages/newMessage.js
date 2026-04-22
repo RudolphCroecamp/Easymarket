@@ -28,7 +28,7 @@ function sendMessage(productID, groupID, message, message_container){
             credentials : "include",
             body : JSON.stringify({productID, groupID, message})
         })
-        .then(res => res.text())//convert result to json format
+        .then(res => res.json())//convert result to json format
         .then(response =>{
             console.log(response);
 

@@ -21,10 +21,7 @@
     $user = $_ENV['DB_USERNAME'];
     $pass = $_ENV['DB_PASS'];
     $db   = $_ENV['DB_NAME'];
-    // $port = $_ENV['DB_PORT'];
-
-    // $PORT = 3306;
-
+    
     $conn = new mysqli($host, $user, $pass, $db);
 
     // Check connection

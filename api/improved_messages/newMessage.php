@@ -48,7 +48,7 @@
     //get userID from session
     $userID = $_SESSION['userID'];
 
-    $tempID = "94115dfd-f3e3-4c20-b620-199e5cf6cbbc";
+    echo $userID;
 
     //start a transaction so we can revert all inserts if one fails
     $conn->begin_transaction();
