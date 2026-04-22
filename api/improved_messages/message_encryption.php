@@ -1,7 +1,33 @@
 <?php
 
+
+
 function getEncryptionKey() {
-    return base64_decode($_ENV['ENCRYPTION_KEY']);
+    // import env variables
+    try {
+        require_once __DIR__ . '/../../vendor/autoload.php';
+        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+        $dotenv->load();
+    } catch (\Throwable $th) {
+        echo json_encode([
+                "status"=>"failed",
+                "success"=>false,
+                "error"=>"Could not load environment variables"
+            ]);
+        die();
+    }
+
+    if (!isset($_ENV['ENCRYPTION_KEY'])) {
+        throw new Exception("Missing ENCRYPTION_KEY");
+    }
+
+    $key = base64_decode($_ENV['ENCRYPTION_KEY']);
+
+    if (!$key || strlen($key) !== 32) {
+        throw new Exception("Invalid encryption key (must be 32 bytes)");
+    }
+
+    return $key;
 }
 
 function encryptMessage($plaintext) {
