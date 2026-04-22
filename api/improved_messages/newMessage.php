@@ -159,6 +159,7 @@
 
         //check if message was successfully added
         $messageID = $conn->insert_id;
+
         if(!$messageID){
             throw new Exception("Could not send message", 501);  
         }

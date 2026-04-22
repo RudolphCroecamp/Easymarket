@@ -4,6 +4,8 @@ import isAuthed from "./isAuthed.js"
 //load more products as you reach the end
 window.addEventListener("load", async () => {
     await isAuthed(window.location.pathname)
+
+    console.log(window.location.origin)
 });
 
 

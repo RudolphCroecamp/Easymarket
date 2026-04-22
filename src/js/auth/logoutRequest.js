@@ -12,6 +12,6 @@ function logoutRequest(){
     .then(res => res.json())
     .then( data =>{
         console.log(data);
-        window.location = "./src/pages/auth/login.html"
+        window.location = "../../../src/pages/auth/lo3333gin.html"
     })
 }
