@@ -3,8 +3,6 @@ import {BACKEND_URL} from "../config.js"
 //call this method when window loads
 window.addEventListener("load", ()=>{
     isAuthed()
-
-    console.log("hallo to def");
 })
 
 
