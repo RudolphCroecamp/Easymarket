@@ -182,8 +182,6 @@
             "success"=>false,
             "error"=>$th->getMessage()
         ]);
-
-        var_dump($conn->error);
     }
 
     //Close statements and connection
