@@ -48,10 +48,11 @@
     //get userID from session
     $userID = $_SESSION['userID'];
 
-    //start a transaction so we can revert all inserts if one fails
-    $conn->begin_transaction();
+    
 
     try {
+        //start a transaction so we can revert all inserts if one fails
+        $conn->begin_transaction();
 
         //check if we received a groupID
         if (!isset($result['groupID']) || empty($result['groupID']) || $result['groupID'] == 0)
@@ -177,6 +178,7 @@
     } catch (\Throwable $th) {
         //Rollback if anything fails
         $conn->rollback();
+
         //return products in json format
         echo json_encode([
             "status"=>"failed",
