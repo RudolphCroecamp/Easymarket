@@ -14,24 +14,37 @@
         $user = $_ENV['DB_USERNAME'];
         $pass = $_ENV['DB_PASS'];
         $db   = $_ENV['DB_NAME'];
+        $port   = $_ENV['DB_PORT'];
+
+        $uri = '';
     } catch (\Throwable $th) {
         //get from hosting server environment
         $host = getenv('DB_HOST');
         $user = getenv('DB_USERNAME');
         $pass = getenv('DB_PASS');
         $db = getenv('DB_NAME');
+        $port   = $_ENV['DB_PORT'];
     }
 
-    
-    
-    $conn = new mysqli($host, $user, $pass, $db);
 
-    // Check connection
-    if ($conn->connect_error) {
-        echo json_encode([
-                "status"=>"failed",
-                "success"=>false,
-                "error"=>"Could not connect to db"
-            ]);
-        die();
+
+    $ssl_ca = __DIR__ . "/ca.pem";
+    // Create connection
+    $conn = mysqli_init();
+
+    // Enable SSL
+    mysqli_ssl_set($conn, NULL, NULL, $ssl_ca, NULL, NULL);
+
+    if (!mysqli_real_connect(
+        $conn,
+        $host,
+        $username,
+        $password,
+        $dbname,
+        $port,
+        NULL,
+        MYSQLI_CLIENT_SSL
+    )) {
+        die("Connection failed: " . mysqli_connect_error());
     }
+

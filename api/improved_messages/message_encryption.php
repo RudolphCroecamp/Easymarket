@@ -14,7 +14,7 @@ function getEncryptionKey() {
         
     } catch (\Throwable $th) {
         //get from hosting server environment
-        $key = getenv('DB_NAME');
+        $key = getenv('ENCRYPTION_KEY');
     }
     
 
