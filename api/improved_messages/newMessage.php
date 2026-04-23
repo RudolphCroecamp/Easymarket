@@ -6,20 +6,6 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
-    // import env variables
-    // try {
-    //     require_once __DIR__ . '/../../vendor/autoload.php';
-    //     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
-    //     $dotenv->load();
-    // } catch (\Throwable $th) {
-    //     echo json_encode([
-    //             "status"=>"failed",
-    //             "success"=>false,
-    //             "error"=>"Could not load environment variables"
-    //         ]);
-    //     die();
-    // }
-
     require '../../config/cors.php';//allow access from webserver
     require '../../config/protectedRoute.php';//user must be authorised
     require '../../config/dbconn.php';//connect to DB
