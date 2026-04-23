@@ -5,23 +5,18 @@
 function getEncryptionKey() {
     // import env variables
     try {
+        //local env variabes
         require_once __DIR__ . '/../../vendor/autoload.php';
         $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
         $dotenv->load();
+
+        $key = base64_decode($_ENV['ENCRYPTION_KEY']);
+        
     } catch (\Throwable $th) {
-        echo json_encode([
-                "status"=>"failed",
-                "success"=>false,
-                "error"=>"Could not load environment variables"
-            ]);
-        die();
+        //get from hosting server environment
+        $key = getenv('DB_NAME');
     }
-
-    if (!isset($_ENV['ENCRYPTION_KEY'])) {
-        throw new Exception("Missing ENCRYPTION_KEY");
-    }
-
-    $key = base64_decode($_ENV['ENCRYPTION_KEY']);
+    
 
     if (!$key || strlen($key) !== 32) {
         throw new Exception("Invalid encryption key (must be 32 bytes)");
