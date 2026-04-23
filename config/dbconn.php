@@ -17,9 +17,9 @@
     } catch (\Throwable $th) {
         //get from hosting server environment
         $host = getenv('DB_HOST');
-        $User = getenv('DB_USERNAME');
-        $Pass = getenv('DB_PASS');
-        $Name = getenv('DB_NAME');
+        $user = getenv('DB_USERNAME');
+        $pass = getenv('DB_PASS');
+        $name = getenv('DB_NAME');
     }
 
     
