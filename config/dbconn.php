@@ -19,7 +19,7 @@
         $host = getenv('DB_HOST');
         $user = getenv('DB_USERNAME');
         $pass = getenv('DB_PASS');
-        $name = getenv('DB_NAME');
+        $db = getenv('DB_NAME');
     }
 
     
