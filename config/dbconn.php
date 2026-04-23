@@ -41,9 +41,9 @@
     if (!mysqli_real_connect(
         $conn,
         $host,
-        $username,
-        $password,
-        $dbname,
+        $user,
+        $pass,
+        $db,
         $port,
         NULL,
         MYSQLI_CLIENT_SSL
