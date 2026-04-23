@@ -11,24 +11,27 @@
         $dotenv->load();
 
         $host = $_ENV['DB_HOST'];
-        $user = $_ENV['DB_USERNAME'];
+        $user = $_ENV['DB_USER'];
         $pass = $_ENV['DB_PASS'];
         $db   = $_ENV['DB_NAME'];
         $port   = $_ENV['DB_PORT'];
 
-        $uri = '';
     } catch (\Throwable $th) {
         //get from hosting server environment
         $host = getenv('DB_HOST');
-        $user = getenv('DB_USERNAME');
+        $user = getenv('DB_USER');
         $pass = getenv('DB_PASS');
         $db = getenv('DB_NAME');
         $port   = $_ENV['DB_PORT'];
     }
 
 
-
-    $ssl_ca = __DIR__ . "/ca.pem";
+    try {
+        $ssl_ca = __DIR__ . "/ca.pem";
+    } catch (\Throwable $th) {
+        $ssl_ca = "/secrets/ca.pem";
+    }
+    
     // Create connection
     $conn = mysqli_init();
 
