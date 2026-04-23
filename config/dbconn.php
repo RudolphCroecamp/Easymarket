@@ -22,7 +22,7 @@
         $user = getenv('DB_USER');
         $pass = getenv('DB_PASS');
         $db = getenv('DB_NAME');
-        $port   = $_ENV['DB_PORT'];
+        $port   = getenv('DB_PORT');
     }
 
 

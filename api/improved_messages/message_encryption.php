@@ -14,7 +14,7 @@ function getEncryptionKey() {
         
     } catch (\Throwable $th) {
         //get from hosting server environment
-        $key = getenv('ENCRYPTION_KEY');
+        $key = base64_decode(getenv('ENCRYPTION_KEY'));
     }
     
 
