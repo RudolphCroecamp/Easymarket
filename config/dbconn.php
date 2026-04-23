@@ -16,10 +16,10 @@
         $db   = $_ENV['DB_NAME'];
     } catch (\Throwable $th) {
         //get from hosting server environment
-        $dbHost = getenv('DB_HOST');
-        $dbUser = getenv('DB_USERNAME');
-        $dbPass = getenv('DB_PASS');
-        $dbName = getenv('DB_NAME');
+        $host = getenv('DB_HOST');
+        $User = getenv('DB_USERNAME');
+        $Pass = getenv('DB_PASS');
+        $Name = getenv('DB_NAME');
     }
 
     
