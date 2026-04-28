@@ -1,3 +1,5 @@
 .env
 /vendor
 /config/ca.pem
+.oci
+.oci/config

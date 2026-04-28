@@ -10,12 +10,17 @@
 
     require '../../config/cors.php';//allow access from webserver
     require '../../config/protectedRoute.php';//user must be authorised
-    require '../../config/dbconn.php';//connect to DB
+    $conn = require '../../config/dbconn.php';//connect to DB
 
 
     //check if whe have received images
     if (!isset($_FILES['images'])){
         echo json_encode(["error" => "No images uploaded"]);
+        exit;
+    }
+
+    if ($_FILES['images']['size'][0] > 5 * 1024 * 1024) {
+        echo json_encode(["error" => "Image too large (max 5MB)"]);
         exit;
     }
 
@@ -54,49 +59,95 @@
         $quantity = $_POST['quantity'];
     }
 
-    //verify upload directory exist
-    $uploadDir = "uploads/";
-    if (!file_exists($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
-    }
-
-    $uploadedFiles = [];
 
     require_once '../../config/generateGUID.php';//connect to DB
     $productID = generateGUID();// 2a38e78c-99be-4b32-a5f5-cac84f9efccf
-    $image_char = "a";
-
 
     //save all the images from client to db
+    $uploadedFiles = [];
+    $image_char = "a";
+
     foreach ($_FILES['images']['tmp_name'] as $index => $tmpName) {
 
-        $fileName = $_FILES['images']['name'][$index];
-        $fileType = $_FILES['images']['type'][$index];
         $fileError = $_FILES['images']['error'][$index];
 
-        if ($fileError !== 0) {
-            continue; //skip failed uploads
+        if ($fileError !== 0) continue;
+
+        // 🔒 Validate real image (NOT $_FILES['type'])
+        $imageInfo = getimagesize($tmpName);
+        if (!$imageInfo) continue;
+
+        $mime = $imageInfo['mime'];
+        $allowedTypes = ['image/jpeg', 'image/png'];
+
+        if (!in_array($mime, $allowedTypes)) continue;
+
+        // 🎨 Create image resource
+        switch ($mime) {
+            case 'image/jpeg':
+                $image = imagecreatefromjpeg($tmpName);
+                break;
+
+            case 'image/png':
+                $image = imagecreatefrompng($tmpName);
+
+                // preserve transparency
+                imagepalettetotruecolor($image);
+                imagealphablending($image, true);
+                imagesavealpha($image, true);
+                break;
+            default:
+                continue 2;
         }
 
-        //validate type
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-        if (!in_array($fileType, $allowedTypes)) {
+        // 📏 Resize (max width 1200px)
+        $maxWidth = 1200;
+        $width = imagesx($image);
+        $height = imagesy($image);
+
+        if ($width > $maxWidth) {
+            $newHeight = ($height / $width) * $maxWidth;
+            $resized = imagecreatetruecolor($maxWidth, $newHeight);
+
+            imagecopyresampled($resized, $image, 0, 0, 0, 0, $maxWidth, $newHeight, $width, $height);
+            imagedestroy($image);
+            $image = $resized;
+        }
+
+        // 🧾 Save as WebP instead of JPG
+        $filePath = $uploadDir . $productID . "_" . $image_char . ".webp";
+
+        if (!imagewebp($image, $filePath, 80)) {
+            imagedestroy($image);
             continue;
         }
 
+        imagedestroy($image);
 
-        //save image as /uploads/2a38e78c-99be-4b32-a5f5-cac84f9efccf_a.jpg
+        require_once '../../config/uploadToOracle.php';
+
+        $fileName = $productID . "_" . $image_char . ".webp";
+
+        // Upload to Oracle
+        $imageUrl = uploadToOracle($filePath, $fileName);
+
+        // Delete local file after upload
+        unlink($filePath);
+
+        // Store URL instead of local path
+        $uploadedFiles[] = $imageUrl;
         
-        //rename file
-        //$extension = pathinfo(basename($fileName), PATHINFO_EXTENSION);//get the image extention
-        $filePath = $uploadDir . $productID . "_" . $image_char . ".jpg";//name of new image
-
-        if (move_uploaded_file($tmpName, $filePath)) {
-            $uploadedFiles[] = $filePath;
-        }
-
         $image_char++;
     }
+    
+    if (count($uploadedFiles) === 0) {
+        echo json_encode([
+            "success" => false,
+            "message" => "No valid images uploaded"
+        ]);
+        exit;
+    }
+
 
 
 
@@ -105,17 +156,40 @@
     //start a transaction so we can revert all inserts if one fails
     $conn->begin_transaction();
 
+    //add product images to db
+    $insertImageStmt = $conn->prepare("
+        INSERT INTO product_images (productID, imageUrl)
+        VALUES (?, ?)
+    ");
+
+     //add listing details to db
+    $insertProductStmt = $conn->prepare("
+        INSERT INTO products 
+        (productID, ownerID, name, description, price, category, sold, deleted, `condition`, delivery, latitude, longitude, amountType, quantity) 
+        VALUES (?,?,?,?,?,?, FALSE, FALSE, ?,?,?,?,?,?)
+    ");
+    
+
+    // Prepare statements
+    $insertTagStmt = $conn->prepare("
+        INSERT INTO tags (name)
+        VALUES (?)
+        ON DUPLICATE KEY UPDATE tagID = LAST_INSERT_ID(tagID)
+    ");
+
+    $insertProductTagStmt = $conn->prepare("
+        INSERT IGNORE INTO product_tags (productID, tagID)
+        VALUES (?, ?)
+    ");
 
 
     try {
-        //we get out product id above -> line 64
+            
+        foreach ($uploadedFiles as $filePath) {
+            $insertImageStmt->bind_param("ss", $productID, $filePath);
+            $insertImageStmt->execute();
+        }
 
-        //add listing details to db
-        $insertProductStmt = $conn->prepare("
-            INSERT INTO products 
-            (productID, ownerID, name, description, price, category, sold, deleted, `condition`, delivery, latitude, longitude, amountType, quantity) 
-            VALUES (?,?,?,?,?,?, FALSE, FALSE, ?,?,?,?,?,?)
-        ");
         //get userID from session
         $ownerID = $_SESSION['userID'];
 
@@ -125,18 +199,6 @@
         );
 
         $insertProductStmt->execute();
-
-        // Prepare statements
-        $insertTagStmt = $conn->prepare("
-            INSERT INTO tags (name)
-            VALUES (?)
-            ON DUPLICATE KEY UPDATE tagID = LAST_INSERT_ID(tagID)
-        ");
-
-        $insertProductTagStmt = $conn->prepare("
-            INSERT IGNORE INTO product_tags (productID, tagID)
-            VALUES (?, ?)
-        ");
 
         //add all tags to tags database
         foreach ($tags as $tag) {
@@ -169,6 +231,12 @@
     } catch (\Throwable $th) {
         //Rollback if anything fails
         $conn->rollback();
+        
+        //delete files after it failed
+        foreach ($uploadedFiles as $file) {
+            if (file_exists($file)) unlink($file);
+        }
+
         //return products in json format
         echo json_encode([
             "status"=>"failed",
@@ -176,6 +244,8 @@
             "message"=>"Could not add listing",
             "error"=>$th->getMessage()
         ]);
+
+        
     }
 
     //Close statements and connection

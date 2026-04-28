@@ -26,11 +26,9 @@
     }
 
 
-    try {
-        $ssl_ca = __DIR__ . "/ca.pem";
-    } catch (\Throwable $th) {
-        $ssl_ca = "/secrets/ca.pem";
-    }
+    $ssl_ca = file_exists(__DIR__ . "/ca.pem")
+    ? __DIR__ . "/ca.pem"
+    : "/secrets/ca.pem";
     
     // Create connection
     $conn = mysqli_init();
@@ -51,3 +49,9 @@
         die("Connection failed: " . mysqli_connect_error());
     }
 
+    if (!$conn) {
+        throw new Exception("DB connection failed");
+    }
+
+
+    return $conn;
