@@ -8,7 +8,7 @@
 
     require '../../config/cors.php';//allow access from webserver
     //require '../../config/protectedRoute.php';//user must be authorised
-    require '../../config/dbconn.php';//connect to DB
+    $conn = require '../../config/dbconn.php';//connect to DB
 
     // Get page number from client
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -18,40 +18,50 @@
     $offset = ($page - 1) * $limit;
 
     //select only available products
-    $sql = "SELECT * FROM products WHERE deleted = FALSE ORDER BY name ASC LIMIT ? OFFSET ?";
-
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ii", $limit, $offset);
-    $stmt->execute();
+    $getProductsStmt = $conn->prepare("SELECT * FROM products WHERE deleted = FALSE ORDER BY name ASC LIMIT ? OFFSET ?");
+    $getProductsStmt->bind_param("ii", $limit, $offset);
+    $getProductsStmt->execute();
 
     //get data from db
-    $result = $stmt->get_result();
+    $product_result = $getProductsStmt->get_result();
+    
+    //get product imageUrl
+    $getProductImageUrlStmt = $conn->prepare("SELECT imageUrl 
+        FROM product_images 
+        WHERE productID = ? 
+        AND isPrimary = 1
+        LIMIT 1
+    ");
+
+    $products = [];
 
     //check if we have received rows form the db
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $products[] = $row;
+    if ($product_result && $product_result->num_rows > 0) {
+        while ($product = $product_result->fetch_assoc()) {
+
+            $productID = $product["productID"];
+
+            $getProductImageUrlStmt->bind_param("s", $productID);
+            $getProductImageUrlStmt->execute();
+
+            $images_result = $getProductImageUrlStmt->get_result();
+            $img = $images_result->fetch_assoc();
+
+            $product["primaryImage"] = $img["imageUrl"] ?? null;
+
+            $products[] = $product;
         }
 
-        //return products in json format
         echo json_encode([
-            "status"=>"success",
-            "success"=>true,
-            "products"=>$products
-        ]);
-
-    }else{
-        //return a failed message when no data was return from the db
-        echo json_encode([
-            "status"=>"failed",
-            "success"=>false,
-            "error" => "No products found"
+            "status" => "success",
+            "success" => true,
+            "products" => $products
         ]);
     }
 
 
     
     //close and end connection
-    $stmt->close();
+    $getProductsStmt->close();
     $conn->close();
     die();

@@ -1,7 +1,9 @@
         
-// import {BACKEND_URL} from "../config.js"
+import {BACKEND_URL} from "../config.js"
 
-const BACKEND_URL="http://localhost:80/easymarket-api/endpoints/listings"
+//handle errors
+import {showToast} from "../toast.js"
+import {setErrorMessage, hideErrorMessage} from "../handleErrorMessage.js"
         
 //make it unavailable 
 function deleteListing(productID) {
@@ -45,9 +47,9 @@ function makeAvailable(productID) {
         console.log(data);
 
         if(data.success === true){
-            alert(data.message)
+            showToast(data.message)
         }else{
-            alert(data.error || "Could not make listing available. Try again later.")
+            showToast(data.error || "Could not make listing available. Try again later.")
         }
         
         location.reload();

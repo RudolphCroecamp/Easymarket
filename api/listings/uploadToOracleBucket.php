@@ -30,5 +30,5 @@
             throw new Exception("Oracle upload failed with HTTP code: " . $httpCode);
         }
 
-        return $uploadUrl;
+        return $fileName;
     }

@@ -8,7 +8,7 @@
 
     require '../../config/cors.php';//allow access from webserver
     require '../../config/protectedRoute.php';//user must be authorised
-    require '../../config/dbconn.php';//connect to DB
+    $conn = require '../../config/dbconn.php';//connect to DB
 
 
 
@@ -22,9 +22,7 @@
             "error" => "Invalid productID"
         ]);
 
-        $stmt->close();
-        $conn->close();
-        die();
+        exit();
     }else{
         $productID = $_GET['productID'];
     }
@@ -57,6 +55,12 @@
     //get data from db
     $tags_result = $stmt->get_result();
 
+    $getProductImageUrlStmt = $conn->prepare("SELECT * FROM product_images WHERE productID = ? ORDER BY position ASC");
+    $getProductImageUrlStmt->bind_param("s", $productID);
+    $getProductImageUrlStmt->execute();
+
+    $images_result = $getProductImageUrlStmt->get_result();
+
     //check if we have received rows form the db
     if ($product_result && $product_result->num_rows > 0) {
         //add product info to array of product 
@@ -66,6 +70,21 @@
         while ($row = $tags_result->fetch_assoc()) {
             $tags[] = $row;
         }
+
+        //add images
+        $images = [];
+
+        if ($images_result && $images_result->num_rows > 0) {
+            while ($img = $images_result->fetch_assoc()) {
+                $images[] = $img["imageUrl"];
+            }
+        }
+
+        // attach images to product
+        $product["images"] = $images;
+        $product["imageCount"] = $images_result->num_rows;
+
+        $products[] = $product;
 
         //return products in json format
         echo json_encode([

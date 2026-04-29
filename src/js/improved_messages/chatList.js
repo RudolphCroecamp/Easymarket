@@ -28,7 +28,6 @@ function getLatestMessages() {
         .catch(error => {throw error})
 
     } catch (error) {
-        console.log(error);
         throw error
     }
 
@@ -38,6 +37,11 @@ function getLatestMessages() {
 function loadChatList(messages){
     const chat_canvas = document.getElementById("chat_canvas");
     console.log(messages);
+
+    if(!messages && messages.length <= 0){
+        console.log("No messages to load");
+        return
+    }
 
 
 

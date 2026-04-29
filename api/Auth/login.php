@@ -6,7 +6,7 @@
 
     require './session_config.php';//set session details
 
-    require '../../config/dbconn.php';//connect to DB
+    $conn = require '../../config/dbconn.php';//connect to DB
 
     header('Content-Type: application/json');
 

@@ -1,5 +1,9 @@
-import {BACKEND_URL} from "../config.js"
-import showToast from "../toast.js"
+import {BACKEND_URL, IMAGES_URL} from "../config.js"
+
+//handle errors
+import {showToast} from "../toast.js"
+import {setErrorMessage, hideErrorMessage} from "../handleErrorMessage.js"
+
 import getComments from "../comments/getComments.js"
 import newComment from "../comments/newComment.js"
 
@@ -31,7 +35,7 @@ async function loadProducts(){
 
 
     //get products
-    fetch(`http://localhost:80/easymarket-api/endpoints/products/getProductById.php?productID=${productID}`, {
+    fetch(`${BACKEND_URL}/products/getProductById.php?productID=${productID}`, {
         method : "POST",
         credentials : "include"
     })
@@ -60,9 +64,6 @@ async function loadProducts(){
             }else{
                 listingPrice = listingPrice.toFixed(2);  
             }
-
-            
-
 
             //add product into container
             container.innerHTML += 
@@ -185,12 +186,12 @@ async function loadProducts(){
             const mainImage = document.getElementById("mainImage");
             const imgcontainer = document.getElementById("thumbnailContainer");
 
-            let letter = "a";
+            //let letter = "a";
             const images = []
 
             for (let i = 0; i < product.imageCount; i++) {
-                images.push(`${BACKEND_URL}/listings/uploads/${product.productID}_${letter}.jpg`);
-                letter = String.fromCharCode(letter.charCodeAt(0) + 1);
+                images.push(`${IMAGES_URL}/${product.images[i]}`);
+                //letter = String.fromCharCode(letter.charCodeAt(0) + 1);//next letter in alphabet
             }
 
             // set first image
@@ -241,6 +242,7 @@ async function loadProducts(){
                     await sendMessage(productID, 0, message, container);
                 } catch (error) {
                     console.log(error);
+                    showToast(error)
                 }
                 
 
@@ -262,14 +264,10 @@ async function loadProducts(){
             loading = false;
         }
 
-
-
-
     }).catch(error =>{
         console.log(error)
         //show error message to client
-        document.getElementById("error-box").classList.remove("visually-hidden");
-        document.getElementById("error-message").innerText = error;
+        setErrorMessage(error)
     });
 }
 
@@ -297,7 +295,6 @@ function setCityFromGPS() {
             location = (data.address.county + ", " + data.address.state) 
         }
 
-
         console.log(city);
 
         // document.getElementById("setLocation").innerHTML = `<strong>Location:</strong> ${city}` 
@@ -312,7 +309,6 @@ function setCityFromGPS() {
 
 
 async function getSimilarProducts(category){
-
     fetch(`${BACKEND_URL}/products/similarProducts.php?category=${category}`, {
         method : "POST",
         credentials : "include"
@@ -327,10 +323,9 @@ async function getSimilarProducts(category){
     .catch(error =>{
         console.log(error)
         //show error message to client
-        document.getElementById("error-box").classList.remove("visually-hidden");
-        document.getElementById("error-message").innerText = error;
+        console.log(error);
+        showToast(error)
     })
-
 }
 
 

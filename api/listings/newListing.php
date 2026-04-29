@@ -30,11 +30,7 @@
         $_POST['category'],
         $_POST['condition'],
         $_POST['description'],
-        $_POST['delivery'],
-        $_POST['amountType'],
-        $_POST['latitude'],
-        $_POST['longitude']
-        
+        $_POST['delivery'], 
     ))
     {
         echo json_encode(["error" => "Fill in all fields"]);
@@ -48,9 +44,6 @@
     $condition = $_POST['condition'];
     $description = $_POST['description'];
     $delivery = $_POST['delivery'];
-    $latitude = $_POST['latitude'];
-    $longitude = $_POST['longitude'];
-    $amountType = $_POST['amountType'];
 
     //quantity defualts to 1 if not provided
     if (!isset($_POST['quantity']) || $_POST['quantity'] == 0){
@@ -66,6 +59,12 @@
     //save all the images from client to db
     $uploadedFiles = [];
     $image_char = "a";
+
+    $uploadDir = __DIR__ . "/uploads/";
+
+    if (!file_exists($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
 
     foreach ($_FILES['images']['tmp_name'] as $index => $tmpName) {
 
@@ -106,7 +105,7 @@
         $height = imagesy($image);
 
         if ($width > $maxWidth) {
-            $newHeight = ($height / $width) * $maxWidth;
+            $newHeight = max(1, (int)(($height / $width) * $maxWidth));
             $resized = imagecreatetruecolor($maxWidth, $newHeight);
 
             imagecopyresampled($resized, $image, 0, 0, 0, 0, $maxWidth, $newHeight, $width, $height);
@@ -124,7 +123,7 @@
 
         imagedestroy($image);
 
-        require_once '../../config/uploadToOracle.php';
+        require_once __DIR__ . '/uploadToOracleBucket.php';
 
         $fileName = $productID . "_" . $image_char . ".webp";
 
@@ -156,17 +155,11 @@
     //start a transaction so we can revert all inserts if one fails
     $conn->begin_transaction();
 
-    //add product images to db
-    $insertImageStmt = $conn->prepare("
-        INSERT INTO product_images (productID, imageUrl)
-        VALUES (?, ?)
-    ");
-
      //add listing details to db
     $insertProductStmt = $conn->prepare("
         INSERT INTO products 
-        (productID, ownerID, name, description, price, category, sold, deleted, `condition`, delivery, latitude, longitude, amountType, quantity) 
-        VALUES (?,?,?,?,?,?, FALSE, FALSE, ?,?,?,?,?,?)
+        (productID, ownerID, name, description, price, category, sold, deleted, `condition`, delivery) 
+        VALUES (?,?,?,?,?,?, FALSE, FALSE, ?,?)
     ");
     
 
@@ -182,20 +175,21 @@
         VALUES (?, ?)
     ");
 
+    //add product images to db
+    $insertImageStmt = $conn->prepare("
+        INSERT INTO product_images (productID, imageUrl, position, isPrimary)
+        VALUES (?, ?, ?, ?)
+    ");
+
 
     try {
-            
-        foreach ($uploadedFiles as $filePath) {
-            $insertImageStmt->bind_param("ss", $productID, $filePath);
-            $insertImageStmt->execute();
-        }
 
         //get userID from session
         $ownerID = $_SESSION['userID'];
 
         $insertProductStmt->bind_param(
-            "ssssdsssddsi", 
-            $productID, $ownerID, $title, $description, $price, $category, $condition, $delivery, $latitude, $longitude, $amountType, $quantity
+            "ssssdsss", 
+            $productID, $ownerID, $title, $description, $price, $category, $condition, $delivery
         );
 
         $insertProductStmt->execute();
@@ -218,6 +212,15 @@
             //Link product to tag
             $insertProductTagStmt->bind_param("si", $productID, $tagID);
             $insertProductTagStmt->execute();
+            
+            $imgPosition = 1;
+            foreach ($uploadedFiles as $filePath) {
+                $isPrimary = $imgPosition == 1 ? 1 : 0;
+                $insertImageStmt->bind_param("ssii", $productID, $filePath, $imgPosition, $isPrimary);
+                $insertImageStmt->execute();
+
+                $imgPosition++;
+            }
         }
 
         $conn->commit();
@@ -252,6 +255,6 @@
     if (isset($insertProductStmt)) $insertProductStmt->close();
     if (isset($insertTagStmt)) $insertTagStmt->close();
     if (isset($insertProductTagStmt)) $insertProductTagStmt->close();
-
+    if (isset($insertImageStmt)) $insertImageStmt->close();
     $conn->close();
     die();

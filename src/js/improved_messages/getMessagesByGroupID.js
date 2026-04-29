@@ -30,7 +30,6 @@ async function getMessagesForChat(productID){
         .catch(error => {throw error})
 
     } catch (error) {
-        console.log(error);
         throw error
     }
 

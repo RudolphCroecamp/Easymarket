@@ -1,5 +1,9 @@
 import {BACKEND_URL} from "../config.js"
 
+//handle errors
+import {showToast} from "../toast.js"
+import {setErrorMessage, hideErrorMessage} from "../handleErrorMessage.js"
+
 import {categoryOptions} from "./listingOptions.js"
 
 const dropArea = document.getElementById('drop-area');
@@ -8,7 +12,6 @@ const preview = document.getElementById('preview');
 
 const categoryContainer = document.getElementById("category")
 const conditionContainer = document.getElementById("condition")
-const amountTypeContainer = document.getElementById("amountType")
 const deliveryContainer = document.getElementById("delivery")
 
 
@@ -86,14 +89,12 @@ form.addEventListener('submit', async e => {
     const category = document.getElementById("category")
     const condition = document.getElementById("condition")
     const description = document.getElementById("description")
-    const amountType = document.getElementById("amountType")
-    const quantity = document.getElementById("quantity")//optional defaults to 1
     const delivery = document.getElementById("delivery")//delivery method
 
     // console.log(validateInput(title, price, category, condition, description, amountAvailable, delivery));
 
     if(
-        validateInput(title, price, category, condition, description, amountType, delivery)
+        validateInput(title, price, category, condition, description, delivery)
     ){
         const formData = new FormData();
 
@@ -103,7 +104,6 @@ form.addEventListener('submit', async e => {
         //set select elements value
         const categoryText = categoryContainer.options[categoryContainer.selectedIndex].text
         const conditionText = conditionContainer.options[conditionContainer.selectedIndex].text
-        const amountTypeText = amountTypeContainer.options[amountTypeContainer.selectedIndex].text
         const deliveryText = deliveryContainer.options[deliveryContainer.selectedIndex].text
 
         // append all other fields manually
@@ -112,21 +112,14 @@ form.addEventListener('submit', async e => {
         formData.append("category", categoryText);//default other
         formData.append("condition", conditionText);//default new
         formData.append("description", description.value);
-        formData.append("amountType", amountTypeText);//default single item
-        formData.append("quantity", quantity.value || 1);//default 1
-        formData.append("location", location.value);
         formData.append("delivery", deliveryText);
-
-        const coords = await getUserLocation()
-        console.log(coords);
-        formData.append("latitude", coords.latitude);
-        formData.append("longitude", coords.longitude);
-
         //get tags from tagsInput
         const tagsArray = tagify.value.map(tag => tag.value);
 
-        //tags array
-        formData.append("tags", JSON.stringify(tagsArray));
+
+        //tags could be empty becasue it is optional
+        if(tagsArray.length > 0) formData.append("tags", JSON.stringify(tagsArray));
+        
 
         try {
             fetch(`${BACKEND_URL}/listings/newListing.php`, {
@@ -140,10 +133,12 @@ form.addEventListener('submit', async e => {
 
                 //redirect back to home screen or show error
                 if(data.success === true){
+                    showToast(data.message)
                     // window.location = "/"
                     // document.getElementById("newLisitingForm").reset()
                 }else{
                     setErrorMessage(data.error)
+                    showToast(data.message || data.error)
                 }
             })
 
@@ -157,77 +152,13 @@ form.addEventListener('submit', async e => {
 });
 
 
-
-//get and return the users latitude and longitude
-function getUserLocation() {
-    return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-
-                resolve({
-                    lat: lat,
-                    lng: lng
-                });
-            },
-            (error) => {
-                reject(error);
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 5000,
-                maximumAge: 0
-            }
-        );
-    });
-}
-
-
-
-
-
-
-
 //reset page and redirect back to home screen
 form.addEventListener("reset", ()=>{
     window.location = "/"
 })
 
-//show preview of page
-document.getElementById("btnPreviewListing")
-.addEventListener("click", ()=>{
-    window.location = "/preview-listing"
-})
 
 
-
-
-
-//add or remove quantity input from client screen
-document.getElementById("amountType")
-.addEventListener("click", (elm)=>{
-
-    if(elm.target.value == 1){
-        document.getElementById("quantityContainer").classList.add("visually-hidden");
-    }else if(elm.target.value == 2){
-        document.getElementById("quantityContainer").classList.remove("visually-hidden");
-    }
-})
-
-
-
-//show error message to client
-function setErrorMessage(error){
-    document.getElementById("error-box").classList.remove("visually-hidden");
-    document.getElementById("error-message").innerText = error;
-}
-
-//hide error message from client
-function hideErrorMessage(){
-    document.getElementById("error-box").classList.add("visually-hidden");
-    document.getElementById("error-message").innerText = "";
-}
 
 //validate an array of inputs
 //valid if it has a value 
@@ -259,10 +190,9 @@ function validateInput(...elements){
 }
 
 
-
+// Initialize Tagify
 const input = document.getElementById("tagsInput");
 
-// Initialize Tagify
 const tagify = new Tagify(input, {
     delimiters: ",| ", // Enter, comma, or space
     maxTags: 10,
@@ -275,20 +205,7 @@ const tagify = new Tagify(input, {
 
 
 
-
-
-
 //append categories to category dropdown container / select element
 categoryOptions.forEach((cat, index) =>{
     categoryContainer.innerHTML +=`<option value="${index+1}">${cat}</option>` 
 })
-
-
-
-
-
-
-
-
-
-

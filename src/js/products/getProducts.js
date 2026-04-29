@@ -1,4 +1,8 @@
-import {BACKEND_URL} from "../config.js"
+import {BACKEND_URL, IMAGES_URL} from "../config.js"
+
+//handle errors
+import {showToast} from "../toast.js"
+import {setErrorMessage, hideErrorMessage} from "../handleErrorMessage.js"
 
 let page = 1;
 let loading = false;
@@ -39,7 +43,7 @@ function loadProducts(){
         }else{
             console.log(data);
 
-            //hide spinner when there arn't more items to load
+            //hide spinner when there are more items to load
             if(data.products.length < 20){
                 const spinner = document.getElementById('loading');
                 spinner.style.display = 'none';
@@ -55,7 +59,7 @@ function loadProducts(){
 
                             <!-- Image -->
                             <div class="p-3 text-center">
-                                <img src="${BACKEND_URL}/listings/uploads/${product.productID}_a.jpg" 
+                                <img src="${IMAGES_URL}/${product.primaryImage}" 
                                     class="img-fluid rounded"
                                     style="height: 180px; object-fit: contain;">
                             </div>
@@ -94,10 +98,8 @@ function loadProducts(){
 
     }).catch(error =>{
         console.log(error)
-
         //show error message to client
-        document.getElementById("error-box").classList.remove("visually-hidden");
-        document.getElementById("error-message").innerText = error;
+        setErrorMessage(error)
     });
 
 }

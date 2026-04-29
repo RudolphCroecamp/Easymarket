@@ -1,5 +1,8 @@
 import {BACKEND_URL} from "../config.js"
 
+//handle errors
+import {showToast} from "../toast.js"
+import {setErrorMessage, hideErrorMessage} from "../handleErrorMessage.js"
 import {categoryOptions} from "./listingOptions.js"
 
 const dropArea = document.getElementById('drop-area');

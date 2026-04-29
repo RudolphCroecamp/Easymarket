@@ -1,4 +1,5 @@
 import {BACKEND_URL} from "../config.js"
+import { showToast } from "../toast.js"
 
 import {my_message, their_message} from "./message_helpers.js"
 
@@ -38,15 +39,14 @@ function sendMessage(productID, groupID, message, message_container){
             }
             
             //request success
-             console.log( message_container);
+
             //append message to container
             message_container.innerHTML += my_message(message)
-
-            console.log(message);
 
             //go to last message
             message_container.scrollTop = message_container.scrollHeight;
 
+            showToast(response.messsage)
             return response.message
 
         })
@@ -54,7 +54,6 @@ function sendMessage(productID, groupID, message, message_container){
 
 
     } catch (error) {
-        console.log(error);
         throw error
     }
 

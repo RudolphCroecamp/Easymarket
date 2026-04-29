@@ -1,4 +1,9 @@
-import {BACKEND_URL} from "../config.js"
+import {BACKEND_URL, IMAGES_URL} from "../config.js"
+
+//handle errors
+import {showToast} from "../toast.js"
+import {setErrorMessage, hideErrorMessage} from "../handleErrorMessage.js"
+
 console.log("running here");
 let page = 1;
 let loading = false;
