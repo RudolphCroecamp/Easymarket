@@ -1,0 +1,89 @@
+{
+  "provinces": [
+    {
+      "name": "Eastern Cape",
+      "cities": [
+        { "name": "Gqeberha", "alt": "Port Elizabeth" },
+        { "name": "East London" },
+        { "name": "Mthatha" },
+        { "name": "Makhanda", "alt": "Grahamstown" },
+        { "name": "Bhisho" }
+      ]
+    },
+    {
+      "name": "Free State",
+      "cities": [
+        { "name": "Bloemfontein" },
+        { "name": "Welkom" },
+        { "name": "Bethlehem" },
+        { "name": "Sasolburg" }
+      ]
+    },
+    {
+      "name": "Gauteng",
+      "cities": [
+        { "name": "Johannesburg" },
+        { "name": "Pretoria" },
+        { "name": "Soweto" },
+        { "name": "Midrand" },
+        { "name": "Centurion" }
+      ]
+    },
+    {
+      "name": "KwaZulu-Natal",
+      "cities": [
+        { "name": "Durban" },
+        { "name": "Pietermaritzburg" },
+        { "name": "Richards Bay" },
+        { "name": "Newcastle" },
+        { "name": "Ladysmith" }
+      ]
+    },
+    {
+      "name": "Limpopo",
+      "cities": [
+        { "name": "Polokwane" },
+        { "name": "Thohoyandou" },
+        { "name": "Tzaneen" },
+        { "name": "Mokopane" }
+      ]
+    },
+    {
+      "name": "Mpumalanga",
+      "cities": [
+        { "name": "Mbombela", "alt": "Nelspruit" },
+        { "name": "Emalahleni", "alt": "Witbank" },
+        { "name": "Secunda" },
+        { "name": "Middelburg" }
+      ]
+    },
+    {
+      "name": "Northern Cape",
+      "cities": [
+        { "name": "Kimberley" },
+        { "name": "Upington" },
+        { "name": "Springbok" },
+        { "name": "De Aar" }
+      ]
+    },
+    {
+      "name": "North West",
+      "cities": [
+        { "name": "Mahikeng" },
+        { "name": "Rustenburg" },
+        { "name": "Klerksdorp" },
+        { "name": "Potchefstroom" }
+      ]
+    },
+    {
+      "name": "Western Cape",
+      "cities": [
+        { "name": "Cape Town" },
+        { "name": "Stellenbosch" },
+        { "name": "Paarl" },
+        { "name": "George" },
+        { "name": "Worcester" }
+      ]
+    }
+  ]
+}

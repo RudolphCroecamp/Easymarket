@@ -1,0 +1,118 @@
+{
+  "categories": [
+    {
+      "name": "Electronics",
+      "subcategories": [
+        "Computers & Laptops",
+        "Mobile Phones & Accessories",
+        "Gaming",
+        "Cameras & Photography",
+        "TVs & Home Entertainment"
+      ]
+    },
+    {
+      "name": "Clothing",
+      "subcategories": [
+        "Men's Clothing",
+        "Women's Clothing",
+        "Kids' Clothing",
+        "Shoes",
+        "Accessories (Fashion)"
+      ]
+    },
+    {
+      "name": "Home & Living",
+      "subcategories": [
+        "Furniture",
+        "Home Decor",
+        "Kitchen & Dining",
+        "Bedding",
+        "Appliances"
+      ]
+    },
+    {
+      "name": "Health & Beauty",
+      "subcategories": [
+        "Skincare",
+        "Haircare",
+        "Makeup",
+        "Fragrances",
+        "Personal Care"
+      ]
+    },
+    {
+      "name": "Sports & Outdoors",
+      "subcategories": [
+        "Fitness Equipment",
+        "Camping & Hiking",
+        "Cycling",
+        "Fishing"
+      ]
+    },
+    {
+      "name": "Automotive",
+      "subcategories": [
+        "Car Accessories",
+        "Car Parts",
+        "Motorcycle Accessories"
+      ]
+    },
+    {
+      "name": "Books & Media",
+      "subcategories": [
+        "Books",
+        "Music",
+        "Movies"
+      ]
+    },
+    {
+      "name": "Toys & Games",
+      "subcategories": [
+        "Board Games",
+        "Action Figures",
+        "Educational Toys"
+      ]
+    },
+    {
+      "name": "Baby & Kids",
+      "subcategories": [
+        "Baby Clothing",
+        "Baby Gear",
+        "Toys (Baby)"
+      ]
+    },
+    {
+      "name": "Groceries",
+      "subcategories": [
+        "Snacks",
+        "Beverages",
+        "Fresh Produce"
+      ]
+    },
+    {
+      "name": "Pet Supplies",
+      "subcategories": [
+        "Dog Supplies",
+        "Cat Supplies",
+        "Other Pets"
+      ]
+    },
+    {
+      "name": "Office & Stationery",
+      "subcategories": [
+        "Office Supplies",
+        "School Supplies"
+      ]
+    },
+    {
+      "name": "Services",
+      "subcategories": [
+        "Digital Products"
+      ]
+    },
+    {
+       "name": "Other",
+       "subcategories": [] 
+    }
+  ]
+}

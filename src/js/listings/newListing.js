@@ -15,6 +15,10 @@ const conditionContainer = document.getElementById("condition")
 const deliveryContainer = document.getElementById("delivery")
 
 
+const locationData = await loadLocationData()
+const categoryData = await loadCategoryData()
+
+
 let filesToUpload = [];
 
 //Click drop area to open file selector
@@ -95,24 +99,21 @@ form.addEventListener('submit', async e => {
 
     if(
         validateInput(title, price, category, condition, description, delivery)
+        &&
+        filesToUpload.length > 0
     ){
         const formData = new FormData();
 
         // append only dragged/selected files manually
         filesToUpload.forEach(file => formData.append('images[]', file));
 
-        //set select elements value
-        const categoryText = categoryContainer.options[categoryContainer.selectedIndex].text
-        const conditionText = conditionContainer.options[conditionContainer.selectedIndex].text
-        const deliveryText = deliveryContainer.options[deliveryContainer.selectedIndex].text
-
         // append all other fields manually
         formData.append("title", title.value);
         formData.append("price", price.value);
-        formData.append("category", categoryText);//default other
-        formData.append("condition", conditionText);//default new
+        formData.append("category", categoryContainer.value);//default other
+        formData.append("condition", conditionContainer.value);//default new
         formData.append("description", description.value);
-        formData.append("delivery", deliveryText);
+        formData.append("delivery", deliveryContainer.value);
         //get tags from tagsInput
         const tagsArray = tagify.value.map(tag => tag.value);
 
@@ -167,22 +168,22 @@ function validateInput(...elements){
     for (let elm of elements) {
         console.log(elm.value);
 
-        if(elm.tagName.toLowerCase() === "input" || elm.tagName.toLowerCase() === "textarea"){//check input elements for value
+        if(elm.tagName.toLowerCase() === "input" || elm.tagName.toLowerCase() === "textarea"){//check input and textarea elements for value
             if(!elm.value || elm.value.trim().length === 0){
                 elm.focus()
-                setErrorMessage("Fill in all fields");
+                showToast("Fill in all fields");
                 return false;
             }
         }else if(elm.tagName.toLowerCase() === "select"){//check select elements for a value
             //invalid value if index == 0
             if(elm.selectedIndex == 0){
                 elm.focus()
-                setErrorMessage("Fill in all fields");
+                showToast("Fill in all fields");
                 return false;
             }  
         }else{
             //error if we did not check all the input tags
-            setErrorMessage("Unknown validation error");
+            showToast("Unknown validation error");
             return false;
         } 
     }
@@ -206,6 +207,126 @@ const tagify = new Tagify(input, {
 
 
 //append categories to category dropdown container / select element
-categoryOptions.forEach((cat, index) =>{
-    categoryContainer.innerHTML +=`<option value="${index+1}">${cat}</option>` 
+const categorySelect = document.getElementById("category")
+const subcategorySelect = document.getElementById("subcategorySelect")
+
+//add main categories
+categoryData.categories.forEach((mainCat, index)=>{
+    console.log(index);
+    console.log(mainCat.name);
+    const option = document.createElement("option");
+    option.value = mainCat.name;
+    option.textContent = mainCat.name;
+    categorySelect.appendChild(option);
 })
+
+
+
+categorySelect.addEventListener("change", () => {
+    const categorySelectText = categorySelect.value
+
+    //disable subcategory select element
+    if(categorySelectText == "0"){
+        //reset to defaults when no option was selected
+        subcategorySelect.disabled = true;
+        subcategorySelect.selectedIndex = 0;
+        return
+    }
+
+    //enable subcategory select element
+    subcategorySelect.disabled = false;
+
+
+    const selected = categoryData.categories.find(
+        c => c.name === categorySelectText
+    );
+
+    subcategorySelect.innerHTML = "";
+
+    subcategorySelect.innerHTML += "<option value='0' selected>Select a subcategory</option>";
+
+    selected.subcategories.forEach(sub => {
+        const option = document.createElement("option");
+        option.value = sub;
+        option.textContent = sub;
+        subcategorySelect.appendChild(option);
+    });
+});
+
+
+
+
+//append available location to container
+const provinceSelect = document.getElementById("province");
+const citySelect = document.getElementById("city");
+
+
+//add provices
+locationData.provinces.forEach((name)=>{
+    console.log(name);
+    const option = document.createElement("option");
+    option.value = name.name;
+    option.textContent = name.name;
+    provinceSelect.appendChild(option);
+})
+
+
+provinceSelect.addEventListener("change", async () => {
+    console.log(provinceSelect.value);
+
+    //disable subcategory select element
+    if(provinceSelect.value == "0"){
+        //reset to defaults when no option was selected
+        citySelect.disabled = true;
+        citySelect.selectedIndex = 0;
+        return
+    }
+
+    //enable city select element
+    citySelect.disabled = false;
+
+    const selected = locationData.provinces.find(p => p.name === provinceSelect.value)
+
+    citySelect.innerHTML = "";
+
+    citySelect.innerHTML += "<option value='0' selected>Select a city</option>";
+
+    selected.cities.forEach(city => {
+        const option = document.createElement("option");
+        option.value = city.name;
+        option.textContent = city.alt 
+        ? `${city.name} (${city.alt})` 
+        : city.name;
+
+        citySelect.appendChild(option);
+    });
+});
+
+
+//get data from locations.json
+async function loadLocationData() {
+  try {
+    const response = await fetch("../../js/listings/locations.json");
+    const data = await response.json();
+
+    console.log(data);
+
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+//get data from categoryOptions.json
+async function loadCategoryData() {
+  try {
+    const response = await fetch("../../js/listings/categoryOptions.json");
+    const data = await response.json();
+
+    console.log(data);
+
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+}

@@ -114,6 +114,7 @@
                 </div>
 
                 <!-- listing deltails -->
+                 <h5>Listing details</h5>
                 <div class="form-floating mb-3">
                     <input type="text" name="title" id="title" class="form-control">
                     <label class="form-label" for="title">title</label>
@@ -124,29 +125,73 @@
                     <label class="form-label" for="price">price</label>
                 </div>
 
-                <!-- get categories from listingOptions.js -->
+                <div class="form-floating mb-3">
+                    <textarea name="description" id="description" class="form-control" style="height: 100px; max-height: 200px; min-height: 100px"></textarea>
+                    <label for="description">Description</label>
+                </div>
+
+                <h5>Category</h5>
                 <div class="form-floating mb-3">
                     <select class="form-select" id="category">
-                        <option selected>Select a category</option>
+                        <option value="0" selected>Select a category</option>
                         <!-- category options are added here -->
                     </select>
                     <label for="category">Category</label>
                 </div>
 
                 <div class="form-floating mb-3">
+                    <select class="form-select" id="subcategorySelect" disabled>
+                        <option value="0" selected>Select a subcategory</option>
+                        <!-- subcategory options are added here -->
+                    </select>
+                    <label for="category">Subcategory</label>
+                </div>
+
+
+                <h5>Condition</h5>
+                <div class="form-floating mb-3">
                     <select class="form-select" id="condition">
-                        <option selected>Select a condition</option>
-                        <option value="1">New</option>
-                        <option value="2">Good</option>
-                        <option value="3">Broken</option>
+                        <option value="0" selected>Select a condition</option>
+                        <option value="New">New</option>
+                        <option value="Good">Good</option>
+                        <option value="Broken">Broken</option>
                     </select>
                     <label for="condition">Condition</label>
                 </div>
 
+                
+
+                
+                <h5>Location</h5>
                 <div class="form-floating mb-3">
-                    <textarea name="description" id="description" class="form-control" style="height: 100px; max-height: 200px; min-height: 100px"></textarea>
-                    <label for="description">Description</label>
+                    <select class="form-select" id="province">
+                        <option value="0" selected>Select a provice</option>
+                        <!-- provinces are added here -->
+                    </select>
+                    <label for="province">Provice</label>
                 </div>
+
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="city" disabled>
+                        <option value="0" selected>Select a city</option>
+                        <!-- cities are added here -->
+                    </select>
+                    <label for="city">City</label>
+                </div>
+
+                <h5>Delivery Method</h5>
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="delivery">
+                        <option value="0" selected>Select a delivery option</option>
+                        <option value="Public meetup">Public meetup</opton>
+                        <option value="Door pick-up">Door pick-up</option>
+                        <option value="Door drop-off">Door drop-off</option>
+                        <option value="Courier service">Courier service</option>
+                    </select>
+                    <label for="delivery">Delivery option</label>
+                </div>
+
+                <h5>Advanced Search</h5>
 
                 <div class="mb-3">
                     <label for="tagsInput" class="form-label text-muted">Tags (optional)</label>
@@ -162,17 +207,6 @@
                         <!-- Add button -->
                         <button class="btn btn-primary" type="button" id="btnAddTag">+</button>
                     </div>
-                </div>
-
-                <div class="form-floating mb-3">
-                    <select class="form-select" id="delivery">
-                        <option selected>Select a delivery option</option>
-                        <option value="1">Public meetup</opton>
-                        <option value="2">Door pick-up</option>
-                        <option value="3">Door drop-off</option>
-                        <option value="4">Courier service</option>
-                    </select>
-                    <label for="delivery">Delivery option</label>
                 </div>
 
 
