@@ -100,11 +100,15 @@
             height: 400px; /* or whatever fits your modal */
             overflow-y: auto;
         }
+
+        .testMt{
+            margin-top: 7rem !important; 
+        }
     </style>
     
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark sticky-top">
         <div class="container-fluid d-flex flex-wrap row">
             <a class="navbar-brand col-6 col-sm-6" href="/">Logo</a>
 
@@ -151,29 +155,65 @@
         </div>
     </nav>
 
-    
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- LEFT SIDEBAR -->
+            <div class="col-12 col-md-3 col-lg-2 mb-4">
+                <div class="card p-3 shadow-sm">
 
+                    <h5 class="mb-3">Filters</h5>
 
+                    <!-- PRICE FILTER -->
+                    <label for="priceRange" class="form-label">Max Price</label>
+                    <input type="range" class="form-range" min="0" max="10000" step="100" id="priceRange">
+                    <div class="d-flex justify-content-between">
+                        <small>R0</small>
+                        <small id="priceValue">R5000</small>
+                    </div>
 
-    <div class="container py-5">
+                    <hr>
 
-        <!-- Products are added in this container -->
-        <div class="row g-4" id="products-container">
-            
-        </div>
+                    <!-- PROVINCE -->
+                    <label class="form-label">Province</label>
+                    <select class="form-select mb-3" id="province">
+                        <option value="0">Select Province</option>
+                    </select>
 
-        <div class="d-flex justify-content-center mt-5">
-            <div class="spinner-border" role="status" id="loading">
-                <span class="visually-hidden">Loading...</span>
+                    <!-- CITY -->
+                    <label class="form-label">City</label>
+                    <select class="form-select mb-3" id="city" disabled>
+                        <option value="0">Select City</option>
+                    </select>
+
+                    <button class="btn btn-primary w-100" id="applyFilters">
+                        Apply Filters
+                    </button>
+
+                </div>
+
+                
             </div>
-        </div>
 
+            <!-- RIGHT CONTENT -->
+                <div class="col-12 col-md-9 col-lg-10">
+
+                    <!-- Products -->
+                    <div class="row g-4" id="products-container"></div>
+
+                    <!-- Loader -->
+                    <div class="d-flex justify-content-center mt-5">
+                        <div class="spinner-border" role="status" id="loading">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                </div>
+        </div>
     </div>
 
 
-
     <!-- Offcanvas (Right Side Nav) -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="contactPanel">
+    <div class="offcanvas offcanvas-end rounded me-2 my-5 testMt" data-bs-scroll="true" data-bs-backdrop="false"  tabindex="-1" id="contactPanel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title">Chat</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>

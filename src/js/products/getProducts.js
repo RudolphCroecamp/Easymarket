@@ -4,10 +4,17 @@ import {BACKEND_URL, IMAGES_URL} from "../config.js"
 import {showToast} from "../toast.js"
 import {setErrorMessage, hideErrorMessage} from "../handleErrorMessage.js"
 
+
+// import categoryData_init from "../loadData/categories.js";
+import locationData_init from "../loadData/locations.js";
+
 let page = 1;
 let loading = false;
 
 const container = document.getElementById("products-container");
+
+// categoryData_init()
+locationData_init()
 
 
 loadProducts();
@@ -19,6 +26,7 @@ window.addEventListener("scroll", () => {
         loadProducts();
     }
 });
+
 
 function loadProducts(){
     //prevent the client from making unwanted request

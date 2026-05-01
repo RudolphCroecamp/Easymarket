@@ -4,7 +4,8 @@ import {BACKEND_URL} from "../config.js"
 import {showToast} from "../toast.js"
 import {setErrorMessage, hideErrorMessage} from "../handleErrorMessage.js"
 
-import {categoryOptions} from "./listingOptions.js"
+import categoryData_init from "../loadData/categories.js";
+import locationData_init from "../loadData/locations.js";
 
 const dropArea = document.getElementById('drop-area');
 const fileInput = document.getElementById('images');
@@ -15,8 +16,8 @@ const conditionContainer = document.getElementById("condition")
 const deliveryContainer = document.getElementById("delivery")
 
 
-const locationData = await loadLocationData()
-const categoryData = await loadCategoryData()
+categoryData_init()
+locationData_init()
 
 
 let filesToUpload = [];
@@ -203,125 +204,3 @@ const tagify = new Tagify(input, {
     }
 });
 
-
-
-
-//append categories to category dropdown container / select element
-const categorySelect = document.getElementById("category")
-const subcategorySelect = document.getElementById("subcategorySelect")
-
-//add main categories
-categoryData.categories.forEach((mainCat, index)=>{
-    const option = document.createElement("option");
-    option.value = mainCat.name;
-    option.textContent = mainCat.name;
-    categorySelect.appendChild(option);
-})
-
-
-
-categorySelect.addEventListener("change", () => {
-    const categorySelectText = categorySelect.value
-
-    //disable subcategory select element
-    if(categorySelectText == "0"){
-        //reset to defaults when no option was selected
-        subcategorySelect.disabled = true;
-        subcategorySelect.selectedIndex = 0;
-        return
-    }
-
-    //enable subcategory select element
-    subcategorySelect.disabled = false;
-
-
-    const selected = categoryData.categories.find(
-        c => c.name === categorySelectText
-    );
-
-    subcategorySelect.innerHTML = "";
-
-    subcategorySelect.innerHTML += "<option value='0' selected>Select a subcategory</option>";
-
-    selected.subcategories.forEach(sub => {
-        const option = document.createElement("option");
-        option.value = sub;
-        option.textContent = sub;
-        subcategorySelect.appendChild(option);
-    });
-});
-
-
-
-
-//append available location to container
-const provinceSelect = document.getElementById("province");
-const citySelect = document.getElementById("city");
-
-
-//add provices
-locationData.provinces.forEach((name)=>{
-    const option = document.createElement("option");
-    option.value = name.name;
-    option.textContent = name.name;
-    provinceSelect.appendChild(option);
-})
-
-
-provinceSelect.addEventListener("change", async () => {
-    //disable subcategory select element
-    if(provinceSelect.value == "0"){
-        //reset to defaults when no option was selected
-        citySelect.disabled = true;
-        citySelect.selectedIndex = 0;
-        return
-    }
-
-    //enable city select element
-    citySelect.disabled = false;
-
-    const selected = locationData.provinces.find(p => p.name === provinceSelect.value)
-
-    citySelect.innerHTML = "";
-
-    citySelect.innerHTML += "<option value='0' selected>Select a city</option>";
-
-    selected.cities.forEach(city => {
-        const option = document.createElement("option");
-        option.value = city.name;
-        option.textContent = city.alt 
-        ? `${city.name} (${city.alt})` 
-        : city.name;
-
-        citySelect.appendChild(option);
-    });
-});
-
-
-//get data from locations.json
-async function loadLocationData() {
-  try {
-    const response = await fetch("../../js/listings/locations.json");
-    const data = await response.json();
-
-    console.log(data);
-
-    return data;
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-//get data from categoryOptions.json
-async function loadCategoryData() {
-  try {
-    const response = await fetch("../../js/listings/categoryOptions.json");
-    const data = await response.json();
-
-    console.log(data);
-
-    return data;
-  } catch (err) {
-    console.error(err);
-  }
-}
