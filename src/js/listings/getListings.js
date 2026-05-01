@@ -4,6 +4,8 @@ import {BACKEND_URL, IMAGES_URL} from "../config.js"
 import {showToast} from "../toast.js"
 import {setErrorMessage, hideErrorMessage} from "../handleErrorMessage.js"
 
+import {deleteListing, makeAvailable} from "./updateListingStatus.js"
+
 let page = 1;
 let loading = false;
 
@@ -30,7 +32,21 @@ document.addEventListener("DOMContentLoaded", () => {
         container.innerHTML = "";
         loadListings();
     });
+
+    container.addEventListener("click", (e) => {
+        if (e.target.matches(".delete-btn")) {
+            handle_deleteListing(e);
+            console.log("here 37");
+        }
+
+        if (e.target.matches(".list-btn")) {
+            handle_makeAvailable(e)
+            console.log("here 37");
+        }
+    });//onclick="handle_deleteListing(event)"
 });
+
+
 
 
 
@@ -40,11 +56,13 @@ function loadListings(){
 
     loading = true;
 
+
+
     const filterListings = document.getElementById("filterListings").value
 
     //get products
     fetch(`${BACKEND_URL}/listings/getListings.php?page=${page}&filterListings=${filterListings}`, {
-        method : "GET",
+        method : "POST",
         credentials : "include",
     })
     .then(res => res.json())
@@ -62,7 +80,7 @@ function loadListings(){
             container.innerHTML += `
                 <div class="col-12 col-sm-6 col-xl-3">
                     <div class="card shadow-sm">
-                        <img src="${BACKEND_URL}/listings/uploads/${product.productID}_a.jpg" class="card-img-top listingImg">
+                        <img src="${IMAGES_URL}/${product.productID}_a.webp" class="card-img-top listingImg">
 
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title text-nowrap">${product.name}</h5>
@@ -76,7 +94,7 @@ function loadListings(){
                                     </span>
 
                                     <div class="mt-auto d-flex gap-2">
-                                        <button class="btn btn-sm btn-success" data-id="${product.productID}" onclick="handle_makeAvailable(event)">List</button>
+                                        <button class="btn btn-sm btn-success list-btn" data-id="${product.productID}">List</button>
                                     </div>
                                 `
                                 : `
@@ -85,9 +103,9 @@ function loadListings(){
                                     </span>
 
                                     <div class="mt-auto d-flex gap-2">
-                                        <a class="btn btn-sm btn-primary" href="/src/pages/listings/updateListing.html?productID=${product.productID}">Edit</a>
-                                        <button class="btn btn-sm btn-danger" data-id="${product.productID}" onclick="handle_deleteListing(event)">Delete</button>
-                                        <a class="btn btn-sm btn-outline-secondary" href="/src/pages/products/product-view.html?productID=${product.productID}">View</a>
+                                        <a class="btn btn-sm btn-primary" href="./updateListing.html?productID=${product.productID}">Edit</a>
+                                        <button class="btn btn-sm btn-danger delete-btn" data-id="${product.productID}" >Delete</button>
+                                        <a class="btn btn-sm btn-outline-secondary" href="../../pages/products/product-view.html?productID=${product.productID}">View</a>
                                     </div>
                                 `
                             }
@@ -104,12 +122,42 @@ function loadListings(){
 
     }).catch(error =>{
         console.log(error)
-
         //show error message to client
-        document.getElementById("error-box").classList.remove("visually-hidden");
-        document.getElementById("error-message").innerText = error;
+        setErrorMessage(error)
     });
 
+}
+
+
+
+
+function handle_deleteListing(event){
+    if (confirm("Are you sure you want to unlist this item?")) {
+        event.preventDefault()
+        const productID = event.target.dataset.id;//get id from button
+        //delete the item if OK is clicked
+        console.log("Item deleted.");
+
+        deleteListing(productID)
+    } else {
+        //handle cancellation if Cancel is clicked
+        console.log("Action cancelled.");
+    }
+}
+
+
+function handle_makeAvailable(event){
+    if (confirm("Are you sure you want to list this item?")) {
+        event.preventDefault()
+        const productID = event.target.dataset.id;//get id from button
+        //delete the item if OK is clicked
+        console.log("Item listed.");
+
+        makeAvailable(productID)
+    } else {
+        //handle cancellation if Cancel is clicked
+        console.log("Action cancelled.");
+    }
 }
 
 

@@ -10,7 +10,6 @@
     require './session_config.php';//set session details
 
     //delete user session
-    session_unset();
     session_destroy();
 
 

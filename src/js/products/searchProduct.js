@@ -37,17 +37,15 @@ function searchProduct(query){
     if(loading) return;
     loading = true;
 
-    
-
     console.log(query);
 
     //get products form server
-    fetch(`${BACKEND_URL}/products/searchProduct.php?page=${page}&query=${query}`, {
-        method : "GET",
+    fetch(`${BACKEND_URL}/products/searchProduct.php?page=${encodeURIComponent(page)}&query=${encodeURIComponent(query)}`, {
+        method : "POST",
         credentials : "include"
     })
     .then(res => res.json())
-    .then( data =>{
+    .then(data =>{
 
         if(data.success===false){
             //log error on failed
@@ -67,7 +65,7 @@ function searchProduct(query){
                     <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                         <div class="card ">
 
-                            <img src="${BACKEND_URL}/listings/uploads/${product.productID}_a.jpg" class="card-img-top">
+                            <img src="${IMAGES_URL}/${product.image}_a.webp" class="card-img-top">
 
                             <div class="card-body">
 
@@ -77,7 +75,7 @@ function searchProduct(query){
 
                                 <div class="mt-auto">
                                     <button class="btn btn-primary w-100">
-                                        <a class="text-white text-decoration-none" href="/src/pages/products/product-view.html?productID=${product.productID}">View Product</a>
+                                        <a class="text-white text-decoration-none" href="./product-view.html?productID=${product.productID}">View Product</a>
                                     </button>
                                 </div>
                             </div>

@@ -131,7 +131,7 @@
                             my listings
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/src/pages/listings/view-listings.html">view listings</a></li>
+                            <li><a class="dropdown-item" href="./src/pages/listings/view-listings.html">view listings</a></li>
                             <li><a class="dropdown-item" href="./src/pages/listings/new-lisiting.html">New listing</a></li>
                             <li><hr class="dropdown-divider "></li>
                             <li><a class="dropdown-item" href="./src/pages/listings/view-listings.html">Remove listing</a></li>
@@ -233,19 +233,24 @@
 <script>
 
     //implement a search button
-    const searchBtn = document.getElementById("searchBtn")
+    document.addEventListener("DOMContentLoaded", ()=>{
+        const searchBtn = document.getElementById("searchBtn")
+        console.log("init search btn");
 
-    searchBtn.addEventListener("click", ()=>{
-        const query = document.getElementById("searchBox").value
-        
-        //check that we have a value before making request to server
-        if(!query || query.length === 0){
-            console.log({"error" : "invalid search term"});
-            return false;
-        }
+        searchBtn.addEventListener("click", ()=>{
+            console.log("Clicking search btn");
+            const query = document.getElementById("searchBox").value
+            
+            //check that we have a value before making request to server
+            if(!query || query.length === 0){
+                console.log({"error" : "invalid search term"});
+                return false;
+            }
 
-        window.location = `./src/pages/products/search-view.html?query=${query}`  
+            window.location = `./src/pages/products/search-view.html?query=${encodeURIComponent(query)}`  
+        })
     })
+    
 
 
 

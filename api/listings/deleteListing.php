@@ -9,7 +9,7 @@
 
     require '../../config/cors.php';
     require '../../config/protectedRoute.php';
-    require '../../config/dbconn.php';
+    $conn = require '../../config/dbconn.php';
 
     $data = json_decode(file_get_contents("php://input"), true);
 

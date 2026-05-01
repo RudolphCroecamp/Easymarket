@@ -356,7 +356,7 @@ function renderSimilarProducts(products) {
             <div class="card slider-card border-0 shadow-sm">
 
                 <div class="p-2 text-center">
-                    <img src="${BACKEND_URL}/listings/uploads/${product.productID}_a.jpg"
+                    <img src="${IMAGES_URL}/${product.productID}_a.jpg"
                          class="img-fluid"
                          style="height:120px; object-fit:contain;">
                 </div>
@@ -371,7 +371,7 @@ function renderSimilarProducts(products) {
                         R${product.price}
                     </p>
 
-                    <a href="/src/pages/products/product-view.html?productID=${product.productID}"
+                    <a href="./product-view.html?productID=${product.productID}"
                        class="btn btn-sm btn-dark mt-auto w-100">
                         View
                     </a>

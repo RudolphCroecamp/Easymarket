@@ -77,18 +77,23 @@
 </body>
 
 <script>
-    const searchBtn = document.getElementById("searchBtn")
 
-    searchBtn.addEventListener("click", ()=>{
-        const query = document.getElementById("searchBox").value
-        
-        //check that we have a value before making request to server
-        if(!query || query.length === 0){
-            console.log({"error" : "invalid search term"});
-            return false;
-        }
+    document.addEventListener("DOMContentLoaded", ()=>{
+        const searchBtn = document.getElementById("searchBtn")
 
-        window.location = `./search-view.html?query=${query}` 
+        searchBtn.addEventListener("click", ()=>{
+            const query = document.getElementById("searchBox").value
+            
+            //check that we have a value before making request to server
+            if(!query || query.length === 0){
+                console.log({"error" : "invalid search term"});
+                return false;
+            }
+
+            window.location = `./search-view.html?query=${query}` 
+        })   
     })
+
+    
 </script>
 </html>

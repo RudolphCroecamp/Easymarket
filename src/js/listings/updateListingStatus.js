@@ -4,13 +4,21 @@ import {BACKEND_URL} from "../config.js"
 //handle errors
 import {showToast} from "../toast.js"
 import {setErrorMessage, hideErrorMessage} from "../handleErrorMessage.js"
+
+export {deleteListing, makeAvailable}
+
+
+
+
+
+
         
 //make it unavailable 
 function deleteListing(productID) {
     console.log(productID);
-
+    const listing = document.getElementById("makeListingUnavailable")
     //delete products
-    fetch(`${BACKEND_URL}/deleteListing.php`, {
+    fetch(`${BACKEND_URL}/listings/deleteListing.php`, {
         method : "POST",
         credentials : "include",
         body : JSON.stringify({ productID: productID })
@@ -21,9 +29,9 @@ function deleteListing(productID) {
         console.log(data);
 
         if(data.success === true){
-            alert(data.message)
+            showToast(data.message)
         }else{
-            alert(data.error || "Could not delete listing. Try again later.")
+            showToast(data.error || "Could not delete listing. Try again later.")
         }
         
         location.reload();
@@ -36,7 +44,7 @@ function makeAvailable(productID) {
     console.log(productID);
 
     //delete products
-    fetch(`${BACKEND_URL}/makeAvailable.php`, {
+    fetch(`${BACKEND_URL}/listings/makeAvailable.php`, {
         method : "POST",
         credentials : "include",
         body : JSON.stringify({ productID: productID })
