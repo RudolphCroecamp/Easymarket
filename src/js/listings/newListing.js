@@ -86,21 +86,18 @@ form.addEventListener('submit', async e => {
     e.preventDefault();
     hideErrorMessage()
 
-
-    console.log("requesting");
     const title = document.getElementById("title")
     const price = document.getElementById("price")
-    const category = document.getElementById("category")
     const condition = document.getElementById("condition")
     const description = document.getElementById("description")
     const delivery = document.getElementById("delivery")//delivery method
-
-    // console.log(validateInput(title, price, category, condition, description, amountAvailable, delivery));
+    const province = document.getElementById("province")
+    const city = document.getElementById("city")
+    const category = document.getElementById("category")
+    const subcategorySelect = document.getElementById("subcategorySelect")
 
     if(
-        validateInput(title, price, category, condition, description, delivery)
-        &&
-        filesToUpload.length > 0
+        validateInput(title, price, condition, description, delivery, province, city, category, subcategorySelect)
     ){
         const formData = new FormData();
 
@@ -114,6 +111,11 @@ form.addEventListener('submit', async e => {
         formData.append("condition", conditionContainer.value);//default new
         formData.append("description", description.value);
         formData.append("delivery", deliveryContainer.value);
+        formData.append("province", province.value);
+        formData.append("city", city.value);
+        formData.append("category", category.value);
+        formData.append("subcategory", subcategorySelect.value);
+
         //get tags from tagsInput
         const tagsArray = tagify.value.map(tag => tag.value);
 
@@ -134,12 +136,12 @@ form.addEventListener('submit', async e => {
 
                 //redirect back to home screen or show error
                 if(data.success === true){
-                    showToast(data.message)
-                    // window.location = "/"
-                    // document.getElementById("newLisitingForm").reset()
+                    showToast(data.message, "success")
+                    window.location = "/"
+                    form.reset()
                 }else{
                     setErrorMessage(data.error)
-                    showToast(data.message || data.error)
+                    showToast(data.message || data.error, "warning")
                 }
             })
 
@@ -166,8 +168,6 @@ form.addEventListener("reset", ()=>{
 function validateInput(...elements){
     
     for (let elm of elements) {
-        console.log(elm.value);
-
         if(elm.tagName.toLowerCase() === "input" || elm.tagName.toLowerCase() === "textarea"){//check input and textarea elements for value
             if(!elm.value || elm.value.trim().length === 0){
                 elm.focus()
@@ -212,8 +212,6 @@ const subcategorySelect = document.getElementById("subcategorySelect")
 
 //add main categories
 categoryData.categories.forEach((mainCat, index)=>{
-    console.log(index);
-    console.log(mainCat.name);
     const option = document.createElement("option");
     option.value = mainCat.name;
     option.textContent = mainCat.name;
@@ -263,7 +261,6 @@ const citySelect = document.getElementById("city");
 
 //add provices
 locationData.provinces.forEach((name)=>{
-    console.log(name);
     const option = document.createElement("option");
     option.value = name.name;
     option.textContent = name.name;
@@ -272,8 +269,6 @@ locationData.provinces.forEach((name)=>{
 
 
 provinceSelect.addEventListener("change", async () => {
-    console.log(provinceSelect.value);
-
     //disable subcategory select element
     if(provinceSelect.value == "0"){
         //reset to defaults when no option was selected

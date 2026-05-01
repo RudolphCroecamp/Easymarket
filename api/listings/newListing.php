@@ -6,8 +6,6 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
-    // var_dump($_POST);
-
     require '../../config/cors.php';//allow access from webserver
     require '../../config/protectedRoute.php';//user must be authorised
     $conn = require '../../config/dbconn.php';//connect to DB
@@ -27,30 +25,31 @@
     if (!isset(
         $_POST['title'], 
         $_POST['price'],
-        $_POST['category'],
         $_POST['condition'],
         $_POST['description'],
-        $_POST['delivery'], 
+        $_POST['delivery'],
+        $_POST['province'],
+        $_POST['city'],
+        $_POST['category'],
+        $_POST['subcategory']
     ))
     {
         echo json_encode(["error" => "Fill in all fields"]);
         exit;
     }
 
+
     //get data from client
     $title = $_POST['title'];
     $price = $_POST['price'];
-    $category = $_POST['category'];
     $condition = $_POST['condition'];
     $description = $_POST['description'];
     $delivery = $_POST['delivery'];
+    $province = $_POST['province'];
+    $city = $_POST['city'];
+    $category = $_POST['category'];
+    $subcategory = $_POST['subcategory'];
 
-    //quantity defualts to 1 if not provided
-    if (!isset($_POST['quantity']) || $_POST['quantity'] == 0){
-        $quantity = 1;
-    }else{
-        $quantity = $_POST['quantity'];
-    }
 
 
     require_once '../../config/generateGUID.php';//connect to DB
@@ -150,7 +149,6 @@
 
 
 
-    $tags = json_decode($_POST['tags'], true);
 
     //start a transaction so we can revert all inserts if one fails
     $conn->begin_transaction();
@@ -158,10 +156,10 @@
      //add listing details to db
     $insertProductStmt = $conn->prepare("
         INSERT INTO products 
-        (productID, ownerID, name, description, price, category, sold, deleted, `condition`, delivery) 
-        VALUES (?,?,?,?,?,?, FALSE, FALSE, ?,?)
+        (productID, ownerID, name, description, price, sold, deleted, `condition`, delivery, province, city, category, subcategory) 
+        VALUES (?,?,?,?,?, FALSE, FALSE, ?, ?, ?, ?, ?, ?)
     ");
-    
+
 
     // Prepare statements
     $insertTagStmt = $conn->prepare("
@@ -188,39 +186,50 @@
         $ownerID = $_SESSION['userID'];
 
         $insertProductStmt->bind_param(
-            "ssssdsss", 
-            $productID, $ownerID, $title, $description, $price, $category, $condition, $delivery
+            "ssssdssssss", 
+            $productID, $ownerID, $title, $description, $price, $condition, $delivery, $province, $city, $category, $subcategory
         );
 
         $insertProductStmt->execute();
+        
+        //check if we have tags - tags are optional
+        try {
+            if(isset($_POST['tags']) && !empty($_POST['tags'])){
 
-        //add all tags to tags database
-        foreach ($tags as $tag) {
-
-            //Clean tag
-            $cleanTag = strtolower(trim($tag));
-
-            if ($cleanTag === '') continue;
-
-            //Insert or reuse tag
-            $insertTagStmt->bind_param("s", $cleanTag);
-            $insertTagStmt->execute();
-
-            //Get tag ID
-            $tagID = $conn->insert_id;
-
-            //Link product to tag
-            $insertProductTagStmt->bind_param("si", $productID, $tagID);
-            $insertProductTagStmt->execute();
+                //we have tags
+                $tags = json_decode($_POST['tags'], true);
             
-            $imgPosition = 1;
-            foreach ($uploadedFiles as $filePath) {
-                $isPrimary = $imgPosition == 1 ? 1 : 0;
-                $insertImageStmt->bind_param("ssii", $productID, $filePath, $imgPosition, $isPrimary);
-                $insertImageStmt->execute();
+                //add all tags to tags database
+                foreach ($tags as $tag) {
 
-                $imgPosition++;
+                    //Clean tag
+                    $cleanTag = strtolower(trim($tag));
+
+                    if ($cleanTag === '') continue;
+
+                    //Insert or reuse tag
+                    $insertTagStmt->bind_param("s", $cleanTag);
+                    $insertTagStmt->execute();
+
+                    //Get tag ID
+                    $tagID = $conn->insert_id;
+
+                    //Link product to tag
+                    $insertProductTagStmt->bind_param("si", $productID, $tagID);
+                    $insertProductTagStmt->execute();
+                    
+                    $imgPosition = 1;
+                    foreach ($uploadedFiles as $filePath) {
+                        $isPrimary = $imgPosition == 1 ? 1 : 0;
+                        $insertImageStmt->bind_param("ssii", $productID, $filePath, $imgPosition, $isPrimary);
+                        $insertImageStmt->execute();
+
+                        $imgPosition++;
+                    }
+                }
             }
+        } catch (\Throwable $th) {
+            throw $th;
         }
 
         $conn->commit();

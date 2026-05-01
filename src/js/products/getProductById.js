@@ -161,7 +161,7 @@ async function loadProducts(){
                                 </span>
 
                                 <span class="badge bg-light text-dark" id="setLocation">
-                                    📍 ${product.location || "Port Elizabeth, Eastern Cape"}
+                                    📍 ${product.province + ", " + product.city || "Port Elizabeth, Eastern Cape"}
                                 </span>
 
                             </div>
@@ -186,12 +186,10 @@ async function loadProducts(){
             const mainImage = document.getElementById("mainImage");
             const imgcontainer = document.getElementById("thumbnailContainer");
 
-            //let letter = "a";
             const images = []
 
             for (let i = 0; i < product.imageCount; i++) {
                 images.push(`${IMAGES_URL}/${product.images[i]}`);
-                //letter = String.fromCharCode(letter.charCodeAt(0) + 1);//next letter in alphabet
             }
 
             // set first image
@@ -216,9 +214,6 @@ async function loadProducts(){
                 col.appendChild(img);
                 imgcontainer.appendChild(col);
             });
-
-            //set the location for the product using the sellers latitude and longitude
-            setCityFromGPS(product.latitude, product.longitude)
 
             //get similar products
             await getSimilarProducts(product.category)
@@ -274,39 +269,6 @@ async function loadProducts(){
 
 
 
-function setCityFromGPS() {
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-        const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`
-        );
-
-        const data = await res.json();
-
-        console.log(data);
-
-        const city = data.address.city ||
-            data.address.town ||
-            data.address.village ||
-            "Unknown"
-
-        let location = "Unknown"
-        
-        if(data.address.county && data.address.state){
-            location = (data.address.county + ", " + data.address.state) 
-        }
-
-        console.log(city);
-
-        // document.getElementById("setLocation").innerHTML = `<strong>Location:</strong> ${city}` 
-        document.getElementById("setLocation").innerHTML = `${location}` 
-    })
-
-}
-
-
-
-
-
 
 async function getSimilarProducts(category){
     fetch(`${BACKEND_URL}/products/similarProducts.php?category=${category}`, {
@@ -318,7 +280,12 @@ async function getSimilarProducts(category){
         console.log(data);
 
         //load similar products
-        renderSimilarProducts(data.products)
+        if(data.success === true){
+            renderSimilarProducts(data.products)   
+        }else{
+            throw new Error(data.error || "No similar products found");
+        }
+        
     })
     .catch(error =>{
         console.log(error)
@@ -348,6 +315,13 @@ document.getElementById("scrollRight").addEventListener("click", () => {
 
 
 function renderSimilarProducts(products) {
+    //prevent if no products was passed
+    if(!products || products.length <=0){
+        return
+    }
+
+    console.log(products);
+
     const container = document.getElementById("similarProductsContainer");
     container.innerHTML = "";
 
@@ -458,11 +432,7 @@ async function loadComments(productID, page=1){
         console.log(data.comments);
 
         if (data.success == false) {
-            console.log(error)
-            //show error message to client
-            document.getElementById("error-box").classList.remove("visually-hidden");
-            document.getElementById("error-message").innerText = error;
-            return
+            throw new Error(data.error || "This product has no reviews")
         }
 
         const commentsContainer = document.getElementById("commentsContainer")
