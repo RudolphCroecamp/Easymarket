@@ -6,6 +6,7 @@ import {setErrorMessage, hideErrorMessage} from "../handleErrorMessage.js"
 
 import categoryData_init from "../loadData/categories.js";
 import locationData_init from "../loadData/locations.js";
+import { searchAddresses } from "../locationServices.js";
 
 const dropArea = document.getElementById('drop-area');
 const fileInput = document.getElementById('images');
@@ -83,7 +84,7 @@ function addFiles(files) {
 //handle listing details upload
 const form = document.getElementById('newLisitingForm');
 
-form.addEventListener('submit', async e => {
+form.addEventListener('submit', async(e) => {
     e.preventDefault();
     hideErrorMessage()
 
@@ -95,11 +96,20 @@ form.addEventListener('submit', async e => {
     const province = document.getElementById("province")
     const city = document.getElementById("city")
     const category = document.getElementById("category")
-    const subcategorySelect = document.getElementById("subcategorySelect")
+    const subcategory = document.getElementById("subcategory")
 
     if(
-        validateInput(title, price, condition, description, delivery, province, city, category, subcategorySelect)
+        validateInput(title, price, condition, description, delivery, province, city, category, subcategory)
     ){
+        //get coordinates of user from dropdown boxes
+        const query = province.value + " " + city.value
+        const data = await searchAddresses(query)
+        const {lat, lon} = data[0]
+
+        if(!lat || !lon){
+            throw new Error("Could not get coordinates");
+        }
+
         const formData = new FormData();
 
         // append only dragged/selected files manually
@@ -115,7 +125,9 @@ form.addEventListener('submit', async e => {
         formData.append("province", province.value);
         formData.append("city", city.value);
         formData.append("category", category.value);
-        formData.append("subcategory", subcategorySelect.value);
+        formData.append("subcategory", subcategory.value);
+        formData.append("latitude", lat);
+        formData.append("longitude", lon);
 
         //get tags from tagsInput
         const tagsArray = tagify.value.map(tag => tag.value);

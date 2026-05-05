@@ -1,5 +1,5 @@
 import {BACKEND_URL} from "../config.js"
-import isAuthed from "./isAuthed.js"
+// import isAuthed from "./isAuthed.js"
 
 //load more products as you reach the end
 window.addEventListener("load", async () => {
@@ -9,51 +9,63 @@ window.addEventListener("load", async () => {
 });
 
 
+document.addEventListener("DOMContentLoaded", ()=>{
+    const loginForm = document.getElementById("loginForm");
+    console.log(loginForm);
 
+    loginForm.addEventListener("submit", (e) => {
+        console.log("running");
+        e.preventDefault();
+        hideErrorMessage()
 
-const loginForm = document.getElementById("loginForm");
+        console.log("requesting");
+        const email = document.getElementById("email")
+        const password = document.getElementById("password")
 
-loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    hideErrorMessage()
-
-    console.log("requesting");
-    const email = document.getElementById("email")
-    const password = document.getElementById("password")
-
-    if(
-        validateInput(email, password) 
-        && 
-        validateEmail(email.value)
-    )
-    {
-        //get data
-        const formData = new FormData(loginForm)
-
-        console.log(formData);
-
-        //submit inputs to backend after fields have been validated
-        fetch(`${BACKEND_URL}/Auth/login.php`,
-            {
-                method : "POST",
-                credentials: "include",
-                body : formData
-            }
+        if(
+            validateInput(email, password) 
+            && 
+            validateEmail(email.value)
         )
-        .then(res => res.json())
-        .then(data =>{
-            console.log(data);
+        {
+            //get data
+            const formData = new FormData(loginForm)
 
-            if(data.success === true){
-                //valid user credentials
-                window.location = "/" //go back to home directory
-            }else{
-                //invalid user credentials
-                setErrorMessage(data.error)
-            }
-        })
-    }
-});
+            console.log(formData);
+
+            //submit inputs to backend after fields have been validated
+            fetch(`${BACKEND_URL}/Auth/login.php`,
+                {
+                    method : "POST",
+                    credentials: "include",
+                    body : formData,
+                }
+            )
+            .then(res => res.json())
+            .then(data =>{
+                console.log(data);
+
+                if(data.success === true){
+                    //valid user credentials
+                    window.location = "/" //go back to home directory
+                }else{
+                    //invalid user credentials
+                    setErrorMessage(data.error)
+                }
+            }).catch(error=>{
+                console.log(error);
+            })
+        }
+    });
+})
+
+
+
+
+
+
+
+
 
 
 

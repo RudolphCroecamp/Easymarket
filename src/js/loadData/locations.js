@@ -11,8 +11,6 @@ async function locationData_init(){
     try {
         const locationData = await loadLocationData()
 
-        console.log(locationData);
-
         if(!locationData || !locationData.provinces){
             throw new Error("Could not load locationData");
         }
@@ -34,7 +32,6 @@ async function loadLocationData() {
     try {
         const response = await fetch(`/${BASE_PATH}/src/js/loadData/locations.json`);
         const data = await response.json();
-        console.log(data);
         return data;
     } catch (err) {
         console.error(err);
@@ -43,8 +40,6 @@ async function loadLocationData() {
 
 //populate containers
 function popMainContiner_loc(locationData){
-
-    console.log(locationData);
     //add provinces
     locationData.provinces.forEach((name)=>{
         const option = document.createElement("option");

@@ -10,16 +10,78 @@
     //require '../../config/protectedRoute.php';//user must be authorised
     $conn = require '../../config/dbconn.php';//connect to DB
 
+    
+
+    $jsonData = json_decode(file_get_contents('php://input'),true);
+
     // Get page number from client
-    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $page = isset($jsonData['page']) ? (int)$jsonData['page'] : 1;
     $limit = 20;
 
     // Calculate offset
     $offset = ($page - 1) * $limit;
+    //check if data is set and not empty
+    if (!isset($jsonData["min"], $jsonData["max"], $jsonData["lat"], $jsonData["long"], $jsonData["radius"])) {
+        echo json_encode([
+                "status" => "failed",
+                "success" => false,
+                "error" => "Fill in all fields",
+                "fields" => $jsonData
+            ]);
+            exit;
+    }
 
-    //select only available products
-    $getProductsStmt = $conn->prepare("SELECT * FROM products WHERE deleted = FALSE ORDER BY name ASC LIMIT ? OFFSET ?");
-    $getProductsStmt->bind_param("ii", $limit, $offset);
+    $minPrice = (int)$jsonData["min"];
+    $maxPrice = (int)$jsonData["max"];
+    $lat = (float)$jsonData["lat"];
+    $long = (float)$jsonData["long"];
+    $radius = (int)$jsonData["radius"];
+
+    $minDistance = 0;
+
+    $cacheDir = __DIR__ . "/cache";
+    if (!is_dir($cacheDir)) {
+        mkdir($cacheDir, 0777, true);
+    }
+
+    $cacheKey = md5("$lat-$long-$radius-$minPrice-$maxPrice-$page");
+    $cacheFile = $cacheDir . "/$cacheKey.json";
+
+    // check cache
+    if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 60) {
+        echo json_encode([
+            "status" => "success",
+            "success" => true,
+            "products" => json_decode(file_get_contents($cacheFile), true)
+        ]);
+        exit;
+    }
+
+
+    //select only available products in close radius
+
+    $sql = 
+        "SELECT *,
+        (6371 * ACOS(
+            COS(RADIANS(?)) *
+            COS(RADIANS(latitude)) *
+            COS(RADIANS(longitude) - RADIANS(?)) +
+            SIN(RADIANS(?)) *
+            SIN(RADIANS(latitude))
+        )) AS distance
+        FROM products
+        WHERE price BETWEEN ? AND ?
+        HAVING distance BETWEEN ? AND ?
+        ORDER BY distance ASC
+        LIMIT ? OFFSET ?
+        ";
+
+    $getProductsStmt = $conn->prepare($sql);
+
+    $getProductsStmt->bind_param(
+        "dddiiiiii", $lat, $long, $lat, $minPrice, $maxPrice, $minDistance, $radius, $limit, $offset
+    );
+
     $getProductsStmt->execute();
 
     //get data from db
@@ -55,9 +117,21 @@
         echo json_encode([
             "status" => "success",
             "success" => true,
-            "products" => $products
+            "products" => $products,
+            "fields" => $jsonData
+        ]);
+
+        file_put_contents($cacheFile, json_encode($products));
+    }else{
+        echo json_encode([
+            "status" => "failed",
+            "success" => false,
+            "error" => "No products found",
+            "fields" => $jsonData
         ]);
     }
+
+    
 
 
     

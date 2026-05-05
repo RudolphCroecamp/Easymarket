@@ -31,7 +31,9 @@
         $_POST['province'],
         $_POST['city'],
         $_POST['category'],
-        $_POST['subcategory']
+        $_POST['subcategory'],
+        $_POST['latitude'],
+        $_POST['longitude']
     ))
     {
         echo json_encode(["error" => "Fill in all fields"]);
@@ -49,6 +51,8 @@
     $city = $_POST['city'];
     $category = $_POST['category'];
     $subcategory = $_POST['subcategory'];
+    $latitude = $_POST['latitude'];
+    $longitude = $_POST['longitude'];
 
 
 
@@ -156,7 +160,7 @@
      //add listing details to db
     $insertProductStmt = $conn->prepare("
         INSERT INTO products 
-        (productID, ownerID, name, description, price, sold, deleted, `condition`, delivery, province, city, category, subcategory) 
+        (productID, ownerID, name, description, price, sold, deleted, `condition`, delivery, category, subcategory, latitude, longitude) 
         VALUES (?,?,?,?,?, FALSE, FALSE, ?, ?, ?, ?, ?, ?)
     ");
 
@@ -186,8 +190,8 @@
         $ownerID = $_SESSION['userID'];
 
         $insertProductStmt->bind_param(
-            "ssssdssssss", 
-            $productID, $ownerID, $title, $description, $price, $condition, $delivery, $province, $city, $category, $subcategory
+            "ssssdssssdd", 
+            $productID, $ownerID, $title, $description, $price, $condition, $delivery, $category, $subcategory, $latitude, $longitude
         );
 
         $insertProductStmt->execute();

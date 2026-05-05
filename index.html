@@ -16,22 +16,12 @@
     <script defer type="module" src="./src/js/toast.js"></script>
     <script defer type="module" src="./src/js/handleErrorMessage.js"></script>
 
+
+    <!-- price range slider -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.js"></script> -->
+
     <style>
-        .listingImg {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-        .product-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-        }
-
-
         #chatMessages {
             background: #f8f9fa;
         }
@@ -101,13 +91,66 @@
             overflow-y: auto;
         }
 
-        .testMt{
+        .marginTop{
             margin-top: 7rem !important; 
         }
+
+        /* #priceSlider {
+            height: 6px;
+        } */
+
+        .card {
+            transition: box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        .smallertd{
+            max-width: 200px;
+        }
+
+
+
+        .product-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-radius: 14px;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .product-image-wrapper {
+            width: 100%;
+            height: 200px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image {
+            max-height: 100%;
+            object-fit: contain;
+
+            opacity: 0;
+            filter: blur(8px);
+            transition: all 0.4s ease;
+        }
+
+        .product-image.loaded {
+            opacity: 1;
+            filter: blur(0);
+        }
+
     </style>
     
 </head>
-<body>
+<body class="bg-body-tertiary">
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark sticky-top">
         <div class="container-fluid d-flex flex-wrap row">
             <a class="navbar-brand col-6 col-sm-6" href="/">Logo</a>
@@ -156,64 +199,78 @@
     </nav>
 
     <div class="container-fluid mt-4">
-        <div class="row">
-            <!-- LEFT SIDEBAR -->
-            <div class="col-12 col-md-3 col-lg-2 mb-4">
-                <div class="card p-3 shadow-sm">
 
-                    <h5 class="mb-3">Filters</h5>
+    <!-- FILTER BAR -->
+    <div class="container my-3">
+        <div class="card border-0 shadow-sm rounded-4 p-2 p-md-3">
 
-                    <!-- PRICE FILTER -->
-                    <label for="priceRange" class="form-label">Max Price</label>
-                    <input type="range" class="form-range" min="0" max="10000" step="100" id="priceRange">
-                    <div class="d-flex justify-content-between">
-                        <small>R0</small>
-                        <small id="priceValue">R5000</small>
+            <div class="row g-2 align-items-end justify-content-center">
+
+                <!-- PRICE -->
+                <div class="col-12 col-md-5">
+                    <label class="form-label fw-semibold small text-muted">
+                        Price Range
+                    </label>
+
+                    <div class="d-flex gap-2">
+
+                        <!-- MIN -->
+                        <div class="form-floating w-50">
+                            <input 
+                                type="number" 
+                                id="minPriceInput"
+                                class="form-control form-control-sm"
+                                placeholder="Min (R)"
+                                value="0"
+                            >
+                            <label for="minPriceInput">Min (R)</label>
+                        </div>
+
+                        <!-- MAX -->
+                        <div class="form-floating w-50">
+                            <input 
+                                type="number" 
+                                id="maxPriceInput"
+                                class="form-control form-control-sm"
+                                placeholder="Max (R)"
+                                value="50000"
+                            >
+                            <label for="maxPriceInput">Max (R)</label>
+                        </div>
+
                     </div>
-
-                    <hr>
-
-                    <!-- PROVINCE -->
-                    <label class="form-label">Province</label>
-                    <select class="form-select mb-3" id="province">
-                        <option value="0">Select Province</option>
-                    </select>
-
-                    <!-- CITY -->
-                    <label class="form-label">City</label>
-                    <select class="form-select mb-3" id="city" disabled>
-                        <option value="0">Select City</option>
-                    </select>
-
-                    <button class="btn btn-primary w-100" id="applyFilters">
-                        Apply Filters
-                    </button>
-
                 </div>
 
-                
+                <!-- LOCATION + RADIUS BUTTON -->
+                <div class="col-12 col-md-4">
+                    <button 
+                        class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#locationModal"
+                    >
+                        📍 Location & Radius
+                    </button>
+                </div>
             </div>
 
-            <!-- RIGHT CONTENT -->
-                <div class="col-12 col-md-9 col-lg-10">
-
-                    <!-- Products -->
-                    <div class="row g-4" id="products-container"></div>
-
-                    <!-- Loader -->
-                    <div class="d-flex justify-content-center mt-5">
-                        <div class="spinner-border" role="status" id="loading">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-
-                </div>
         </div>
+    </div>
+
+        <!-- PRODUCTS -->
+        <div class="row g-4" id="products-container"></div>
+
+        <!-- LOADER -->
+        <div class="d-flex justify-content-center mt-5">
+            <div class="spinner-border" role="status" id="loading">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
     </div>
 
 
     <!-- Offcanvas (Right Side Nav) -->
-    <div class="offcanvas offcanvas-end rounded me-2 my-5 testMt" data-bs-scroll="true" data-bs-backdrop="false"  tabindex="-1" id="contactPanel">
+    <div class="offcanvas offcanvas-end rounded me-2 my-5 marginTop" data-bs-scroll="true" data-bs-backdrop="false"  tabindex="-1" id="contactPanel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title">Chat</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
@@ -268,6 +325,59 @@
 
 
 
+    <!-- LOCATION MODAL -->
+    <div class="modal fade" id="locationModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4">
+
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">Set Location</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <!-- LOCATION INPUT -->
+                    <label class="form-label small text-muted">Location</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-white">📍</span>
+                        <input 
+                            id="addressInput"
+                            type="text"
+                            class="form-control"
+                            placeholder="Enter city or area..."
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <ul id="addressDropdown" class="dropdown-menu w-100 mt-1 shadow-sm"></ul>
+
+                    <!-- RADIUS -->
+                    <label class="form-label small text-muted mt-3">Radius (KM)</label>
+                    <input 
+                        type="number"
+                        id="radiusInput"
+                        class="form-control"
+                        placeholder="e.g. 60"
+                    >
+
+                </div>
+
+                <div class="modal-footer border-0">
+                    <button class="btn btn-light" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" data-bs-dismiss="modal" id="submitLocation">
+                        Save
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
 </body>
 
 <script>
@@ -275,7 +385,6 @@
     //implement a search button
     document.addEventListener("DOMContentLoaded", ()=>{
         const searchBtn = document.getElementById("searchBtn")
-        console.log("init search btn");
 
         searchBtn.addEventListener("click", ()=>{
             console.log("Clicking search btn");

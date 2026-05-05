@@ -42,8 +42,6 @@ async function loadCategoryData() {
     const response = await fetch(`/${BASE_PATH}/src/js/loadData/categoryOptions.json`);
     const data = await response.json();
 
-    console.log(data);
-
     return data;
   } catch (err) {
     console.error(err);
@@ -69,7 +67,6 @@ function popMainContiner_cat(categoryData){
 
 function popSubContiner_onselect__cat(categoryData){
     //disable subcategory select element
-    console.log(categoryData);
     if(mainContainer.value == "0"){
         //reset to defaults when no option was selected
         subContainer.disabled = true;

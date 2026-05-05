@@ -359,7 +359,7 @@ function renderSimilarProducts(products) {
 
 
 
-
+//handle reviews
 let selectedRating = 0;
 
 const stars = document.querySelectorAll("#starRating i");
@@ -511,18 +511,3 @@ function getMonthFromInt(month_num) {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-//amount = amount input box
-function handleCheckout(){
-    //handle checkout
-}
