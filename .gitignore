@@ -1,5 +1,7 @@
 .env
-/vendor
-/config/ca.pem
-.oci
-.oci/config
+vendor/
+
+cache/
+uploads/
+
+*.pem

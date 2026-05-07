@@ -51,7 +51,7 @@
     $cacheFile = $cacheDir . "/$cacheKey.json";
 
     // check cache
-    if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 60) {
+    if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 120) {
         echo json_encode([
             "status" => "success",
             "success" => true,

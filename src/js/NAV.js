@@ -7,47 +7,107 @@ navContainer.innerHTML = NAV()
 function NAV(){
     return(
     `
-    <div class="container-fluid d-flex flex-wrap row">
-        <a class="navbar-brand col-6 col-sm-6" href="/">Logo</a>
+        <div class="container-fluid flex-column">
 
-        <button class="navbar-toggler col-2 col-sm-5 me-2" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <!-- TOP BAR -->
+        <div class="w-100 d-flex align-items-center justify-content-between py-2">
 
-        <div class="collapse navbar-collapse col-2 col-sm-5" id="mynavbar">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link btn-link active" href="/">Home</a>
-                </li>
+            <!-- LEFT -->
+            <a class="navbar-brand d-flex align-items-center gap-2 m-0" href="/">
+                <img 
+                    src="/src/assets/logo.png"
+                    alt="Logo"
+                    width="42"
+                    height="42"
+                    class="rounded-circle border border-light object-fit-cover"
+                >
+                <span class="fw-bold text-white fs-5">
+                    EasyMarket
+                </span>
+            </a>
 
-                <!-- Trigger (Contact Item) -->
-                <li class="nav-item">
-                    <button class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#contactPanel">
-                        Open Contact
+            <!-- RIGHT SIDE -->
+            <div class="d-flex align-items-center gap-2">
+
+                <!-- ✅ MESSAGES (ALWAYS OUTSIDE BURGER) -->
+                <button 
+                    class="btn btn-outline-light d-flex align-items-center gap-1"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#contactPanel"
+                >
+                    <i class="bi bi-chat-dots-fill"></i>
+                    <span class="d-none d-sm-inline">Messages</span>
+                </button>
+
+                <!-- ☰ BURGER DROPDOWN -->
+                <div class="dropdown">
+
+                    <button 
+                        class="navbar-toggler border-0 shadow-none"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        <span class="navbar-toggler-icon"></span>
                     </button>
-                </li>
 
-                <!-- Trigger (listing dropdown) -->
-                <li class="dropdown">
-                    <button class="nav-link btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        my listings
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/src/pages/listings/view-listings.html">view listings</a></li>
-                        <li><a class="dropdown-item" href="/src/pages/listings/new-lisiting.html">New listing</a></li>
-                        <li><hr class="dropdown-divider "></li>
-                        <li><a class="dropdown-item" href="/src/pages/listings/view-listings.html">Remove listing</a></li>
+                    <!-- MENU -->
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark shadow-lg border-0 mt-3">
+
+                        <li>
+                            <a class="dropdown-item" href="/src/pages/listings/new-lisiting.html">
+                                New Listing
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="/src/pages/listings/view-listings.html">
+                                View Listings
+                            </a>
+                        </li>
+
+                        <li><hr class="dropdown-divider"></li>
+
+                        <li>
+                            <a class="dropdown-item" href="/src/pages/settings/settings.html">
+                                Settings
+                            </a>
+                        </li>
+
+                        <li><hr class="dropdown-divider"></li>
+
+                        <li>
+                            <a class="dropdown-item text-danger" href="/src/pages/auth/logout.html">
+                                Logout
+                            </a>
+                        </li>
+
                     </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/src/pages/auth/logout.html">logout</a>
-                </li>
-            </ul>
+
+                </div>
+
+            </div>
         </div>
 
-        <div class="d-flex col-12 col-sm-10 col-md-6 col-lg-4 mt-2">
-            <input class="form-control me-2" id="searchBox" type="text" placeholder="Search">
-            <button class="btn btn-primary" id="searchBtn">Search</button>
+        <!-- SEARCH -->
+        <div class="w-100 pb-3">
+            <div class="d-flex col-12 col-sm-10 col-md-7 col-lg-5 mx-auto mt-2">
+
+                <input 
+                    class="form-control me-2 rounded-3 px-3"
+                    id="searchBox"
+                    type="text"
+                    placeholder="Search..."
+                >
+
+                <button 
+                    class="btn btn-primary rounded-3 px-4"
+                    id="searchBtn"
+                >
+                    Search
+                </button>
+
+            </div>
         </div>
 
     </div>

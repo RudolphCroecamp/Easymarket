@@ -29,55 +29,13 @@
     <script defer type="module" src="src/js/toast.js"></script>
     <script defer type="module" src="src/js/handleErrorMessage.js"></script>
 
-
-    <style>
-        #drop-area {
-            background: #f8f9fa;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: background 0.2s;
-        }
-
-        #drop-area.dragover {
-            background: #e2e6ea;
-        }
-
-        .preview-item {
-            position: relative;
-            display: inline-block;
-        }
-
-        .preview-item img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .remove-btn {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: red;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
 </head>
 
 <body class="bg-body-tertiary">
     
-    <nav id="NAV" class="navbar navbar-expand-sm navbar-dark bg-dark sticky-top">
-        <!--  Nav added here -->
+    <!-- NAVBAR -->
+    <nav id="NAV" class="navbar navbar-dark bg-dark sticky-top shadow-sm border-bottom">
+        <!-- Nav comes here -->
     </nav>
 
     <div class="container d-flex justify-content-center mt-5">
@@ -246,6 +204,30 @@
             </div>
         </div>
     </div>
+
+
+
+<script>
+
+    //implement a search button
+    document.addEventListener("DOMContentLoaded", ()=>{
+        const searchBtn = document.getElementById("searchBtn")
+
+        searchBtn.addEventListener("click", ()=>{
+            console.log("Clicking search btn");
+            const query = document.getElementById("searchBox").value
+            
+            //check that we have a value before making request to server
+            if(!query || query.length === 0){
+                console.log({"error" : "invalid search term"});
+                return false;
+            }
+
+            window.location = `/src/pages/products/search-view.html?query=${encodeURIComponent(query)}`  
+        })
+    })
+
+</script>
 
 
 </body>

@@ -1,124 +1,211 @@
 #chatMessages {
-            background: #f8f9fa;
-        }
+    background: #f8f9fa;
+}
 
-        .message {
-            max-width: 75%;
-            padding: 8px 12px;
-            border-radius: 12px;
-            margin-bottom: 8px;
-        }
+.message {
+    max-width: 75%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+}
 
-        .message.sent {
-            background: #0d6efd;
-            color: white;
-            margin-left: auto;
-        }
+.message.sent {
+    background: #0d6efd;
+    color: white;
+    margin-left: auto;
+}
 
-        .message.received {
-            background: #e9ecef;
-        }
-
-
-        #chatMessages {
-            background: #f8f9fa;
-        }
-
-        /* Chat item */
-        .chat-item {
-            cursor: pointer;
-            border-bottom: 1px solid #eee;
-            transition: background 0.2s ease;
-        }
-
-        .chat-item:hover {
-            background: #f1f3f5;
-        }
-
-        /* Avatar */
-        .chat-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        /* Title */
-        .chat-title {
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
-
-        /* Message preview */
-        .chat-preview {
-            font-size: 0.85rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* Date */
-        .chat-date {
-            font-size: 0.75rem;
-        }
-
-        #chatMessagesContainer {
-            height: 400px; /* or whatever fits your modal */
-            overflow-y: auto;
-        }
-
-        .marginTop{
-            margin-top: 7rem !important; 
-        }
-
-        /* #priceSlider {
-            height: 6px;
-        } */
-
-        .card {
-            transition: box-shadow 0.2s ease;
-        }
-
-        .card:hover {
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-        }
-
-        .smallertd{
-            max-width: 200px;
-        }
+.message.received {
+    background: #e9ecef;
+}
 
 
+#chatMessages {
+    background: #f8f9fa;
+}
 
-        .product-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border-radius: 14px;
-            cursor: pointer;
-        }
+/* Chat item */
+.chat-item {
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s ease;
+}
 
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-        }
+.chat-item:hover {
+    background: #f1f3f5;
+}
 
-        .product-image-wrapper {
-            width: 100%;
-            height: 200px;
-            background: #f8f9fa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+/* Avatar */
+.chat-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 
-        .product-image {
-            max-height: 100%;
-            object-fit: contain;
+/* Title */
+.chat-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
 
-            opacity: 0;
-            filter: blur(8px);
-            transition: all 0.4s ease;
-        }
+/* Message preview */
+.chat-preview {
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
-        .product-image.loaded {
-            opacity: 1;
-            filter: blur(0);
-        }
+/* Date */
+.chat-date {
+    font-size: 0.75rem;
+}
+
+#chatMessagesContainer {
+    height: 400px; /* or whatever fits your modal */
+    overflow-y: auto;
+}
+
+.marginTop{
+    margin-top: 7rem !important; 
+}
+
+/* #priceSlider {
+    height: 6px;
+} */
+
+.card {
+    transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.smallertd{
+    max-width: 200px;
+}
+
+
+
+.product-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 14px;
+    cursor: pointer;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.product-image-wrapper {
+    width: 100%;
+    height: 200px;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-image {
+    max-height: 100%;
+    object-fit: contain;
+
+    opacity: 0;
+    filter: blur(8px);
+    transition: all 0.4s ease;
+}
+
+.product-image.loaded {
+    opacity: 1;
+    filter: blur(0);
+}
+
+
+
+#drop-area {
+    background: #f8f9fa;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+#drop-area.dragover {
+    background: #e2e6ea;
+}
+
+.preview-item {
+    position: relative;
+    display: inline-block;
+}
+
+.preview-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.remove-btn {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#drop-area {
+    background: #f8f9fa;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+#drop-area.dragover {
+    background: #e2e6ea;
+}
+
+.preview-item {
+    position: relative;
+    display: inline-block;
+}
+
+.preview-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.remove-btn {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
