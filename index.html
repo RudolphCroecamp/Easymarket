@@ -4,22 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Easymarket-Home</title>
-    <script type="module" src="./src/js/auth/isAuthed.js" ></script>
+
+
+    <script type="module" src="/src/js/auth/isAuthed.js" ></script>
+
+    <link rel="stylesheet" href="/src/css/styles.css">
+
+    <script defer src="/src/js/NAV.js"></script>
+    
 
     <link defer href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
-    <script defer type="module" src="./src/js/products/getProducts.js"></script>
+    <script defer type="module" src="/src/js/products/getProducts.js"></script>
 
-    <script defer type="module" src="./src/js/improved_messages/chatList.js"></script>
+    <script defer type="module" src="/src/js/improved_messages/chatList.js"></script>
 
-    <script defer type="module" src="./src/js/toast.js"></script>
-    <script defer type="module" src="./src/js/handleErrorMessage.js"></script>
+    <script defer type="module" src="/src/js/toast.js"></script>
+    <script defer type="module" src="/src/js/handleErrorMessage.js"></script>
 
-
-    <!-- price range slider -->
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.js"></script> -->
 
     <style>
         #chatMessages {
@@ -151,51 +154,8 @@
     
 </head>
 <body class="bg-body-tertiary">
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark sticky-top">
-        <div class="container-fluid d-flex flex-wrap row">
-            <a class="navbar-brand col-6 col-sm-6" href="/">Logo</a>
-
-            <button class="navbar-toggler col-2 col-sm-5 me-2" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse col-2 col-sm-5" id="mynavbar">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link btn-link active" href="/">Home</a>
-                    </li>
-
-                    <!-- Trigger (Contact Item) -->
-                    <li class="nav-item">
-                        <button class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#contactPanel">
-                            Open Contact
-                        </button>
-                    </li>
-
-                    <!-- Trigger (listing dropdown) -->
-                    <li class="dropdown">
-                        <button class="nav-link btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            my listings
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="./src/pages/listings/view-listings.html">view listings</a></li>
-                            <li><a class="dropdown-item" href="./src/pages/listings/new-lisiting.html">New listing</a></li>
-                            <li><hr class="dropdown-divider "></li>
-                            <li><a class="dropdown-item" href="./src/pages/listings/view-listings.html">Remove listing</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="./src/pages/auth/logout.html">logout</a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="d-flex col-12 col-sm-10 col-md-6 col-lg-4 mt-2">
-                <input class="form-control me-2" id="searchBox" type="text" placeholder="Search">
-                <button class="btn btn-primary" id="searchBtn">Search</button>
-            </div>
-
-        </div>
+    <nav id="NAV" class="navbar navbar-expand-sm navbar-dark bg-dark sticky-top">
+        <!--  Nav added here -->
     </nav>
 
     <div class="container-fluid mt-4">
@@ -396,7 +356,7 @@
                 return false;
             }
 
-            window.location = `./src/pages/products/search-view.html?query=${encodeURIComponent(query)}`  
+            window.location = `/src/pages/products/search-view.html?query=${encodeURIComponent(query)}`  
         })
     })
     
@@ -404,4 +364,5 @@
 
 
 </script>
+
 </html>

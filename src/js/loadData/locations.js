@@ -2,7 +2,7 @@ export default locationData_init
 
 export {loadLocationData, popMainContiner_loc, popSubContainer_onselect_loc}
 
-const BASE_PATH = window.location.pathname.split("/")[1];
+// const BASE_PATH = window.location.pathname.split("/")[1];
 
 const mainContainer = document.getElementById("province")
 const subContainer = document.getElementById("city")
@@ -30,7 +30,7 @@ async function locationData_init(){
 //get data from locations.json
 async function loadLocationData() {
     try {
-        const response = await fetch(`/${BASE_PATH}/src/js/loadData/locations.json`);
+        const response = await fetch(`/src/js/loadData/locations.json`);
         const data = await response.json();
         return data;
     } catch (err) {

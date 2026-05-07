@@ -7,6 +7,10 @@
 
     <script type="module" src="/src/js/auth/isAuthed.js"></script>
 
+    <link rel="stylesheet" href="/src/css/styles.css">
+
+    <script defer src="/src/js/NAV.js"></script>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
@@ -20,8 +24,10 @@
 
     <script defer type="module" src="/src/js/listings/updateListing.js" ></script>
 
-    <script defer type="module" src="../../js/toast.js"></script>
-    <script defer type="module" src="../../js/handleErrorMessage.js"></script>
+    <script defer type="module" src="/src/js/improved_messages/chatList.js"></script>
+
+    <script defer type="module" src="src/js/toast.js"></script>
+    <script defer type="module" src="src/js/handleErrorMessage.js"></script>
 
 
     <style>
@@ -70,36 +76,8 @@
 
 <body class="bg-body-tertiary">
     
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">Logo</a>
-    
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="mynavbar">
-
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
-                        </li>
-                    <li class="dropdown">
-                        <button class="nav-link btn-link dropdown-toggle active" type="button" data-bs-toggle="dropdown" aria-expanded="false">my listings</button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/src/pages/listings/view-listings.html">view listings</a></li>
-                            <li><a class="dropdown-item" href="/src/pages/listings/new-lisiting.html">New listing</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/src/pages/listings/view-listings.html">Remove listing</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/src/pages/auth/logout.html">logout</a>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
+    <nav id="NAV" class="navbar navbar-expand-sm navbar-dark bg-dark sticky-top">
+        <!--  Nav added here -->
     </nav>
 
     <div class="container d-flex justify-content-center mt-5">
@@ -206,6 +184,66 @@
                 
 
             </form>
+        </div>
+    </div>
+
+
+
+
+
+
+
+        <!-- Offcanvas (Right Side Nav) -->
+    <div class="offcanvas offcanvas-end rounded me-2 my-5 marginTop" data-bs-scroll="true" data-bs-backdrop="false"  tabindex="-1" id="contactPanel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">Chat</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+
+        <div class="offcanvas-body d-flex flex-column p-0">
+
+            <!-- Messages -->
+            <div id="chat_canvas" class="flex-grow-1 p-3 overflow-auto">
+                <!-- Messages are added here-->
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <!-- Chat Modal - used to send messages -->
+    <div class="modal fade" id="chatModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chatUserName">Chat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div id="chatMessagesContainer" class="d-flex flex-column gap-2 overflow-auto" style="max-height: 20vh;">
+                        <!-- messages are added here -->
+                    </div>
+                </div>
+
+
+                <!-- CHAT INPUT BOX -->
+                <div class="modal-footer ">
+                    <div class="input-group">
+                       <input type="text" 
+                        class="form-control" 
+                        placeholder="Type a message..."
+                        id="messageInput">
+
+                        <button class="btn btn-success " id="btnSendMessageModal">
+                            Send
+                        </button> 
+                    </div>
+                </div>
+                
+            </div>
         </div>
     </div>
 

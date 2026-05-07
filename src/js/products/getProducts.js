@@ -92,11 +92,16 @@ async function address_init(){
 }
 
 
-async function loadProducts(min=0, max=50_000, lat, long, radius){
+async function loadProducts(min=0, max=50_000, lat, long, radius=60){
     //prevent the client from making unwanted request
     if(loading) return;
 
     console.log(min, max, lat, long, radius);
+
+    if(!radius || radius == ""){
+        RADIUS = 60
+        radius = 60
+    }
 
     loading = true;
 
@@ -163,7 +168,7 @@ async function loadProducts(min=0, max=50_000, lat, long, radius){
                                     </h6>
 
                                     <p class="text-muted small mb-1 text-truncate">
-                                        Sold by ${product.ownerName || "Pieter Jacobs"}
+                                        Sold by ${product.ownerName}
                                     </p>
 
                                     <p class="text-muted small mb-2">
@@ -200,6 +205,7 @@ async function loadProducts(min=0, max=50_000, lat, long, radius){
 }
 
 
+//show images after they loaded
 document.addEventListener("load", function(e) {
     if (e.target.classList.contains("lazy-image")) {
         e.target.classList.add("loaded");

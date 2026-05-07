@@ -160,8 +160,8 @@
      //add listing details to db
     $insertProductStmt = $conn->prepare("
         INSERT INTO products 
-        (productID, ownerID, name, description, price, sold, deleted, `condition`, delivery, category, subcategory, latitude, longitude) 
-        VALUES (?,?,?,?,?, FALSE, FALSE, ?, ?, ?, ?, ?, ?)
+        (productID, ownerID, name, description, price, sold, deleted, `condition`, delivery, category, subcategory, latitude, longitude, province, city) 
+        VALUES (?,?,?,?,?, FALSE, FALSE, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
 
@@ -190,8 +190,8 @@
         $ownerID = $_SESSION['userID'];
 
         $insertProductStmt->bind_param(
-            "ssssdssssdd", 
-            $productID, $ownerID, $title, $description, $price, $condition, $delivery, $category, $subcategory, $latitude, $longitude
+            "ssssdssssddss", 
+            $productID, $ownerID, $title, $description, $price, $condition, $delivery, $category, $subcategory, $latitude, $longitude, $province, $city
         );
 
         $insertProductStmt->execute();

@@ -3,7 +3,7 @@ export default categoryData_init
 
 export {loadCategoryData, popMainContiner_cat, popSubContiner_onselect__cat}
 
-const BASE_PATH = window.location.pathname.split("/")[1];
+// const BASE_PATH = window.location.pathname.split("/")[1];
 
 const mainContainer = document.getElementById("category")
 const subContainer = document.getElementById("subcategory")
@@ -39,7 +39,7 @@ async function categoryData_init(){
 //get data from categoryOptions.json
 async function loadCategoryData() {
   try {
-    const response = await fetch(`/${BASE_PATH}/src/js/loadData/categoryOptions.json`);
+    const response = await fetch(`/src/js/loadData/categoryOptions.json`);
     const data = await response.json();
 
     return data;

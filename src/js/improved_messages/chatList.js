@@ -55,7 +55,7 @@ function loadChatList(messages){
         div.className = "chat-item d-flex align-items-center p-3";
 
         div.innerHTML = `
-            <img src="./src/images/downvotes.png" class="chat-avatar">
+            <img src="/src/images/downvotes.png" class="chat-avatar">
 
             <div class="ms-3 flex-grow-1">
                 <div class="d-flex justify-content-between">

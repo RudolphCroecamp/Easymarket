@@ -44,7 +44,10 @@
         mkdir($cacheDir, 0777, true);
     }
 
-    $cacheKey = md5("$lat-$long-$radius-$minPrice-$maxPrice-$page");
+    $cacheLat = (int)$lat;
+    $cacheLong = (int)$long;
+
+    $cacheKey = md5("$cacheLat-$cacheLong-$radius-$minPrice-$maxPrice-$page");
     $cacheFile = $cacheDir . "/$cacheKey.json";
 
     // check cache

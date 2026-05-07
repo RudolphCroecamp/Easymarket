@@ -61,8 +61,8 @@ async function getLocationFromGPS() {
                     "success" : true,
                     "province" : province, 
                     "city" : city, 
-                    "lat" : lat, 
-                    "long" : long 
+                    "lat" : lat.toFixed(0), 
+                    "long" : long.toFixed(0)
                 });
             } catch (err) {
                 reject(err);
