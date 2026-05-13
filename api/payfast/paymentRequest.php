@@ -74,7 +74,7 @@
         $buyerID = $userID;
 
         $price = $productInfo["price"];
-        $platformFee = ($productInfo["price"] / 100) * 95;//platform takes 5 percent
+        $platformFee = ($price / 100) * 5;//platform takes 5 percent
         $sellerFee = $price - $platformFee;
 
         $status = "order placed";
