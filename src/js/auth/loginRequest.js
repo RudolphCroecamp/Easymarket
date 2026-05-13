@@ -3,7 +3,7 @@ import {BACKEND_URL} from "../config.js"
 
 //load more products as you reach the end
 window.addEventListener("load", async () => {
-    await isAuthed(window.location.pathname)
+    // await isAuthed(window.location.pathname)
 
     console.log(window.location.origin)
 });

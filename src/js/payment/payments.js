@@ -36,9 +36,6 @@ document.addEventListener("DOMContentLoaded", async ()=>{
     }
 
 
-    
-
-    
 })
 
 
@@ -122,13 +119,3 @@ async function getListingDetails(id){
 
     })
 }
-
-
-
-
-
-
-
-
-
-

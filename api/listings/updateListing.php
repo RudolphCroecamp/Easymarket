@@ -108,16 +108,20 @@
         //add listing details to db
         $insertProductStmt = $conn->prepare("
             UPDATE products 
-            SET name = ?, description = ?, price = ?, category = ?, `condition` = ?, delivery = ?, amountType = ?, quantity = ?
+            SET name = ?, description = ?, price = ?, category = ?, `condition` = ?, delivery = ?, quantity = ?
             WHERE productID = ?
         ");
+
+        // INSERT INTO products 
+        // (productID, ownerID, name, description, price, sold, deleted, `condition`, delivery, category, subcategory, latitude, longitude, province, city) 
+        // VALUES (?,?,?,?,?, FALSE, FALSE, ?, ?, ?, ?, ?, ?, ?, ?)
 
         //get userID from session
         $ownerID = $_SESSION['userID'];
 
         $insertProductStmt->bind_param(
             "ssdssssis", 
-            $title, $description, $price, $category, $condition, $delivery, $amountType, $quantity, $productID
+            $title, $description, $price, $category, $condition, $delivery, $quantity, $productID
         );
 
         $insertProductStmt->execute();
