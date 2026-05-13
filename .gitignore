@@ -1,7 +1,6 @@
 cors.php
 session_config.php
 
-
 .env
 vendor/
 
