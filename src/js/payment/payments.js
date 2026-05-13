@@ -48,7 +48,7 @@ async function createPaymentRequest(productID) {
             credentials: "include",
             body : JSON.stringify({ productID : productID })
         })
-        .then(res => res.text())
+        .then(res => res.json())
         .then(data =>{
             console.log(data);
             res(data)

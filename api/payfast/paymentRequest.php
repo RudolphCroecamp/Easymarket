@@ -5,11 +5,6 @@
 
     require './generateSignature.php';//user must be authorised
 
-    header('Content-Type: application/json');
-
-
-
-
     //get info from client
     $jsonData = json_decode(file_get_contents('php://input'),true);
 
