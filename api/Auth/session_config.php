@@ -2,10 +2,10 @@
 session_set_cookie_params([
     'lifetime' => 60 * 180,
     'path' => '/',
-    'domain' => 'localhost',
-    'secure' => false,       
+    'domain' => 'easymarket-727523185751.europe-west1.run.app',
+    'secure' => true,
     'httponly' => true,
-    'samesite' => 'Lax'      
+    'samesite' => 'None'
 ]);
 
 
