@@ -28,7 +28,7 @@
 
     $ssl_ca = file_exists(__DIR__ . "/ca.pem")
     ? __DIR__ . "/ca.pem"
-    : "/secrets/ca.pem";
+    : "/secrets/aiven-ca";
     
     // Create connection
     $conn = mysqli_init();

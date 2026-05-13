@@ -1,5 +1,5 @@
-cors.php
-session_config.php
+api/Auth/session_config.php
+config/cors.php
 
 .env
 vendor/
@@ -8,3 +8,6 @@ cache/
 uploads/
 
 *.pem
+
+
+
