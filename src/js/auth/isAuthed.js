@@ -31,7 +31,7 @@ export default async function isAuthed(){
                 return false;
             } else {
                 //redirect user to login page if they arnt logged in already and not on login page
-                window.location = "./src/pages/auth/login.html"
+                //window.location = "/src/pages/auth/login.html"
                 return false;
             }
         }

@@ -32,15 +32,15 @@
 </head>
 
 <body class="bg-body-tertiary">
-    
+
     <!-- NAVBAR -->
     <nav id="NAV" class="navbar navbar-dark bg-dark sticky-top shadow-sm border-bottom">
         <!-- Nav comes here -->
     </nav>
 
-    <div class="container d-flex justify-content-center mt-5">
-        <div class="w-100 d-flex flex-column gap-4">
-            <h1 class="h1 text-center">Update Listing</h1>
+    <div class="container d-flex justify-content-center my-5">
+        <div class="w-auto d-flex flex-column gap-4">
+            <h1 class="h1 text-center">Create a new listing</h1>
             <form id="newLisitingForm">
 
                 <!-- listing images -->
@@ -51,6 +51,7 @@
                 </div>
 
                 <!-- listing deltails -->
+                 <h5>Listing details</h5>
                 <div class="form-floating mb-3">
                     <input type="text" name="title" id="title" class="form-control">
                     <label class="form-label" for="title">title</label>
@@ -61,32 +62,76 @@
                     <label class="form-label" for="price">price</label>
                 </div>
 
-                <!-- get categories from listingOptions.js -->
+                <div class="form-floating mb-3">
+                    <textarea name="description" id="description" class="form-control" style="height: 100px; max-height: 200px; min-height: 100px"></textarea>
+                    <label for="description">Description</label>
+                </div>
+
+                <h5>Category</h5>
                 <div class="form-floating mb-3">
                     <select class="form-select" id="category">
-                        <option selected>Select a category</option>
+                        <option value="0" selected>Select a category</option>
                         <!-- category options are added here -->
                     </select>
                     <label for="category">Category</label>
                 </div>
 
                 <div class="form-floating mb-3">
+                    <select class="form-select" id="subcategory" disabled>
+                        <option value="0" selected>Select a subcategory</option>
+                        <!-- subcategory options are added here -->
+                    </select>
+                    <label for="category">Subcategory</label>
+                </div>
+
+
+                <h5>Condition</h5>
+                <div class="form-floating mb-3">
                     <select class="form-select" id="condition">
-                        <option selected>Select a condition</option>
-                        <option value="1">New</option>
-                        <option value="2">Good</option>
-                        <option value="3">Broken</option>
+                        <option value="0" selected>Select a condition</option>
+                        <option value="New">New</option>
+                        <option value="Good">Good</option>
+                        <option value="Broken">Broken</option>
                     </select>
                     <label for="condition">Condition</label>
                 </div>
 
+                
+
+                
+                <h5>Location</h5>
                 <div class="form-floating mb-3">
-                    <textarea name="description" id="description" class="form-control" style="height: 100px; max-height: 200px; min-height: 100px"></textarea>
-                    <label for="description">Description</label>
+                    <select class="form-select" id="province">
+                        <option value="0" selected>Select a provice</option>
+                        <!-- provinces are added here -->
+                    </select>
+                    <label for="province">Provice</label>
                 </div>
 
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="city" disabled>
+                        <option value="0" selected>Select a city</option>
+                        <!-- cities are added here -->
+                    </select>
+                    <label for="city">City</label>
+                </div>
+
+                <h5>Delivery Method</h5>
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="delivery">
+                        <option value="0" selected>Select a delivery option</option>
+                        <option value="Public meetup">Public meetup</opton>
+                        <option value="Door pick-up">Door pick-up</option>
+                        <option value="Door drop-off">Door drop-off</option>
+                        <option value="Courier service">Courier service</option>
+                    </select>
+                    <label for="delivery">Delivery option</label>
+                </div>
+
+                <h5>Advanced Search</h5>
+
                 <div class="mb-3">
-                    <label for="tagsInput" class="form-label text-muted">Tags</label>
+                    <label for="tagsInput" class="form-label text-muted">Tags (optional)</label>
                     
                     <div class="input-group">
                         <!-- Tagify input -->
@@ -101,38 +146,6 @@
                     </div>
                 </div>
 
-                <div class="form-floating mb-3">
-                    <select class="form-select" id="amountType">
-                        <option selected>Select amount available</option>
-                        <option value="1">Single item</opton>
-                        <option value="2">Multiple items</option>
-                    </select>
-                    <label for="amountType">Amount Available</label>
-                </div>
-
-                <div id="quantityContainer" class="form-floating mb-3 visually-hidden" >
-                    <input type="number" name="quantity" id="quantity" class="form-control">
-                    <label class="form-label" for="quantity">Quantity</label>
-                </div>
-
-
-                <!-- <div class="form-floating mb-3">
-                    <input type="text" name="location" id="location" class="form-control">
-                    <label class="form-label" for="location">location</label>
-                </div> -->
-
-
-                <div class="form-floating mb-3">
-                    <select class="form-select" id="delivery">
-                        <option selected>Select a delivery option</option>
-                        <option value="1">Public meetup</opton>
-                        <option value="2">Door pick-up</option>
-                        <option value="3">Door drop-off</option>
-                        <option value="4">Courier service</option>
-                    </select>
-                    <label for="delivery">Delivery option</label>
-                </div>
-
 
                 <div>
                     <button type="reset" class="btn btn-danger">Cancel</button>
@@ -144,6 +157,7 @@
             </form>
         </div>
     </div>
+
 
 
 
@@ -228,7 +242,6 @@
     })
 
 </script>
-
 
 </body>
 </html>

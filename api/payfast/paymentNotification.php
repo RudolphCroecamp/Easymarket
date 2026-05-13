@@ -1,7 +1,7 @@
 <?php
 
     require '../../config/cors.php';//allow access from webserver
-    require '../../config/protectedRoute.php';//user must be authorised
+    // require '../../config/protectedRoute.php';//user must be authorised
     $conn = require '../../config/dbconn.php';//connect to DB
 
 
