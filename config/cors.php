@@ -6,7 +6,11 @@
         "http://127.0.0.1:5500",
         "http://localhost:5500",
         "http://127.0.0.1:8080",
-        "https://easymarket-727523185751.europe-west1.run.app"
+        "https://easymarket-727523185751.europe-west1.run.app",
+        'www.payfast.co.za',
+        'sandbox.payfast.co.za',
+        'w1w.payfast.co.za',
+        'w2w.payfast.co.za'
     ];
 
     $origin = $_SERVER['HTTP_ORIGIN'] ?? '';

@@ -73,6 +73,9 @@
             exit(json_encode([
                 "status"=>"success",
                 "success"=>true,
+                "publicUserInfo" => [
+                    "role" => $role
+                ],
                 "message" => "Login Success"
             ]));
         }else{

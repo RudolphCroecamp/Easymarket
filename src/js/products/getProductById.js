@@ -10,18 +10,46 @@ import newComment from "../comments/newComment.js"
 import {sendMessage} from "../improved_messages/newMessage.js"
 import {getMessagesForChat, renderChatMessages} from "../improved_messages/getMessagesByGroupID.js"
 
+// import {createPaymentRequest} from "../payment/payments.js"
+
 let loading = false;
 
 let page = 1
 
 const container = document.getElementById("productview-container");
-const loadingText = document.getElementById("loading");
+// const loadingText = document.getElementById("loading");
 
 
 const upvotes_img = "../../images/upvotes.png"
 const downvotes_img= "../../images/downvotes.png"
 
-loadProducts()
+
+
+
+
+document.addEventListener("DOMContentLoaded", ()=>{
+    const searchBtn = document.getElementById("searchBtn")
+    let AMOUNT = 1;
+    let amountAvailable = 0;
+
+    searchBtn.addEventListener("click", ()=>{
+        const query = document.getElementById("searchBox").value
+        
+        //check that we have a value before making request to server
+        if(!query || query.length === 0){
+            console.log({"error" : "invalid search term"});
+            return false;
+        }
+
+        window.location = `./search-view.html?query=${query}` 
+    })
+
+    loadProducts()
+
+})
+
+
+
 
 
 async function loadProducts(){
@@ -105,7 +133,7 @@ async function loadProducts(){
                                 ${product.downvotes}
                             </p>
 
-                            <button class="btn btn-success w-25 text-nowrap" id=reviewProduct data-bs-toggle="modal" data-bs-target="#reviewModal">
+                            <button class="btn btn-success" id=reviewProduct data-bs-toggle="modal" data-bs-target="#reviewModal">
                                 review
                             </button>
 
@@ -145,6 +173,7 @@ async function loadProducts(){
                     <!-- General Details -->
                     <div class="col-12">
                         <div class="card shadow-sm border-0 p-3">
+
                             <div class="d-flex flex-wrap gap-3 text-muted small fw-semibold">
                                 <h2 class="fw-bold text-primary mb-3">
                                     R ${Number(product.price).toFixed(2)}
@@ -164,6 +193,10 @@ async function loadProducts(){
                                     📍 ${product.province + ", " + product.city || "Port Elizabeth, Eastern Cape"}
                                 </span>
 
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-3 text-muted small fw-semibold mt-3">
+                                <button type="submit" class="btn btn-success" id="orderProduct">Order Now</button>
                             </div>
 
                         </div>
@@ -215,6 +248,11 @@ async function loadProducts(){
                 imgcontainer.appendChild(col);
             });
 
+            //add event for ordering product
+            document.getElementById("orderProduct").addEventListener("click", async ()=>{
+                window.location.href = `/src/pages/payments/payment.html?productID=${productID}`
+            })
+
             //get similar products
             await getSimilarProducts(product.category)
 
@@ -255,6 +293,9 @@ async function loadProducts(){
 
                 document.getElementById("sendMessageBtn").disabled = true;
             }
+
+
+                
             
             loading = false;
         }
@@ -510,4 +551,12 @@ function getMonthFromInt(month_num) {
         default: return "Invalid month";
     }
 }
+
+
+
+
+
+
+
+
 

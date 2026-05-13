@@ -209,3 +209,42 @@
 }
 
 
+
+
+
+
+.message-btn {
+    text-decoration: none;
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+/* Remove default bootstrap button look */
+.message-btn.btn-link {
+    border: none;
+    box-shadow: none;
+}
+
+/* Hover underline effect */
+.message-btn::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: currentColor;
+    transition: all 0.25s ease;
+    transform: translateX(-50%);
+    border-radius: 2px;
+    opacity: 0.8;
+}
+
+.message-btn:hover::after {
+    width: 80%;
+}
+
+/* Optional: slight hover feedback */
+.message-btn:hover {
+    color: #ffffff;
+}

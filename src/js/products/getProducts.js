@@ -133,7 +133,6 @@ async function loadProducts(min=0, max=50_000, lat, long, radius=60){
             throw new Error(data.error); 
         }else{
             hideErrorMessage()
-            console.log(data);
 
             //hide spinner when there are more items to load
             if(data.products.length < 20){

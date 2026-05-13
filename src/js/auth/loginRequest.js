@@ -47,7 +47,16 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
                 if(data.success === true){
                     //valid user credentials
-                    window.location = "/" //go back to home directory
+
+                    //check if user is an ADMIN
+                    if(data.publicUserInfo && data.publicUserInfo.role === "admin"){
+                        window.location = "/src/pages/Admin/dashboard.html"
+
+                    }
+
+                    window.location = "/"
+
+                    
                 }else{
                     //invalid user credentials
                     setErrorMessage(data.error)

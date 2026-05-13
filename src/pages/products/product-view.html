@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Easymarket-Product View</title>
 
-    <script type="module" src="src/js/auth/isAuthed.js" ></script>
+    <script type="module" src="/src/js/auth/isAuthed.js" ></script>
 
     <link rel="stylesheet" href="/src/css/styles.css">
     
@@ -13,16 +13,13 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     
-    <script defer type="module" src="src/js/products/getProductById.js"></script>
+    <script defer type="module" src="/src/js/products/getProductById.js"></script>
 
-    <script defer type="module" src="/src/js/improved_messages/chatList.js"></script>
-
-    <script defer type="module" src="srcjs/toast.js"></script>
-    <script defer type="module" src="src/js/handleErrorMessage.js"></script>
+    <!-- <script defer type="module" src="/src/js/improved_messages/chatList.js"></script> -->
 
     <style>
         .icon {
@@ -220,25 +217,5 @@
             </div>
         </div>
     </div>
-
-
-
-    <script>
-        const searchBtn = document.getElementById("searchBtn")
-        let AMOUNT = 1;
-        let amountAvailable = 0;
-
-        searchBtn.addEventListener("click", ()=>{
-            const query = document.getElementById("searchBox").value
-            
-            //check that we have a value before making request to server
-            if(!query || query.length === 0){
-                console.log({"error" : "invalid search term"});
-                return false;
-            }
-
-            window.location = `./search-view.html?query=${query}` 
-        })
-    </script>
 </body>
 </html>

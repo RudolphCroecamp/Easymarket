@@ -91,28 +91,6 @@ function NAV(){
 
             </div>
         </div>
-
-        <!-- SEARCH -->
-        <div class="w-100 pb-3">
-            <div class="d-flex col-12 col-sm-10 col-md-7 col-lg-5 mx-auto mt-2">
-
-                <input 
-                    class="form-control me-2 rounded-3 px-3"
-                    id="searchBox"
-                    type="text"
-                    placeholder="Search..."
-                >
-
-                <button 
-                    class="btn btn-primary rounded-3 px-4"
-                    id="searchBtn"
-                >
-                    Search
-                </button>
-
-            </div>
-        </div>
-
     </div>
     `)
 }
