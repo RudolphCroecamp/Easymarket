@@ -111,9 +111,9 @@
             // Merchant details
             'merchant_id' => '10046638',
             'merchant_key' => 'ntk5urzc2lda3',
-            'return_url' => 'http://localhost/',
-            'cancel_url' => 'http://localhost/',
-            'notify_url' => 'http://localhost/api/payfast/paymentNotification.php',
+            'return_url' => 'https://easymarket-727523185751.europe-west1.run.app/',
+            'cancel_url' => 'https://easymarket-727523185751.europe-west1.run.app/',
+            'notify_url' => 'https://easymarket-727523185751.europe-west1.run.app/api/payfast/paymentNotification.php',
             // Buyer details
             'name_first' => $buyerInfo["fName"],
             'name_last'  => $buyerInfo["lName"],
