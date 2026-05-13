@@ -1,5 +1,4 @@
-api/Auth/session_config.php
-config/cors.php
+
 
 .env
 vendor/

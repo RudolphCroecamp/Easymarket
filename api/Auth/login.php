@@ -1,7 +1,4 @@
 <?php //login.php
-
-    // echo "Current Domain Setting: " . ini_get('session.cookie_domain');
-
     require '../../config/cors.php';//allow access to webserver
 
     require './session_config.php';//set session details
