@@ -48,7 +48,7 @@ async function createPaymentRequest(productID) {
             credentials: "include",
             body : JSON.stringify({ productID : productID })
         })
-        .then(res => res.json())
+        .then(res => res.text())
         .then(data =>{
             console.log(data);
             res(data)
@@ -99,7 +99,7 @@ async function getListingDetails(id){
                 productID : id
             }) 
         })
-        .then(res => res.json)
+        .then(res => res.json())
         .then(data=>{
 
             if(!data.success === true){
