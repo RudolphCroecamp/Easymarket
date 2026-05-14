@@ -19,6 +19,7 @@
         $pfData[$key] = stripslashes( $val );
     }
 
+    $pfParamString = "";
     // Convert posted variables to a string
     foreach( $pfData as $key => $val ) {
         if( $key !== 'signature' ) {
@@ -66,11 +67,15 @@
 
         // Remove duplicates
         $validIps = array_unique( $validIps );
-        $referrerIp = gethostbyname(parse_url($_SERVER['HTTP_REFERER'])['host']);
-        if( in_array( $referrerIp, $validIps, true ) ) {
-            return true;
-        }
-        return false;
+        // $referrerIp = gethostbyname(parse_url($_SERVER['HTTP_REFERER'])['host']);
+        $remoteIp = $_SERVER['REMOTE_ADDR'] ?? '';
+        // if( in_array( $referrerIp, $validIps, true ) ) {
+        //     return true;
+        // }
+
+        return in_array($remoteIp, $validIps, true);
+
+        // return false;
     }
 
 
@@ -107,7 +112,7 @@
             // Execute cURL
             $response = curl_exec( $ch );
             curl_close( $ch );
-            if ($response === 'VALID') {
+            if (trim($response) === 'VALID'){
                 return true;
             }
         }
@@ -131,7 +136,8 @@
         $totalPrice_result = $totalPriceStmt->get_result();
 
         if($totalPrice_result && $totalPrice_result->num_rows > 0){
-            $totalPrice = $totalPrice_result->fetch_assoc();
+            $totalPriceData = $totalPrice_result->fetch_assoc();
+            $totalPrice = (float)$totalPriceData['price'];
         }else{
             throw new Exception("No orders found with provided ID");
         }
