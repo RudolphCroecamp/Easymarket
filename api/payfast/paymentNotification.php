@@ -1,7 +1,6 @@
 <?php
     $conn = require '../../config/dbconn.php';//connect to DB
 
-
     // Tell Payfast that this page is reachable by triggering a header 200
     header( 'HTTP/1.0 200 OK' );
     flush();
