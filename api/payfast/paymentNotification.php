@@ -149,7 +149,7 @@
             //update order status
             $status = "Payment Received";
             $updateStatusStmt = $conn->prepare("UPDATE orders SET status = 'Payment Received' WHERE paymentID = '65'");
-            $updateStatusStmt->bind_param("ss", $status, $paymentID);
+            $updateStatusStmt->bind_param("si", $status, $paymentID);
 
             if (!$updateStatusStmt->execute()){
                 throw new Exception("Could not update status.");
