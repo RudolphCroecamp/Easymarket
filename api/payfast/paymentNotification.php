@@ -124,7 +124,7 @@
         // $check2 = pfValidIP();
 
         //get total Price from db
-        $paymentID = "65";// $pfData["m_payment_id"];//get paymentID from payfast
+        $paymentID = 65;// $pfData["m_payment_id"];//get paymentID from payfast
         // $totalPriceStmt = $conn->prepare("SELECT price FROM orders WHERE paymentID = ?");
         // $totalPriceStmt->bind_param("s", $paymentID);
 
@@ -148,7 +148,7 @@
 
             //update order status
             $status = "Payment Received";
-            $updateStatusStmt = $conn->prepare("UPDATE orders SET status = 'Payment Received' WHERE paymentID = '65'");
+            $updateStatusStmt = $conn->prepare("UPDATE orders SET status = ? WHERE paymentID = ?");
             $updateStatusStmt->bind_param("si", $status, $paymentID);
 
             if (!$updateStatusStmt->execute()){
