@@ -123,7 +123,7 @@
         $check2 = pfValidIP();
 
         //get total Price from db
-        $paymentID = 66;// $pfData["m_payment_id"];//get paymentID from payfast
+        $paymentID = $pfData["m_payment_id"];//get paymentID from payfast
         $totalPriceStmt = $conn->prepare("SELECT price FROM orders WHERE paymentID = ?");
         $totalPriceStmt->bind_param("i", $paymentID);
 
