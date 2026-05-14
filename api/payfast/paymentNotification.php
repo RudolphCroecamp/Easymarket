@@ -126,7 +126,7 @@
         //get total Price from db
         $paymentID = 65;// $pfData["m_payment_id"];//get paymentID from payfast
         // $totalPriceStmt = $conn->prepare("SELECT price FROM orders WHERE paymentID = ?");
-        // $totalPriceStmt->bind_param("s", $paymentID);
+        // $totalPriceStmt->bind_param("i", $paymentID);
 
         // $totalPriceStmt->execute();
 
