@@ -1,13 +1,10 @@
 <?php
-
-    require '../../config/cors.php';//allow access from webserver
-    // require '../../config/protectedRoute.php';//user must be authorised
     $conn = require '../../config/dbconn.php';//connect to DB
 
 
     // Tell Payfast that this page is reachable by triggering a header 200
-    // header( 'HTTP/1.0 200 OK' );
-    // flush();
+    header( 'HTTP/1.0 200 OK' );
+    flush();
 
     // define( 'SANDBOX_MODE', true );
     // $pfHost = SANDBOX_MODE ? 'sandbox.payfast.co.za' : 'www.payfast.co.za';
@@ -151,7 +148,7 @@
 
             //update order status
             $status = "Payment Received";
-            $updateStatusStmt = $conn->prepare("UPDATE orders SET status = ? WHERE paymentID = ?");
+            $updateStatusStmt = $conn->prepare("UPDATE orders SET status = 'Payment Received' WHERE paymentID = '65'");
             $updateStatusStmt->bind_param("ss", $status, $paymentID);
 
             if (!$updateStatusStmt->execute()){
@@ -167,14 +164,6 @@
 
     } catch (\Throwable $th) {
         $conn->rollback();
-
-        error_log($th->getMessage());
-
-        // exit(json_encode([
-        //     "status"=>"failed",
-        //     "success"=>false,
-        //     "error" => "Payment Failed. Try Again"
-        // ]));
     }
 
 

@@ -31,6 +31,7 @@
         ]));
     }
 
+    $conn->begin_transaction();
 
     //check that the user is not the owner of the product
     try {
@@ -131,6 +132,8 @@
             $htmlForm .= '<input name="'.$name.'" type="hidden" value=\''.$value.'\' />';
         }
 
+        $conn->commit();
+
         echo json_encode([
             "status"=>"success",
             "success"=>true,
@@ -140,6 +143,8 @@
         ]);
 
     } catch (\Throwable $th) {
+        $conn->rollback();
+
         exit(json_encode([
             "status"=>"failed",
             "success"=>false,
