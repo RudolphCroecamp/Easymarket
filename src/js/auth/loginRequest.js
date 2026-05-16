@@ -52,9 +52,11 @@ document.addEventListener("DOMContentLoaded", ()=>{
                     if(data.publicUserInfo && data.publicUserInfo.role === "admin"){
                         window.location = "/src/pages/Admin/dashboard.html"
 
+                    }else{
+                        window.location = "/"
                     }
 
-                    window.location = "/"
+                    
 
                     
                 }else{

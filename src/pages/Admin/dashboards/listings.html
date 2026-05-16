@@ -12,22 +12,23 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <link rel="stylesheet" href="/src/css/admin.css">
-    <script defer src="/src/Nav/adminNav.js"></script>
+    <script defer src="/src/js/Nav/adminNav.js"></script>
 
     <script defer src="/src/js/Admin/tables/listingsTable.js"></script>
 
 </head>
 <body>
 
-    <!-- NAVBAR -->
-    <nav id="NAV" class="navbar navbar-dark bg-dark sticky-top shadow-sm border-bottom">
-        <!-- Nav comes here -->
-    </nav>
+<!-- NAVBAR -->
+<nav id="NAV" class="navbar navbar-dark bg-dark shadow-sm border-bottom">
+    <!-- Nav comes here -->
+</nav>
 
 
 
 <!-- left canvas  -->
     <div class="app">
+        
         <!-- Sidebar -->
         <aside id="sidebar" class="sidebar">
             
@@ -64,6 +65,7 @@
         <!-- Main content -->
         <main class="content">
             <div class="container py-4">
+                
 
                 <!-- HEADER -->
 
@@ -239,36 +241,36 @@
 
 <script>
 
-    const sidebar = document.getElementById("sidebar");
-    const toggleBtn = document.getElementById("toggleBtn");
-    const toggleIcon = document.getElementById("toggleIcon");
+    document.addEventListener("DOMContentLoaded", () => {
 
-    toggleBtn.addEventListener("click", () => {
+        const sidebar = document.getElementById("sidebar");
+        const toggleBtn = document.getElementById("toggleBtn");
+        const toggleIcon = document.getElementById("toggleIcon");
 
-        // MOBILE
-        if(window.innerWidth <= 992){
-
-            sidebar.classList.toggle("mobile-open");
+        if (!sidebar || !toggleBtn || !toggleIcon) {
+            console.log("Sidebar elements not found");
             return;
         }
 
-        // DESKTOP
-        sidebar.classList.toggle("collapsed");
+        toggleBtn.addEventListener("click", () => {
 
-        if(sidebar.classList.contains("collapsed")){
+            sidebar.classList.toggle("collapsed");
 
-            toggleIcon.classList.remove("bi-arrow-left-square");
-            toggleIcon.classList.add("bi-arrow-right-square");
+            if(sidebar.classList.contains("collapsed")){
 
-        }else{
+                toggleIcon.classList.remove("bi-arrow-left-square");
+                toggleIcon.classList.add("bi-arrow-right-square");
 
-            toggleIcon.classList.remove("bi-arrow-right-square");
-            toggleIcon.classList.add("bi-arrow-left-square");
+            } else {
 
-        }
+                toggleIcon.classList.remove("bi-arrow-right-square");
+                toggleIcon.classList.add("bi-arrow-left-square");
+
+            }
+
+        });
 
     });
-
 </script>
 
 </body>

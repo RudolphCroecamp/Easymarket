@@ -89,9 +89,17 @@ async function fetchListings(page){
                 }
 
                 resolve(data.listings)
+            }else{
+                //disable next btn when an emty page was found
+                btnNext.disabled = true
+                if(PAGE > 1){
+                    btnPrev.disabled = false
+                }
+
+                //error when fecthing data
+                throw new Error(data.error || "Could not find listings");
             }
-            //error when fecthing data
-            throw new Error(data.error || "Could not find listings");
+            
         })
         .catch(err => {
             //default

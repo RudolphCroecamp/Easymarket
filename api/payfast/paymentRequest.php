@@ -73,7 +73,7 @@
         $platformFee = ($price / 100) * 5;//platform takes 5 percent
         $sellerFee = $price - $platformFee;
 
-        $status = "order placed";
+        $status = "Awaiting Payment";
 
         $ordersStmt->bind_param("sssddds", $sellerID, $buyerID, $productID, $price, $platformFee, $sellerFee, $status);
         $ordersStmt->execute();

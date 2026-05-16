@@ -27,8 +27,6 @@ async function GenerateUsersTable() {
         //populate table
         await populateUsersTable(users)
 
-        PAGE++
-
     } catch (error) {
         console.log(error);
     }
@@ -87,9 +85,17 @@ async function fetchUsers(page){
                 }
 
                 resolve(data.users)
+            }else{
+                //disable next btn when an emty page was found
+                btnNext.disabled = true
+                if(PAGE > 1){
+                    btnPrev.disabled = false
+                }
+
+                //error when fecthing data
+                throw new Error(data.error || "Could not find users");
             }
-            //error when fecthing data
-            throw new Error(data.error || "Could not find users");
+            
         })
         .catch(err => {
             //default
