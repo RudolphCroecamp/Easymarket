@@ -111,7 +111,7 @@
 
 .product-image {
     max-height: 100%;
-    object-fit: contain;
+    object-fit: cover; /*contain */
 
     opacity: 0;
     filter: blur(8px);
@@ -247,4 +247,30 @@
 /* Optional: slight hover feedback */
 .message-btn:hover {
     color: #ffffff;
+}
+
+
+
+
+
+
+
+
+
+/* login/register nav */
+#NAV .btn {
+    transition: all 0.5s ease;
+}
+
+#NAV .btn:hover {
+    transform: translateY(-1px);
+}
+
+#NAV .btn-primary {
+    background: #3b82f6;
+    border: none;
+}
+
+#NAV .btn-primary:hover {
+    background: #2563eb;
 }

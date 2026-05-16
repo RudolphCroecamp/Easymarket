@@ -64,12 +64,9 @@
         // Remove duplicates
         $validIps = array_unique( $validIps );
         $referrerIp = gethostbyname(parse_url($_SERVER['HTTP_REFERER'])['host']);
-        // $remoteIp = $_SERVER['REMOTE_ADDR'] ?? '';
         if( in_array( $referrerIp, $validIps, true ) ) {
             return true;
         }
-
-        // return in_array($remoteIp, $validIps, true);
 
         return false;
     }
@@ -158,6 +155,23 @@
             // Some checks have failed, check payment manually and log for investigation
             throw new Exception("payment failed - Some checks were invalid", 1); 
         }
+
+
+        //send email notification to user
+        try {
+            require_once("./api/mail/sendMail.php");
+
+            $email_message = "Your payment of R{$totalPrice} was received and your order is being processed.";
+            $recipient = "Rcroecamp@gmail.com";//$_SESSION["email"];
+            $subject = "Payment received";
+
+            SendMail($recipient, $subject, $email_message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        
+
+
 
         $conn->commit();
 

@@ -6,7 +6,6 @@
     } catch (\Throwable $th) {
         //throw $th;
     }
-    
 
 
     //check if user is logged in or not

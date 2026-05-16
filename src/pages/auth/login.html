@@ -7,9 +7,10 @@
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    <script defer type="module" src="/src/js/auth/loginRequest.js"></script>
+    
+    <link rel="stylesheet" href="/src/css/styles.css">
 
-    <script defer src="/src/js/NAV.js"></script>
+    <script defer type="module" src="/src/js/auth/loginRequest.js"></script>
 
     <script defer type="module" src="/src/js/toast.js"></script>
     <script defer type="module" src="/src/js/handleErrorMessage.js"></script>
@@ -18,7 +19,39 @@
 
     <!-- NAVBAR -->
     <nav id="NAV" class="navbar navbar-dark bg-dark sticky-top shadow-sm border-bottom">
-        <!-- Nav comes here -->
+        <div class="container-fluid d-flex align-items-center justify-content-between py-2">
+
+            <!-- LEFT SIDE -->
+            <a class="navbar-brand d-flex align-items-center gap-2 m-0" href="/">
+                <img 
+                    src="/src/assets/logo.png"
+                    alt="Logo"
+                    width="42"
+                    height="42"
+                    class="rounded-circle border border-light object-fit-cover"
+                >
+
+                <span class="fw-bold text-white fs-5">
+                    EasyMarket
+                </span>
+            </a>
+
+            <!-- RIGHT SIDE -->
+            <div class="d-flex align-items-center gap-2">
+
+                <!-- LOGIN BUTTON -->
+                <a href="./login.html" class="btn btn-outline-light rounded-pill px-4">                    
+                    Login
+                </a>
+
+                <!-- REGISTER BUTTON -->
+                <a href="./register.html" class="btn btn-primary rounded-pill px-4">
+                    Register
+                </a>
+
+            </div>
+
+        </div>
     </nav>
 
     <div class="container-fluid">
@@ -48,15 +81,17 @@
                         <label class="form-label" for="password">Password</label>
                     </div>
                     
-                    <div class="mb-3">
-                        <!-- <input type="checkbox" class="form-check-input" id="Remember_me">
-                            <label for="Remember_me">Remember me</label>
-                        </input> -->
-                        <a href="./forgot-password.html" class="text-decoration-none float-end">Forgot password?</a>
-                    </div>
-
+                    
 
                     <button class="btn btn-primary w-100" type="submit">Login</button>
+
+                    <div class="mb-3 d-inline">
+                        <a href="./register.html" class="text-decoration-none float-start mt-2">Create an account</a>
+                    </div>
+
+                    <div class="mb-3 d-inline">
+                        <a href="./forgot-password.html" class="text-decoration-none float-end mt-2">Forgot password?</a>
+                    </div>
                 </form>
             </div>
 
