@@ -3,7 +3,7 @@ export {my_message, their_message}
 
 
 //html for messages from current user
-function my_message(message){ 
+function my_message(message, isOwner){ 
     return (`
         <div class="mb-2 text-end">
             <div class="small text-muted">You</div>
@@ -16,10 +16,10 @@ function my_message(message){
 
 
 //html for messages by other user
-function their_message(message){
+function their_message(message, isOwner){
     return (`
         <div class="mb-2">
-            <div class="small text-muted">Seller</div>
+            <div class="small text-muted">${isOwner ? "Buyer" : "Seller"}</div>
             <div class="p-2 bg-secondary rounded shadow-sm small d-inline-block"">
                 ${message}
             </div>

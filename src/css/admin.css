@@ -201,6 +201,10 @@ body {
         width: calc(100% - 70px);
     }
 
+    .toggle-btn {
+        display: none;
+    }
+
 }
 
 
@@ -387,14 +391,6 @@ body{
         font-size: 1.4rem;
     }
 
-}
-
-
-.stock-badge {
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 0.75rem;
 }
 
 

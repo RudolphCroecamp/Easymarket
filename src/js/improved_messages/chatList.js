@@ -125,10 +125,14 @@ document.getElementById("btnSendMessageModal").addEventListener("click", ()=>{
     const productID = modalElement.dataset.productID
 
     const chatMessagesContainer = document.getElementById("chatMessagesContainer")
-    const messageInput = document.getElementById("messageInput")
+    const messageInput = document.getElementById("messageInputModal")
 
     const message = messageInput.value
 
+    console.log("validate new message");
+    console.log(messageInput);
+    console.log(message);
+    console.log(chatMessagesContainer);
 
     try {
         sendMessage(productID, groupID, message, chatMessagesContainer)
@@ -143,7 +147,7 @@ document.getElementById("btnSendMessageModal").addEventListener("click", ()=>{
 
 async function loadModalMessages(productID){
     try {
-        const messages = await getMessagesForChat(productID);
+        const [messages, isOwner] = await getMessagesForChat(productID);
         const chatMessagesContainer = document.getElementById("chatMessagesContainer")
 
         console.log(messages);
@@ -153,9 +157,9 @@ async function loadModalMessages(productID){
         messages.forEach(message=>{
 
             if(message.sentByCurrentUser){
-                chatMessagesContainer.innerHTML+= my_message(message.message)
+                chatMessagesContainer.innerHTML+= my_message(message.message, isOwner)
             }else{
-                chatMessagesContainer.innerHTML+= their_message(message.message)
+                chatMessagesContainer.innerHTML+= their_message(message.message, isOwner)
             }
         })
 

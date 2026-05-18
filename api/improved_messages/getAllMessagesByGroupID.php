@@ -39,40 +39,46 @@
         //prevent the user from chatting to themselfs
 
         //get ownerID
-        $getOwnerIDStmt = $conn->prepare("SELECT ownerID from products WHERE productID = ?");
-        $getOwnerIDStmt->bind_param("s", $productID);
-        $getOwnerIDStmt->execute();
+        // $getOwnerIDStmt = $conn->prepare("SELECT ownerID from products WHERE productID = ?");
+        // $getOwnerIDStmt->bind_param("s", $productID);
+        // $getOwnerIDStmt->execute();
 
-        $owner_result = $getOwnerIDStmt->get_result();
+        // $owner_result = $getOwnerIDStmt->get_result();
         
-        //check for valid ownerID
-        if($owner_result->num_rows <= 0){
-            throw new Exception("Could not find the owner of the product", 1);
-        }
+        // //check for valid ownerID
+        // if($owner_result->num_rows <= 0){
+        //     throw new Exception("Could not find the owner of the product", 1);
+        // }
 
-        //get product's ownerID
-        $row = $owner_result->fetch_assoc();
-        $ownerID = $row["ownerID"];
+        // //get product's ownerID
+        // $row = $owner_result->fetch_assoc();
+        // $ownerID = $row["ownerID"];
 
-        if($ownerID == $userID){
-            throw new Exception("You cannot message yourself", 1);
-        }
-
+        // if($ownerID == $userID){
+        //     throw new Exception("You cannot message yourself", 1);
+        // }
 
         //check for groupID
-        $getGroupChatIdStmt = $conn->prepare("SELECT groupID, buyerID FROM group_chats WHERE productID = ? AND buyerID = ?");
-        $getGroupChatIdStmt->bind_param("is", $productID, $userID);
+        // $getGroupChatIdStmt = $conn->prepare("SELECT groupID, buyerID FROM group_chats WHERE productID = ? AND buyerID = ?");
+        // $getGroupChatIdStmt->bind_param("is", $productID, $userID);
+        // $getGroupChatIdStmt->execute();
+
+        //check for groupID
+        $getGroupChatIdStmt = $conn->prepare("SELECT groupID, buyerID, productID FROM group_chats WHERE productID = ? AND (buyerID = ? OR ownerID = ?)");
+        $getGroupChatIdStmt->bind_param("sss", $productID, $userID, $userID);
         $getGroupChatIdStmt->execute();
         
         $group_result = $getGroupChatIdStmt->get_result();
         
+        
         //check if group exist
         if($group_result->num_rows<=0){
-            throw new Exception("The current user does not belong to any group for the current product", 1);  
+            throw new Exception("The current user does not belong to any group for the current product", 661);  
         }
 
         $row = $group_result->fetch_assoc();
         $groupID = $row["groupID"];
+        $buyerID = $row["buyerID"];
 
 
         //get messages by groupID
@@ -95,13 +101,12 @@
         }else{
             throw new Exception("No messages found", 1);
         }
-
-
         //return messages to client
         echo json_encode([
             "status"=>"success",
             "success"=>true,
-            "messages"=> $messages
+            "messages"=> $messages,
+            "isOwner" => $buyerID == $userID ? false : true
         ]);
 
     } catch (\Throwable $th) {

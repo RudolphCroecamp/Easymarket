@@ -27,6 +27,8 @@
         $productID = $_GET['productID'];
     }
 
+    $userID = $_SESSION["userID"];
+
     //select only available products
     $sql ="
         SELECT p.*, u.fname, u.lname, u.upvotes, u.downvotes
@@ -65,6 +67,7 @@
     if ($product_result && $product_result->num_rows > 0) {
         //add product info to array of product 
         $product = $product_result->fetch_assoc();
+        $ownerID = $product["ownerID"];
 
         $tags = [];
         while ($row = $tags_result->fetch_assoc()) {
@@ -91,7 +94,8 @@
             "status"=>"success",
             "success"=>true,
             "product"=>$product,
-            "tags"=>$tags
+            "tags"=>$tags,
+            "isOwner" => $userID == $ownerID ? true : false
         ]);
 
     }else{

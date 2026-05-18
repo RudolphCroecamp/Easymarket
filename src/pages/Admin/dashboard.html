@@ -15,13 +15,38 @@
     <link rel="stylesheet" href="/src/css/admin.css">
     <script defer src="/src/js/Nav/adminNav.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script defer src="/src/js/Admin/dashboard.js"></script>
+
+    <style>
+        body {
+            background: #f4f6f9;
+        }
+
+        .card-metric {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .metric-icon {
+            font-size: 22px;
+            padding: 10px;
+            border-radius: 12px;
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+
+    </style>
+
 </head>
 <body class="bg-body-tertiary">
 
-<!-- NAVBAR -->
-<nav id="NAV" class="navbar navbar-dark bg-dark shadow-sm">
-    <!-- Nav comes here -->
-</nav>
+    <!-- NAVBAR -->
+    <nav id="NAV" class="navbar navbar-dark bg-dark shadow-sm">
+        <!-- Nav comes here -->
+    </nav>
 
     <!-- left canvas  -->
     <div class="app">
@@ -54,24 +79,190 @@
                     <i class="bi bi-credit-card-2-back"></i>
                     <span class="label">Payments</span>
                 </a>
-
-                <!-- <a href="./dashboards/users.html" class="nav-item">
-                    <i class="bi bi-gear"></i>
-                    <span class="label">Settings</span>
-                </a> -->
-
-                <!-- LOGOUT (BOTTOM) -->
-                <div class="logout-wrapper">
-                    <a href="/src/pages/auth/logout.html" class="btn btn-danger rounded-pill px-4 w-100">
-                        <i class="bi bi-box-arrow-right"></i>
-                    </a>
-                </div>
             </nav>
         </aside>
 
         <!-- Main content -->
         <main class="content">
-            <h1>Admin Panel</h1>
+            <div class="main">
+
+
+                <!-- METRICS -->
+                <div class="row g-3">
+
+                    <div class="col-md-3">
+                        <div class="card card-metric p-3">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 >GMV</h6>
+                                    <h4 id="gmvValue">R 1,245,320</h4>
+                                </div>
+                                <div class="metric-icon"><i class="bi bi-cash-stack"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">  
+                        <div class="card card-metric p-3">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 >Orders</h6>
+                                    <h4 id="ordersValue">8,420</h4>
+                                </div>
+                                <div class="metric-icon"><i class="bi bi-bag-check"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card card-metric p-3">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 >Active Users</h6>
+                                    <h4 id="usersValue">32,110</h4>
+                                </div>
+                                <div class="metric-icon"><i class="bi bi-people"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card card-metric p-3">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6>Take Rate</h6>
+                                    <h4>6.8%</h4>
+                                </div>
+                                <div class="metric-icon"><i class="bi bi-graph-up"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- CHART SECTION -->
+                <div class="row mt-4 g-3">
+
+                    <div class="col-md-8">
+                        <div class="card p-3 card-metric">
+                            <h6>GMV Over Time</h6>
+                            <div style="height: 300px; background: #eef2ff; border-radius: 12px;"
+                                class="d-flex align-items-center justify-content-center text-muted"
+                                id="gmvChart"
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
+                    <div class="col-md-4">
+                        <div class="card p-3 card-metric">
+                            <h6>Marketplace Health</h6>
+
+                            <p class="mb-1">Time to Sell</p>
+                            <div class="progress mb-3">
+                                <div class="progress-bar" style="width: 65%"></div>
+                            </div>
+
+                            <p class="mb-1">Conversion Rate</p>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-success" style="width: 72%"></div>
+                            </div>
+
+                            <p class="mb-1">Dispute Rate</p>
+                            <div class="progress">
+                                <div class="progress-bar bg-danger" style="width: 18%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-8">
+                        <div class="card p-3 card-metric">
+                            <h6>Retention</h6>
+                            <div style="height: 300px; background: #eef2ff; border-radius: 12px;"
+                                class="d-flex align-items-center justify-content-center text-muted"
+                                id="retentionChart"
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- TABLES -->
+                <div class="row mt-4 g-3">
+
+                    <!-- TOP SELLERS -->
+                    <!-- <div class="col-md-6">
+                        <div class="card p-3 card-metric">
+                            <h6>Top Sellers</h6>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Seller</th>
+                                        <th>GMV</th>
+                                        <th>Orders</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>John D.</td>
+                                        <td>R 120,000</td>
+                                        <td>320</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sarah K.</td>
+                                        <td>R 98,500</td>
+                                        <td>280</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mike P.</td>
+                                        <td>R 75,200</td>
+                                        <td>210</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> -->
+
+                    <!-- RECENT ORDERS -->
+                    <div class="col-md-6">
+                        <div class="card p-3 card-metric">
+                            <h6>Recent Orders</h6>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Status</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#1023</td>
+                                        <td><span class="badge bg-success">Completed</span></td>
+                                        <td>R 1,200</td>
+                                    </tr>
+                                    <tr>
+                                        <td>#1024</td>
+                                        <td><span class="badge bg-warning">Pending</span></td>
+                                        <td>R 850</td>
+                                    </tr>
+                                    <tr>
+                                        <td>#1025</td>
+                                        <td><span class="badge bg-danger">Disputed</span></td>
+                                        <td>R 2,300</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
         </main>
     </div>
 

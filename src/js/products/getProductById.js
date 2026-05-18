@@ -133,38 +133,44 @@ async function loadProducts(){
                                 ${product.downvotes}
                             </p>
 
-                            <button class="btn btn-success" id=reviewProduct data-bs-toggle="modal" data-bs-target="#reviewModal">
+                            <button class="btn btn-success" id=reviewProduct data-bs-toggle="modal" data-bs-target="#reviewModal" ${data.isOwner ? "disabled" : ""}>
                                 review
                             </button>
 
+                            ${!data.isOwner ? 
+                                `
+                                    <!-- message box -->
+                                    <div class="mt-3">
 
-                            <!-- message box -->
-                            <div class="mt-3">
+                                        <!-- Divider -->
+                                        <hr>
 
-                                <!-- Divider -->
-                                <hr>
+                                        <h6 class="mb-2">Contact Seller</h6>
 
-                                <h6 class="mb-2">Contact Seller</h6>
+                                        <!-- Messages container -->
+                                        <div class="message-container mb-3 p-2 rounded bg-light"  
+                                            style="max-height: 200px; overflow-y: scroll;" id="message_container">
+                                            <!-- messsages are added here-->
+                                        </div>
 
-                                <!-- Messages container -->
-                                <div class="message-container mb-3 p-2 rounded bg-light"  
-                                    style="max-height: 200px; overflow-y: scroll;" id="message_container">
-                                    <!-- messsages are added here-->
-                                </div>
+                                        <!-- Input + Send -->
+                                        <div class="input-group">
+                                            <input type="text" 
+                                                class="form-control" 
+                                                placeholder="Type a message..."
+                                                id="messageInput">
 
-                                <!-- Input + Send -->
-                                <div class="input-group">
-                                    <input type="text" 
-                                        class="form-control" 
-                                        placeholder="Type a message..."
-                                        id="messageInput">
+                                            <button class="btn btn-success" id="sendMessageBtn">
+                                                Send
+                                            </button>
+                                        </div>
 
-                                    <button class="btn btn-success" id="sendMessageBtn">
-                                        Send
-                                    </button>
-                                </div>
-
-                            </div>
+                                    </div> 
+                                `
+                                : 
+                                
+                                ""
+                            }
                         </div>  
                     </div>
 
@@ -196,7 +202,7 @@ async function loadProducts(){
                             </div>
 
                             <div class="d-flex flex-wrap gap-3 text-muted small fw-semibold mt-3">
-                                <button type="submit" class="btn btn-success" id="orderProduct">Order Now</button>
+                                <button type="submit" class="btn btn-success" id="orderProduct" ${data.isOwner ? "disabled" : ""}>Order Now</button>
                             </div>
 
                         </div>
@@ -258,40 +264,42 @@ async function loadProducts(){
 
             loadComments(productID, page=1)
 
+            
+            if(!data.isOwner){
+                //send message to seller
+                document.getElementById("sendMessageBtn").addEventListener("click", async () => {
+                    console.log("sending message");
 
-            //send message to seller
-            document.getElementById("sendMessageBtn").addEventListener("click", async () => {
-                console.log("sending message");
+                    const messageInput = document.getElementById("messageInput");
+                    const container = document.getElementById("message_container");
 
-                const messageInput = document.getElementById("messageInput");
-                const container = document.getElementById("message_container");
+                    if (!messageInput.value.trim()) return;
 
-                if (!messageInput.value.trim()) return;
+                    const message = messageInput.value
 
-                const message = messageInput.value
+                    //send message to db
+                    try {
+                        await sendMessage(productID, 0, message, container);
+                    } catch (error) {
+                        console.log(error);
+                        showToast(error)
+                    }
+                    
 
-                //send message to db
+                    messageInput.value = "";
+                });
+
                 try {
-                    await sendMessage(productID, 0, message, container);
+                    await renderChatMessages(productID)
+                    const message_container = document.getElementById("message_container")
+                    message_container.scrollTop = message_container.scrollHeight;
                 } catch (error) {
-                    console.log(error);
-                    showToast(error)
+                    const messageInput = document.getElementById("messageInput")
+                    messageInput.value = error
+                    messageInput.disabled = true;
+
+                    document.getElementById("sendMessageBtn").disabled = true;
                 }
-                
-
-                messageInput.value = "";
-            });
-
-            try {
-                await renderChatMessages(productID)
-                const message_container = document.getElementById("message_container")
-                message_container.scrollTop = message_container.scrollHeight;
-            } catch (error) {
-                const messageInput = document.getElementById("messageInput")
-                messageInput.value = error
-                messageInput.disabled = true;
-
-                document.getElementById("sendMessageBtn").disabled = true;
             }
 
 

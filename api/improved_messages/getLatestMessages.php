@@ -30,7 +30,7 @@
 
         $groups = [];
 
-        //add group ids ro array
+        //add group ids to array
         while ($row = $groupChatInfo->fetch_assoc()) {
             $groups[] = $row;
         }
