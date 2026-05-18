@@ -1,7 +1,5 @@
 <?php
 
-
-
 function getEncryptionKey() {
     // import env variables
     try {

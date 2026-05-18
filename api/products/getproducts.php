@@ -1,11 +1,6 @@
 <?php
     header('Content-Type: application/json');
 
-    //catch and return errors
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-
     require '../../config/cors.php';//allow access from webserver
     //require '../../config/protectedRoute.php';//user must be authorised
     $conn = require '../../config/dbconn.php';//connect to DB
