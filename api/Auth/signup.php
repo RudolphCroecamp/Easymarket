@@ -3,7 +3,7 @@
 
     require '../../config/cors.php';//allow access from webserver
 
-    $conn =require '../../config/dbconn.php';//connect to DB
+    $conn = require '../../config/dbconn.php';//connect to DB
 
 
     //check if all params has a value

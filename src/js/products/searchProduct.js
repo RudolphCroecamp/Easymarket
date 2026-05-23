@@ -59,28 +59,51 @@ function searchProduct(query){
                 spinner.style.display = 'none';
             }
 
+
             data.products.forEach(product => {
                 //add product into container
-                container.innerHTML += `
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                        <div class="card ">
+            container.innerHTML += `
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <a href="/src/pages/products/product-view.html?productID=${product.productID}" 
+                    class="text-decoration-none text-dark">
 
-                            <img src="${IMAGES_URL}/${product.image}_a.webp" class="card-img-top">
+                        <div class="card h-100 border-0 shadow-sm product-card overflow-hidden">
 
-                            <div class="card-body">
+                            <!-- Image -->
+                            <div class="product-image-wrapper">
+                                <img 
+                                    src="${IMAGES_URL}/${product.productID}_a.webp" 
+                                    class="w-100 product-image lazy-image"
+                                    alt="${product.name}"
+                                    loading="lazy"
+                                >
+                            </div>
 
-                                <h5>${product.name}</h5>
-                                <p>Sold by ${product.id}</p>
-                                <p>$${product.price}</p>
+                            <!-- Body -->
+                            <div class="card-body d-flex flex-column">
+
+                                <h6 class="fw-semibold mb-1 text-truncate">
+                                    ${product.name}
+                                </h6>
+
+                                <p class="text-muted small mb-1 text-truncate">
+                                    Sold by ${product.ownerName}
+                                </p>
+
+                                <p class="text-muted small mb-2">
+                                    ${product.city}, ${product.province}
+                                </p>
 
                                 <div class="mt-auto">
-                                    <button class="btn btn-primary w-100">
-                                        <a class="text-white text-decoration-none" href="./product-view.html?productID=${product.productID}">View Product</a>
-                                    </button>
+                                    <h5 class="fw-bold text-primary mb-0">
+                                        R${product.price}
+                                    </h5>
                                 </div>
+
                             </div>
                         </div>
-                    </div>
+                    </a>
+                </div>
                 `
             });
 
@@ -96,3 +119,10 @@ function searchProduct(query){
     });
 
 }
+
+//show images after they loaded
+document.addEventListener("load", function(e) {
+    if (e.target.classList.contains("lazy-image")) {
+        e.target.classList.add("loaded");
+    }
+}, true);

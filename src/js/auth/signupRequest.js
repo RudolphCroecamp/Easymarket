@@ -1,53 +1,56 @@
 import {BACKEND_URL} from "../config.js"
 
-const signupForm = document.getElementById("signupForm");
 
-signupForm.addEventListener("submit", (e) => {
-    e.preventDefault()
-    hideErrorMessage()
 
-    console.log("requesting");
-    const fname = document.getElementById("fname")
-    const lname = document.getElementById("lname")
-    const email = document.getElementById("email")
-    const password = document.getElementById("password")
-    const conpassword = document.getElementById("conpassword")
+document.addEventListener("DOMContentLoaded", ()=>{
+    const signupForm = document.getElementById("signupForm");
 
-    console.log(validateInput(fname, lname, email, password, conpassword));
-    console.log(validateEmail(email));
+    signupForm.addEventListener("submit", (e) => {
+        e.preventDefault()
+        hideErrorMessage()
 
-    if(
-        validateInput(fname, lname, email, password, conpassword) 
-        && 
-        validateEmail(email.value)
-    )
-    {
-        //get data
-        const formData = new FormData(signupForm)
+        console.log("requesting");
+        const fname = document.getElementById("fname")
+        const lname = document.getElementById("lname")
+        const email = document.getElementById("email")
+        const password = document.getElementById("password")
+        const conpassword = document.getElementById("conpassword")
 
-        console.log(formData);
+        console.log(validateInput(fname, lname, email, password, conpassword));
+        console.log(validateEmail(email));
 
-        //submit inputs to backend after fields have been validated
-        fetch(`${BACKEND_URL}/Auth/signup.php`,
-            {
-                method : "POST",
-                body : formData
-            }
+        if(
+            validateInput(fname, lname, email, password, conpassword) 
+            && 
+            validateEmail(email.value)
         )
-        .then(res => res.json())
-        .then(data =>{
-            console.log(data);
+        {
+            //get data
+            const formData = new FormData(signupForm)
 
-            if(data.success === true){
-                window.location = "./src/pages/auth/login.html"
-            }else{
-                setErrorMessage(data.error)
-            }
-        })
+            console.log(formData);
 
-    }
-});
+            //submit inputs to backend after fields have been validated
+            fetch(`${BACKEND_URL}/Auth/signup.php`,
+                {
+                    method : "POST",
+                    body : formData
+                }
+            )
+            .then(res => res.json())
+            .then(data =>{
+                console.log(data);
 
+                if(data.success === true){
+                    window.location = "/src/pages/auth/login.html"
+                }else{
+                    setErrorMessage(data.error)
+                }
+            })
+
+        }
+    });
+})
 
 
 //validate an array of inputs

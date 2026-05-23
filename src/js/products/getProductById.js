@@ -295,10 +295,12 @@ async function loadProducts(){
                     message_container.scrollTop = message_container.scrollHeight;
                 } catch (error) {
                     const messageInput = document.getElementById("messageInput")
-                    messageInput.value = error
-                    messageInput.disabled = true;
 
-                    document.getElementById("sendMessageBtn").disabled = true;
+                    console.log(error);
+                    // messageInput.value = error
+                    // messageInput.disabled = true;
+
+                    // document.getElementById("sendMessageBtn").disabled = true;
                 }
             }
 
@@ -379,7 +381,7 @@ function renderSimilarProducts(products) {
             <div class="card slider-card border-0 shadow-sm">
 
                 <div class="p-2 text-center">
-                    <img src="${IMAGES_URL}/${product.productID}_a.jpg"
+                    <img src="${IMAGES_URL}/${product.productID}_a.webp"
                          class="img-fluid"
                          style="height:120px; object-fit:contain;">
                 </div>

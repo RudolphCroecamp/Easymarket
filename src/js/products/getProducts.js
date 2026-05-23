@@ -144,7 +144,7 @@ async function loadProducts(min=0, max=50_000, lat, long, radius=60){
                 //add product into container
                 container.innerHTML += `
                     <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                        <a href="./src/pages/products/product-view.html?productID=${product.productID}" 
+                        <a href="/src/pages/products/product-view.html?productID=${product.productID}" 
                         class="text-decoration-none text-dark">
 
                             <div class="card h-100 border-0 shadow-sm product-card overflow-hidden">

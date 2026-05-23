@@ -105,6 +105,18 @@
         ]);
 
     } catch (\Throwable $th) {
+        $errorCode = $th->getCode();
+
+        if($errorCode == 661){
+            //return products in json format
+            echo json_encode([
+                "status"=>"failed",
+                "success"=>false,
+                "error"=>$th->getMessage()
+            ]);
+        }
+        
+
         //return products in json format
         echo json_encode([
             "status"=>"failed",

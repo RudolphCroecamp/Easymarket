@@ -80,7 +80,7 @@
         $insertCommentStmt = $conn->prepare("
             INSERT INTO comments 
             (productID, senderID, fname, lname, rating, comment) 
-            VALUES (?,?,?,?,?,?,?)
+            VALUES (?,?,?,?,?,?)
         ");
 
 

@@ -64,6 +64,8 @@
         mkdir($uploadDir, 0777, true);
     }
 
+    require_once __DIR__ . '/uploadToOracleBucket.php';
+
     foreach ($_FILES['images']['tmp_name'] as $index => $tmpName) {
 
         $fileError = $_FILES['images']['error'][$index];
@@ -120,8 +122,6 @@
         }
 
         imagedestroy($image);
-
-        require_once __DIR__ . '/uploadToOracleBucket.php';
 
         $fileName = $productID . "_" . $image_char . ".webp";
 
@@ -217,16 +217,19 @@
                     $insertProductTagStmt->bind_param("si", $productID, $tagID);
                     $insertProductTagStmt->execute();
                     
-                    $imgPosition = 1;
-                    foreach ($uploadedFiles as $filePath) {
-                        $isPrimary = $imgPosition == 1 ? 1 : 0;
-                        $insertImageStmt->bind_param("ssii", $productID, $filePath, $imgPosition, $isPrimary);
-                        $insertImageStmt->execute();
-
-                        $imgPosition++;
-                    }
+                    
                 }
             }
+
+            $imgPosition = 1;
+            foreach ($uploadedFiles as $filePath) {
+                $isPrimary = $imgPosition == 1 ? 1 : 0;
+                $insertImageStmt->bind_param("ssii", $productID, $filePath, $imgPosition, $isPrimary);
+                $insertImageStmt->execute();
+
+                $imgPosition++;
+            }
+
         } catch (\Throwable $th) {
             throw $th;
         }
