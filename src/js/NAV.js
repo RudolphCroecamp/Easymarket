@@ -7,109 +7,79 @@ navContainer.innerHTML = NAV()
 function NAV(){
     return(
     `
-        <div class="container-fluid flex-column">
+    <div class="container-fluid px-4 d-flex flex-wrap align-items-center justify-content-between py-2">
 
-        <!-- TOP BAR -->
-        <div class="w-100 d-flex align-items-center justify-content-between py-2">
+        <!-- LOGO -->
+        <a class="navbar-brand d-flex align-items-center gap-2 m-0" href="/">
+            <img 
+                src="/src/images/logo.png"
+                alt="Logo"
+                width="38"
+                height="38"
+                class="rounded-circle object-fit-cover"
+            >
+            <span class="fw-bold text-dark fs-5">
+                EasyMarket
+            </span>
+        </a>
 
-            <!-- LEFT -->
-            <a class="navbar-brand d-flex align-items-center gap-2 m-0" href="/">
-                <img 
-                    src="/src/assets/logo.png"
-                    alt="Logo"
-                    width="42"
-                    height="42"
-                    class="rounded-circle border border-light object-fit-cover"
-                >
-                <span class="fw-bold text-white fs-5">
-                    EasyMarket
+        <!-- RIGHT MENU -->
+        <div class="d-flex align-items-center gap-2 order-1 order-xl-3 ms-1">
+
+            <!-- MESSAGES -->
+            <button
+                class="btn btn-light d-flex align-items-center gap-2 rounded-pill px-3"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#contactPanel"
+            >
+                <i class="bi bi-chat-dots"></i>
+                <span class="d-none d-lg-inline">
+                    Messages
                 </span>
-            </a>
+            </button>
 
-            <!-- RIGHT SIDE -->
-            <div class="d-flex align-items-center gap-2">
-
-                <!--MESSAGES -->
-                <button
-                    class="btn text-white d-flex align-items-center gap-2 px-2 py-2 position-relative message-btn"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#contactPanel"
+            <!-- MENU -->
+            <div class="dropdown">
+                <button 
+                    class="btn btn-light rounded-circle"
+                    data-bs-toggle="dropdown"
                 >
-                    <i class="bi bi-chat-dots-fill fs-6"></i>
-
-                    <span class="d-none d-sm-inline fw-medium">
-                        Messages
-                    </span>
+                    <i class="bi bi-list fs-5"></i>
                 </button>
 
-                <!-- BURGER DROPDOWN -->
-                <div class="dropdown">
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-3">
+                    <li><a class="dropdown-item" href="/src/pages/listings/new-lisiting.html">New Listings</a></li>
+                    <li><a class="dropdown-item" href="/src/pages/listings/view-listings.html">View Listings</a></li>
+                    <li><a class="dropdown-item" href="/src/pages/settings/settings.html">Settings</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    
+                    <li><a class="dropdown-item" href="/src/pages/payments/cart.html">Cart</a></li>
+                    <li><hr class="dropdown-divider"></li>
 
-                    <button 
-                        class="navbar-toggler border-0 shadow-none"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                    >
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+                    <li><a class="dropdown-item" href="/src/pages/payments/payment.html">Checkout</a></li>
+                    <li><hr class="dropdown-divider"></li>
 
-                    <!-- MENU -->
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark shadow-lg border-0 mt-3">
-
-                        <li>
-                            <a class="dropdown-item" href="/src/pages/listings/new-lisiting.html">
-                                New Listing
-                            </a>
-                        </li>
-
-                        <li>
-                            <a class="dropdown-item" href="/src/pages/listings/view-listings.html">
-                                View Listings
-                            </a>
-                        </li>
-
-                        <li><hr class="dropdown-divider"></li>
-
-                        <li>
-                            <a class="dropdown-item" href="/src/pages/settings/settings.html">
-                                Settings
-                            </a>
-                        </li>
-
-                        <li><hr class="dropdown-divider"></li>
-
-                        <li>
-                            <a class="dropdown-item text-danger" href="/src/pages/auth/logout.html">
-                                Logout
-                            </a>
-                        </li>
-
-                    </ul>
-
-                </div>
-
+                    <li><a class="dropdown-item text-danger" href="/src/pages/auth/logout.html">Logout</a></li>
+                </ul>
             </div>
+
         </div>
 
         <!-- SEARCH -->
-        <div class="w-100 pb-3">
-            <div class="d-flex col-12 col-sm-10 col-md-7 col-lg-5 mx-auto mt-2">
-
+        <div class="w-100 w-lg-auto flex-grow-1 mx-lg-5 mt-3 mt-lg-0 order-2 order-xl-2" style="max-width: 700px;">
+            <div class="search-wrapper">
                 <input 
-                    class="form-control me-2 rounded-3 px-3"
+                    class="form-control border-0 shadow-none"
                     id="searchBox"
                     type="text"
-                    placeholder="Search..."
+                    placeholder="Search products..."
                 >
-
                 <button 
-                    class="btn btn-primary rounded-3 px-4"
+                    class="search-btn"
                     id="searchBtn"
                 >
-                    Search
+                    <i class="bi bi-search"></i>
                 </button>
-
             </div>
         </div>
 

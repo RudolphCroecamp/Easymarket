@@ -10,6 +10,8 @@ import newComment from "../comments/newComment.js"
 import {sendMessage} from "../improved_messages/newMessage.js"
 import {getMessagesForChat, renderChatMessages} from "../improved_messages/getMessagesByGroupID.js"
 
+import Cart from "../cart/Cart.js"
+
 // import {createPaymentRequest} from "../payment/payments.js"
 
 let loading = false;
@@ -24,7 +26,8 @@ const upvotes_img = "../../images/upvotes.png"
 const downvotes_img= "../../images/downvotes.png"
 
 
-
+const userCart = new Cart();
+userCart.init();
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -202,7 +205,7 @@ async function loadProducts(){
                             </div>
 
                             <div class="d-flex flex-wrap gap-3 text-muted small fw-semibold mt-3">
-                                <button type="submit" class="btn btn-success" id="orderProduct" ${data.isOwner ? "disabled" : ""}>Order Now</button>
+                                <button type="submit" class="btn btn-success" id="orderProduct" ${data.isOwner ? "disabled" : ""}>Add to Cart</button>
                             </div>
 
                         </div>
@@ -256,7 +259,23 @@ async function loadProducts(){
 
             //add event for ordering product
             document.getElementById("orderProduct").addEventListener("click", async ()=>{
-                window.location.href = `/src/pages/payments/payment.html?productID=${productID}`
+                // window.location.href = `/src/pages/payments/payment.html?productID=${productID}`
+                try {
+
+                    const newItem = {
+                        "productID" : product.productID, 
+                        "price" : product.price, 
+                        "name" : product.name,
+                        "description" : product.description,
+                        "quantity" : 1
+                    }
+
+                    userCart.addItem(newItem)
+
+                } catch (error) {
+                    showToast(error)
+                }
+                
             })
 
             //get similar products

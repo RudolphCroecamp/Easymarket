@@ -30,63 +30,79 @@
 
 <body class="bg-body-tertiary">
     <!-- NAVBAR -->
-    <nav id="NAV" class="navbar navbar-dark bg-dark sticky-top shadow-sm border-bottom">
+    <nav class="navbar navbar-expand-lg bg-white sticky-top shadow-sm py-2" id="NAV">
         <!-- Nav comes here -->
     </nav>
-
+    
     <div class="container-fluid mt-4">
+        <!-- Filters -->
+        <div class="container my-3">
 
-    <!-- FILTER BAR -->
-    <div class="container my-3">
-        <div class="card border-0 shadow-sm rounded-4 p-2 p-md-3">
+            <div class="bg-white shadow-sm rounded-4 p-3 border">
 
-            <div class="row g-2 align-items-end justify-content-center">
+                <div class="d-flex flex-wrap align-items-center gap-2 justify-content-center">
 
-                <!-- PRICE -->
-                <div class="col-12 col-md-5">
-                    <div class="d-flex gap-2">
-                        <!-- MIN -->
-                        <div class="form-floating w-50">
-                            <input 
-                                type="number" 
-                                id="minPriceInput"
-                                class="form-control form-control-sm"
-                                placeholder="Min (R)"
-                                value="0"
-                            >
-                            <label for="minPriceInput">Min (R)</label>
-                        </div>
+                    <!-- MIN -->
+                    <div class="form-floating filter-input">
 
-                        <!-- MAX -->
-                        <div class="form-floating w-50">
-                            <input 
-                                type="number" 
-                                id="maxPriceInput"
-                                class="form-control form-control-sm "
-                                placeholder="Max (R)"
-                                value="50000"
-                            >
-                            <label for="maxPriceInput">Max (R)</label>
-                        </div>
+                        <input 
+                            type="number"
+                            id="minPriceInput"
+                            class="form-control"
+                            placeholder="Min"
+                            value="0"
+                        >
+
+                        <label for="minPriceInput">
+                            Min (R)
+                        </label>
 
                     </div>
-                </div>
 
-                <!-- LOCATION + RADIUS BUTTON -->
-                <div class="col-12 col-md-4">
+                    <!-- MAX -->
+                    <div class="form-floating filter-input">
+
+                        <input 
+                            type="number"
+                            id="maxPriceInput"
+                            class="form-control"
+                            placeholder="Max"
+                            value="50000"
+                        >
+
+                        <label for="maxPriceInput">
+                            Max (R)
+                        </label>
+
+                    </div>
+
+                    <!-- APPLY -->
                     <button 
-                        class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-2"
+                        class="btn btn-primary rounded-pill px-4 h-100"
+                        id="applyFilter"
+                    >
+                        Apply
+                    </button>
+
+                    <!-- LOCATION -->
+                    <button 
+                        class="btn btn-outline-secondary rounded-pill px-4 d-flex align-items-center gap-2"
                         data-bs-toggle="modal"
                         data-bs-target="#locationModal"
                     >
-                        📍 Location & Radius
+
+                        <i class="bi bi-geo-alt"></i>
+
+                        Location
+
                     </button>
+
                 </div>
+
             </div>
 
         </div>
 
-    </div>
         <!-- PRODUCTS -->
         <div class="row g-4" id="products-container"></div>
 
@@ -143,7 +159,7 @@
                         placeholder="Type a message..."
                         id="messageInputModal">
 
-                        <button class="btn btn-success " id="btnSendMessageModal">
+                        <button class="btn btn-success" id="btnSendMessageModal">
                             Send
                         </button> 
                     </div>

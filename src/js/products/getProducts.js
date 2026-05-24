@@ -67,6 +67,17 @@ document.addEventListener("DOMContentLoaded", async ()=>{
         
     })
 
+    document.getElementById("applyFilter").addEventListener("click", async ()=>{
+
+        const max = document.getElementById("maxPriceInput").value
+        const min = document.getElementById("minPriceInput").value
+
+        container.innerHTML = ""
+        page = 1
+
+        await loadProducts(min, max, LAT, LONG, RADIUS);
+    })
+
 })
 
 

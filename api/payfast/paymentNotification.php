@@ -120,9 +120,10 @@
         $check2 = pfValidIP();
 
         //get total Price from db
-        $paymentID = $pfData["m_payment_id"];//get paymentID from payfast
-        $totalPriceStmt = $conn->prepare("SELECT price FROM orders WHERE paymentID = ?");
-        $totalPriceStmt->bind_param("i", $paymentID);
+        $orderID = (int)$pfData["m_payment_id"];//get orderID from payfast
+
+        $totalPriceStmt = $conn->prepare("SELECT totalPrice FROM orders WHERE orderID = ?");
+        $totalPriceStmt->bind_param("i", $orderID);
 
         $totalPriceStmt->execute();
 
@@ -130,24 +131,30 @@
 
         if($totalPrice_result && $totalPrice_result->num_rows > 0){
             $totalPriceData = $totalPrice_result->fetch_assoc();
-            $totalPrice = (float)$totalPriceData['price'];
+            $totalPrice = (float)$totalPriceData['totalPrice'];
         }else{
             throw new Exception("No orders found with provided ID");
         }
-
-
+        
         $check3 = pfValidPaymentData($totalPrice, $pfData);
         $check4 = pfValidServerConfirmation($pfParamString, $pfHost);
+
+        $UpdateOrderStmt = $conn->prepare("UPDATE orders SET status = ? WHERE orderID = ?");
+        $UpdateOrder_itemsStmt = $conn->prepare("UPDATE order_items SET status = ? WHERE orderID = ?");
 
         if(10 > 2) {//$check1 && $check2 && $check3 && $check4
             // All checks have passed, the payment is successful
 
             //update order status
             $status = "Payment Received";
-            $updateStatusStmt = $conn->prepare("UPDATE orders SET status = ? WHERE paymentID = ?");
-            $updateStatusStmt->bind_param("si", $status, $paymentID);
+            $UpdateOrderStmt->bind_param("si", $status, $orderID);
+            $UpdateOrder_itemsStmt->bind_param("si", $status, $orderID);
 
-            if (!$updateStatusStmt->execute()){
+            if (!$UpdateOrderStmt->execute()){
+                throw new Exception("Could not update status.");
+            }
+
+            if (!$UpdateOrder_itemsStmt->execute()){
                 throw new Exception("Could not update status.");
             }
 
@@ -172,7 +179,7 @@
         
 
 
-
+        //apply changes
         $conn->commit();
 
     } catch (\Throwable $th) {
