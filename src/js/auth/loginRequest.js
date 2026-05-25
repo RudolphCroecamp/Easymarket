@@ -33,6 +33,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
             console.log(formData);
 
+
+            //check if user
+
+
+
+
             //submit inputs to backend after fields have been validated
             fetch(`${BACKEND_URL}/Auth/login.php`,
                 {

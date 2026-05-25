@@ -191,18 +191,49 @@ async function loadProducts(){
 
                             <div class="d-flex flex-wrap gap-3 text-muted small fw-semibold">
                                 <span class="badge bg-light text-dark">
-                                    ⏱ ${timeAgo(product.created_at)}
+                                    <i class="bi bi-alarm"></i> ${timeAgo(product.created_at)}
                                 </span>
 
                                 <span class="badge bg-light text-dark">
-                                    👁 ${product.views || 16}
+                                    <i class="bi bi-eye"></i> ${product.views || 16}
                                 </span>
 
                                 <span class="badge bg-light text-dark" id="setLocation">
-                                    📍 ${product.province + ", " + product.city || "Port Elizabeth, Eastern Cape"}
+                                    <i class="bi bi-pin-map"></i> ${product.province + ", " + product.city || "Port Elizabeth, Eastern Cape"}
                                 </span>
 
+                                <span class="badge bg-light text-dark" id="setLocation">
+                                     ${product.quantity || "1"}
+                                </span>
                             </div>
+
+                            <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+                                <!-- Quantity -->
+                                <div class="input-group input-group-sm quantity-stepper" style="width: 110px;">
+
+                                    <button class="btn btn-outline-secondary d-flex align-items-center justify-content-center"
+                                        type="button"
+                                        id="minQuantity"
+                                    >
+                                        <i class="bi bi-dash-lg"></i>
+                                    </button>
+
+                                    <input type="text"
+                                        class="form-control text-center"
+                                        value="1"
+                                        id="itemQuantity"
+                                        readonly>
+
+                                    <button class="btn btn-outline-secondary d-flex align-items-center justify-content-center"
+                                        type="button"
+                                        id="addQuantity"
+                                    >
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+
+                                </div>
+                            </div>
+
 
                             <div class="d-flex flex-wrap gap-3 text-muted small fw-semibold mt-3">
                                 <button type="submit" class="btn btn-success" id="orderProduct" ${data.isOwner ? "disabled" : ""}>Add to Cart</button>
@@ -267,7 +298,7 @@ async function loadProducts(){
                         "price" : product.price, 
                         "name" : product.name,
                         "description" : product.description,
-                        "quantity" : 1
+                        "quantity" : Number(document.getElementById("itemQuantity").value)
                     }
 
                     userCart.addItem(newItem)
@@ -323,9 +354,16 @@ async function loadProducts(){
                 }
             }
 
+                document.getElementById("addQuantity").addEventListener("click", async()=>{
+                    console.log("plus 1");
+                    updateQuantity(product.quantity, 1)
+                })
 
+                document.getElementById("minQuantity").addEventListener("click", async()=>{
+                    console.log("neg 1");
+                    updateQuantity(product.quantity, -1)
+                })
                 
-            
             loading = false;
         }
 
@@ -335,6 +373,29 @@ async function loadProducts(){
         setErrorMessage(error)
     });
 }
+
+
+
+
+function updateQuantity(maxQuantity, amount) {
+    const input = document.getElementById("itemQuantity");
+    let current = Number(input.value);
+
+    if (amount > 0) {
+        // add
+        if (current < maxQuantity) {
+            current++;
+        }
+    } else {
+        // minus
+        if (current > 1) {
+            current--;
+        }
+    }
+
+    input.value = current;
+}
+
 
 
 
