@@ -3,13 +3,17 @@ FROM php:8.3-apache
 RUN apt-get update && apt-get install -y \
     unzip \
     git \
-    curl
+    curl \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libfreetype6-dev
 
 # Enable Apache rewrite
 RUN a2enmod rewrite
 
-# Install PHP extensions
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+# Install GD + MySQL extensions
+RUN docker-php-ext-configure gd --with-jpeg --with-freetype \
+    && docker-php-ext-install gd mysqli pdo pdo_mysql
 
 # Change Apache to Cloud Run port
 RUN sed -i 's/80/8080/g' /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf
