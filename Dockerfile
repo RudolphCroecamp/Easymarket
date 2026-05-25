@@ -6,13 +6,17 @@ RUN apt-get update && apt-get install -y \
     curl \
     libjpeg62-turbo-dev \
     libpng-dev \
-    libfreetype6-dev
+    libfreetype6-dev \
+    libwebp-dev
 
 # Enable Apache rewrite
 RUN a2enmod rewrite
 
-# Install GD + MySQL extensions
-RUN docker-php-ext-configure gd --with-jpeg --with-freetype \
+# Install PHP extensions (GD with JPEG + PNG + WebP support)
+RUN docker-php-ext-configure gd \
+    --with-jpeg \
+    --with-freetype \
+    --with-webp \
     && docker-php-ext-install gd mysqli pdo pdo_mysql
 
 # Change Apache to Cloud Run port

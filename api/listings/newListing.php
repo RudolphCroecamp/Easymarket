@@ -72,16 +72,16 @@
 
         if ($fileError !== 0) continue;
 
-        // 🔒 Validate real image (NOT $_FILES['type'])
+        //Validate real image
         $imageInfo = getimagesize($tmpName);
         if (!$imageInfo) continue;
 
         $mime = $imageInfo['mime'];
-        $allowedTypes = ['image/jpeg', 'image/png'];
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
         if (!in_array($mime, $allowedTypes)) continue;
 
-        // 🎨 Create image resource
+        //Create image resource
         switch ($mime) {
             case 'image/jpeg':
                 $image = imagecreatefromjpeg($tmpName);
@@ -95,11 +95,16 @@
                 imagealphablending($image, true);
                 imagesavealpha($image, true);
                 break;
+
+            case 'image/webp':
+                $image = imagecreatefromwebp($tmpName);
+                break;
+
             default:
                 continue 2;
         }
 
-        // 📏 Resize (max width 1200px)
+        //Resize (max width 1200px)
         $maxWidth = 1200;
         $width = imagesx($image);
         $height = imagesy($image);
@@ -113,7 +118,7 @@
             $image = $resized;
         }
 
-        // 🧾 Save as WebP instead of JPG
+        //Save as WebP instead of JPG
         $filePath = $uploadDir . $productID . "_" . $image_char . ".webp";
 
         if (!imagewebp($image, $filePath, 80)) {
