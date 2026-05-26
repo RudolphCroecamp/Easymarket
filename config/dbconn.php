@@ -5,7 +5,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 try {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
     $dotenv->load();
-    
+
 } catch (\Throwable $e) {
     // ignore in production
 }
@@ -39,7 +39,7 @@ if ($isCloudRun) {
     $user = $_ENV['DB_USER'];
     $pass = $_ENV['DB_PASS'];
     $db   = $_ENV['DB_NAME'];
-    $port   = $_ENV['DB_PORT'];
+    $port  = $_ENV['DB_PORT'];
 
     $useSSL = file_exists(__DIR__ . "/server-ca.pem");
 
@@ -57,9 +57,8 @@ if ($isCloudRun) {
     }
 }
 
-/**
- * Final safety check
- */
+
+
 if (!$conn) {
     die("Database connection not initialized");
 }
