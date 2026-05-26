@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
                     body : formData,
                 }
             )
-            .then(res => res.json())
+            .then(res => res.text())
             .then(data =>{
                 console.log(data);
 

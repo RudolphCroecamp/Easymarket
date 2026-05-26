@@ -170,7 +170,7 @@ async function loadProducts(min=0, max=50_000, lat, long, radius=60){
                                 <!-- Image -->
                                 <div class="product-image-wrapper">
                                     <img 
-                                        src="${IMAGES_URL}/${product.primaryImage}" 
+                                        src="${IMAGES_URL}/${product.productID}_a.webp" 
                                         class="w-100 product-image lazy-image"
                                         alt="${product.name}"
                                         loading="lazy"

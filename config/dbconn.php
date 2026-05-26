@@ -1,53 +1,56 @@
 <?php
-    // import env variables
-    try {
-        //local env variabes
-        require_once __DIR__ . '/../vendor/autoload.php';
-        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
-        $dotenv->load();
 
-        $host = $_ENV['DB_HOST'];
-        $user = $_ENV['DB_USER'];
-        $pass = $_ENV['DB_PASS'];
-        $db   = $_ENV['DB_NAME'];
-        $port   = $_ENV['DB_PORT'];
+require_once __DIR__ . '/../vendor/autoload.php';
 
-    } catch (\Throwable $th) {
-        //get from hosting server environment
-        $host = getenv('DB_HOST');
-        $user = getenv('DB_USER');
-        $pass = getenv('DB_PASS');
-        $db = getenv('DB_NAME');
-        $port   = getenv('DB_PORT');
-    }
+try {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+    $dotenv->load();
+} catch (\Throwable $e) {
+    // ignore if not available in production
+}
 
+/**
+ * Detect environment
+ */
+$isCloudRun = getenv('K_SERVICE') !== false;
 
-    $ssl_ca = file_exists(__DIR__ . "/ca.pem")
-    ? __DIR__ . "/ca.pem"
-    : "/secrets/aiven-ca";
-    
-    // Create connection
-    $conn = mysqli_init();
+if ($isCloudRun) {
 
-    // Enable SSL
-    mysqli_ssl_set($conn, NULL, NULL, $ssl_ca, NULL, NULL);
+    // ✅ CLOUD RUN (Cloud SQL socket)
+    $instance = getenv('CLOUDSQL_CONNECTION_NAME');
+    $user = getenv('DB_USER');
+    $pass = getenv('DB_PASS');
+    $db   = getenv('DB_NAME');
 
-    if (!mysqli_real_connect(
-        $conn,
-        $host,
-        $user,
-        $pass,
-        $db,
-        $port,
-        NULL,
-        MYSQLI_CLIENT_SSL
-    )) {
-        die("Connection failed: " . mysqli_connect_error());
-    }
+    $socket = "/cloudsql/" . $instance;
 
-    if (!$conn) {
-        throw new Exception("DB connection failed");
-    }
+    $conn = new mysqli(null, $user, $pass, $db, null, $socket);
+
+} else {
+
+    // ✅ LOCAL (XAMPP or testing with public IP)
+    $host = getenv('DB_HOST') ?: '127.0.0.1';
+    $user = getenv('DB_USER') ?: 'easymarket-user';
+    $pass = getenv('DB_PASS') ?: '';
+    $db   = getenv('DB_NAME') ?: 'easymarket';
+    $port = getenv('DB_PORT') ?: 3306;
+
+    $conn = new mysqli($host, $user, $pass, $db, $port);
+}
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+return $conn;
 
 
-    return $conn;
+
+
+// $host = '127.0.0.1';
+// $user = 'easymarket-user';
+// $pass = 'mlzf},i]TP95rqU[';
+// $db   = 'easymarket';
+// $port = 3306;
+
+// $conn = new mysqli($host, $user, $pass, $db, $port);

@@ -1,6 +1,8 @@
 <?php
     header('Content-Type: application/json');
 
+    $start = microtime(true);
+
     require '../../config/cors.php';//allow access from webserver
     require '../../config/protectedRoute.php';//user must be authorised
     $conn = require '../../config/dbconn.php';//connect to DB
@@ -85,38 +87,24 @@
     //get data from db
     $product_result = $getProductsStmt->get_result();
     
-    //get product imageUrl
-    $getProductImageUrlStmt = $conn->prepare("SELECT imageUrl 
-        FROM product_images 
-        WHERE productID = ? 
-        AND isPrimary = 1
-        LIMIT 1
-    ");
 
     $products = [];
 
     //check if we have received rows form the db
     if ($product_result && $product_result->num_rows > 0) {
         while ($product = $product_result->fetch_assoc()) {
-
-            $productID = $product["productID"];
-
-            $getProductImageUrlStmt->bind_param("s", $productID);
-            $getProductImageUrlStmt->execute();
-
-            $images_result = $getProductImageUrlStmt->get_result();
-            $img = $images_result->fetch_assoc();
-
-            $product["primaryImage"] = $img["imageUrl"] ?? null;
-
             $products[] = $product;
         }
+
+        $end = microtime(true);
+
+        $executionTime = $end - $start;
 
         echo json_encode([
             "status" => "success",
             "success" => true,
             "products" => $products,
-            "fields" => $jsonData
+            "time" => $executionTime
         ]);
 
         file_put_contents($cacheFile, json_encode($products));

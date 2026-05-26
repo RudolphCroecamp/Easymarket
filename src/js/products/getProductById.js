@@ -54,14 +54,22 @@ document.addEventListener("DOMContentLoaded", async ()=>{
 
 async function initPage(productID) {
     try {
+        //show loading spinner
+
+        document.getElementById("loadingOverlay").classList.remove("d-none");
+
+        //fetch data
         await Promise.all([
             loadProducts(productID),
             getSimilarProducts(productID),
             loadComments(productID, 1)
         ]);
 
+        
+
     } catch (error) {
         console.error(error);
+        document.getElementById("loadingOverlay").classList.add("d-none");
     }
 }
 
@@ -74,9 +82,6 @@ async function loadProducts(productID){
     if(loading) return;
 
     loading = true;
-
-    
-
 
     //get products
     fetch(`${BACKEND_URL}/products/getProductById.php?productID=${productID}`, {
@@ -274,17 +279,21 @@ async function loadProducts(productID){
 
                 </div>
             `;
-
+            
+            //show content
             document.getElementById("productSection").style.visibility = "visible"
+            //hide loading spinner
+            document.getElementById("loadingOverlay").classList.add("d-none");
 
 
             const mainImage = document.getElementById("mainImage");
             const imgcontainer = document.getElementById("thumbnailContainer");
 
             const images = []
+            // let letter = "a"
 
             for (let i = 0; i < product.imageCount; i++) {
-                images.push(`${IMAGES_URL}/${product.images[i]}`);
+                images.push(`${IMAGES_URL}/${productID}_${String.fromCharCode(97 + i)}.webp`);
             }
 
             // set first image
