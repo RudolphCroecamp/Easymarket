@@ -6,32 +6,31 @@ import {my_message, their_message} from "./message_helpers.js"
 
 getLatestMessages()
 
-function getLatestMessages() {
-    
+async function getLatestMessages() {
     try {
-        fetch(`${BACKEND_URL}/improved_messages/getLatestMessages.php`,{
-            method : "POST",
-            credentials : "include"
-        })
-        .then(res => res.json())
-        .then(response =>{
-            console.log(response);
+        const res = await fetch(`${BACKEND_URL}/improved_messages/getLatestMessages.php`, {
+            method: "POST",
+            credentials: "include"
+        });
 
-            if(response.success === false){
-                throw response.error || "Could not load chat list"
-            }
-            
-            //load chats to chat canvas
-            loadChatList(response.messages)
+        const response = await res.json();
 
-        })
-        .catch(error => {throw error})
+        console.log(response);
+
+        // ❌ backend says groupID missing → STOP CLEANLY
+        if (!response.success) {
+            console.warn("Chat list not loaded:", response.error);
+            return null;
+        }
+
+        //return response.messages;
+
+        loadChatList(response.messages)
 
     } catch (error) {
-        throw error
+        console.log("Network error:", error);
+        return null;
     }
-
-    
 }
 
 function loadChatList(messages){
@@ -42,8 +41,6 @@ function loadChatList(messages){
         console.log("No messages to load");
         return
     }
-
-
 
     messages.forEach(chat => {
         const div = document.createElement("div");

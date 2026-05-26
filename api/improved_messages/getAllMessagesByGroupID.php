@@ -30,34 +30,6 @@
         //get userID from session
         $userID = $_SESSION['userID'];
 
-
-        //prevent the user from chatting to themselfs
-
-        //get ownerID
-        // $getOwnerIDStmt = $conn->prepare("SELECT ownerID from products WHERE productID = ?");
-        // $getOwnerIDStmt->bind_param("s", $productID);
-        // $getOwnerIDStmt->execute();
-
-        // $owner_result = $getOwnerIDStmt->get_result();
-        
-        // //check for valid ownerID
-        // if($owner_result->num_rows <= 0){
-        //     throw new Exception("Could not find the owner of the product", 1);
-        // }
-
-        // //get product's ownerID
-        // $row = $owner_result->fetch_assoc();
-        // $ownerID = $row["ownerID"];
-
-        // if($ownerID == $userID){
-        //     throw new Exception("You cannot message yourself", 1);
-        // }
-
-        //check for groupID
-        // $getGroupChatIdStmt = $conn->prepare("SELECT groupID, buyerID FROM group_chats WHERE productID = ? AND buyerID = ?");
-        // $getGroupChatIdStmt->bind_param("is", $productID, $userID);
-        // $getGroupChatIdStmt->execute();
-
         //check for groupID
         $getGroupChatIdStmt = $conn->prepare("SELECT groupID, buyerID, productID FROM group_chats WHERE productID = ? AND (buyerID = ? OR ownerID = ?)");
         $getGroupChatIdStmt->bind_param("sss", $productID, $userID, $userID);
@@ -114,15 +86,17 @@
                 "success"=>false,
                 "error"=>$th->getMessage()
             ]);
+        }else{
+            //return products in json format
+            echo json_encode([
+                "status"=>"failed",
+                "success"=>false,
+                "error"=>$th->getMessage()
+            ]);
         }
         
 
-        //return products in json format
-        echo json_encode([
-            "status"=>"failed",
-            "success"=>false,
-            "error"=>$th->getMessage()
-        ]);
+
     }
 
     //Close statements and connection

@@ -8,7 +8,7 @@ import getComments from "../comments/getComments.js"
 import newComment from "../comments/newComment.js"
 
 import {sendMessage} from "../improved_messages/newMessage.js"
-import {getMessagesForChat, renderChatMessages} from "../improved_messages/getMessagesByGroupID.js"
+import {renderChatMessages} from "../improved_messages/getMessagesByGroupID.js"
 
 import Cart from "../cart/Cart.js"
 
@@ -354,22 +354,18 @@ async function loadProducts(productID){
                         showToast(error)
                     }
                     
-
                     messageInput.value = "";
                 });
 
+
                 try {
-                    await renderChatMessages(productID)
-                    const message_container = document.getElementById("message_container")
+                    await renderChatMessages(productID);
+
+                    const message_container = document.getElementById("message_container");
                     message_container.scrollTop = message_container.scrollHeight;
+
                 } catch (error) {
-                    const messageInput = document.getElementById("messageInput")
-
-                    console.log(error);
-                    // messageInput.value = error
-                    // messageInput.disabled = true;
-
-                    // document.getElementById("sendMessageBtn").disabled = true;
+                    console.log(error.message || error);
                 }
             }
 
@@ -422,29 +418,29 @@ function updateQuantity(maxQuantity, amount) {
 
 
 
-async function getSimilarProducts(category){
-    fetch(`${BACKEND_URL}/products/similarProducts.php?category=${category}`, {
-        method : "POST",
-        credentials : "include"
+async function getSimilarProducts(productID) {
+    fetch(`${BACKEND_URL}/products/similarProducts.php`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `productID=${encodeURIComponent(productID)}`
     })
     .then(res => res.json())
-    .then(data =>{
+    .then(data => {
         console.log(data);
 
-        //load similar products
-        if(data.success === true){
-            renderSimilarProducts(data.products)  
-        }else{
+        if (data.success === true) {
+            renderSimilarProducts(data.products);
+        } else {
             throw new Error(data.error || "No similar products found");
         }
-        
     })
-    .catch(error =>{
-        console.log(error)
-        //show error message to client
+    .catch(error => {
         console.log(error);
-        showToast(error)
-    })
+        showToast(error.message || error);
+    });
 }
 
 

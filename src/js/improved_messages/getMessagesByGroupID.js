@@ -4,64 +4,58 @@ import {my_message, their_message} from "./message_helpers.js"
 export {getMessagesForChat, renderChatMessages}
 
 
-async function getMessagesForChat(productID){
-    //check if we have received a groupID
-    if(!productID) {
-        return Promise.reject("Could not get messages. No productID passed as parameter.")
+async function getMessagesForChat(productID) {
+    if (!productID) {
+        throw new Error("Could not get messages. No productID passed as parameter.");
     }
 
-    try {
-        return fetch(`${BACKEND_URL}/improved_messages/getAllMessagesByGroupID.php`,{
-            method : "POST",
-            credentials : "include",
-            body : JSON.stringify({productID})
-        })
-        .then(res => res.json())
-        .then(response =>{
-            console.log(response);
-            //invalid response
-            if(response.success === false){
-                throw response.error || "Could not load messages for chat"
-            }
+    const res = await fetch(`${BACKEND_URL}/improved_messages/getAllMessagesByGroupID.php`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ productID })
+    });
 
-            return [response.messages, response.isOwner]
+    const response = await res.json();
 
-        })
-        .catch(error => {
-            throw error
-        })
+    console.log(response);
 
-    } catch (error) {
-        throw error
+    if (!res.ok || response.success === false) {
+        throw new Error(response.error || "Could not load messages for chat");
     }
+
+    return [response.messages, response.isOwner];
 }
 
 
-async function renderChatMessages(productID){
-    try {
-        const [messages, isOwner] = await getMessagesForChat(productID)
-        console.log(messages);
+async function renderChatMessages(productID) {
+    const container = document.getElementById("message_container");
 
-        //if no messages where sent yet
-        if(!messages || messages.length <= 0){
-            // const messageInput = document.getElementById("messageInput").value = "Hi, is this still available"
-            return
+    try {
+        const [messages, isOwner] = await getMessagesForChat(productID);
+
+        if (!messages || messages.length === 0) {
+            throw new Error("No messages");
         }
-        
-        //append messages
-        const container = document.getElementById("message_container");
+
+        let html = "";
+
         messages.forEach(message => {
-            if(message.sentByCurrentUser){
-                container.innerHTML+= my_message(message.message)
-            }else{
-                container.innerHTML+= their_message(message.message, isOwner)
+            if (message.sentByCurrentUser) {
+                html += my_message(message.message);
+            } else {
+                html += their_message(message.message, isOwner);
             }
         });
 
-    } catch (error) {
-        throw error
-    }
+        container.innerHTML = html;
 
+    } catch (error) {
+        console.log(error.message || error);
+        container.innerHTML = `<p class="text-muted">No messages yet</p>`;
+    }
 }
 
 
