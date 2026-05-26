@@ -60,7 +60,6 @@
 
 
     //select only available products in close radius
-
     $sql = 
         "SELECT *,
         (6371 * ACOS(
@@ -113,9 +112,6 @@
             "fields" => $jsonData
         ]);
     }
-
-    
-
 
     
     //close and end connection

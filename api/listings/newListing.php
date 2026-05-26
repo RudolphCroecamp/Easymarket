@@ -35,7 +35,6 @@
         exit;
     }
 
-
     //get data from client
     $title = $_POST['title'];
     $price = $_POST['price'];
@@ -48,8 +47,6 @@
     $subcategory = $_POST['subcategory'];
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
-
-
 
     require_once '../../config/generateGUID.php';//connect to DB
     $productID = generateGUID();// 2a38e78c-99be-4b32-a5f5-cac84f9efccf
@@ -150,9 +147,7 @@
         exit;
     }
 
-
-
-
+    $image_count = count($uploadedFiles);
 
     //start a transaction so we can revert all inserts if one fails
     $conn->begin_transaction();
@@ -160,10 +155,9 @@
      //add listing details to db
     $insertProductStmt = $conn->prepare("
         INSERT INTO products 
-        (productID, ownerID, name, description, price, sold, deleted, `condition`, delivery, category, subcategory, latitude, longitude, province, city) 
-        VALUES (?,?,?,?,?, FALSE, FALSE, ?, ?, ?, ?, ?, ?, ?, ?)
+        (productID, ownerID, name, description, price, sold, deleted, `condition`, delivery, category, subcategory, latitude, longitude, province, city, imageCount) 
+        VALUES (?,?,?,?,?, FALSE, FALSE, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
-
 
     // Prepare statements
     $insertTagStmt = $conn->prepare("
@@ -177,12 +171,6 @@
         VALUES (?, ?)
     ");
 
-    //add product images to db
-    $insertImageStmt = $conn->prepare("
-        INSERT INTO product_images (productID, imageUrl, position, isPrimary)
-        VALUES (?, ?, ?, ?)
-    ");
-
 
     try {
 
@@ -190,8 +178,8 @@
         $ownerID = $_SESSION['userID'];
 
         $insertProductStmt->bind_param(
-            "ssssdssssddss", 
-            $productID, $ownerID, $title, $description, $price, $condition, $delivery, $category, $subcategory, $latitude, $longitude, $province, $city
+            "ssssdssssddssi", 
+            $productID, $ownerID, $title, $description, $price, $condition, $delivery, $category, $subcategory, $latitude, $longitude, $province, $city, $image_count
         );
 
         $insertProductStmt->execute();
@@ -222,18 +210,9 @@
                     $insertProductTagStmt->bind_param("si", $productID, $tagID);
                     $insertProductTagStmt->execute();
                     
-                    
                 }
             }
 
-            $imgPosition = 1;
-            foreach ($uploadedFiles as $filePath) {
-                $isPrimary = $imgPosition == 1 ? 1 : 0;
-                $insertImageStmt->bind_param("ssii", $productID, $filePath, $imgPosition, $isPrimary);
-                $insertImageStmt->execute();
-
-                $imgPosition++;
-            }
 
         } catch (\Throwable $th) {
             throw $th;

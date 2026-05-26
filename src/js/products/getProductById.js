@@ -290,12 +290,12 @@ async function loadProducts(productID){
             const imgcontainer = document.getElementById("thumbnailContainer");
 
             const images = []
-            // let letter = "a"
 
             for (let i = 0; i < product.imageCount; i++) {
                 images.push(`${IMAGES_URL}/${productID}_${String.fromCharCode(97 + i)}.webp`);
             }
 
+            console.log(images);
             // set first image
             mainImage.src = images[0];
 
