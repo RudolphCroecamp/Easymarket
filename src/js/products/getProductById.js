@@ -12,15 +12,11 @@ import {getMessagesForChat, renderChatMessages} from "../improved_messages/getMe
 
 import Cart from "../cart/Cart.js"
 
-// import {createPaymentRequest} from "../payment/payments.js"
-
 let loading = false;
 
 let page = 1
 
 const container = document.getElementById("productview-container");
-// const loadingText = document.getElementById("loading");
-
 
 const upvotes_img = "../../images/upvotes.png"
 const downvotes_img= "../../images/downvotes.png"
@@ -30,7 +26,7 @@ const userCart = new Cart();
 userCart.init();
 
 
-document.addEventListener("DOMContentLoaded", ()=>{
+document.addEventListener("DOMContentLoaded", async ()=>{
     const searchBtn = document.getElementById("searchBtn")
     let AMOUNT = 1;
     let amountAvailable = 0;
@@ -47,22 +43,39 @@ document.addEventListener("DOMContentLoaded", ()=>{
         window.location = `./search-view.html?query=${query}` 
     })
 
-    loadProducts()
+    let params = new URLSearchParams(location.search);
+    const productID = params.get('productID')
 
+    initPage(productID)
+
+    
 })
 
 
+async function initPage(productID) {
+    try {
+        await Promise.all([
+            loadProducts(productID),
+            getSimilarProducts(productID),
+            loadComments(productID, 1)
+        ]);
+
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 
 
-async function loadProducts(){
+
+
+async function loadProducts(productID){
     //prevent the client from making unwanted request
     if(loading) return;
 
     loading = true;
 
-    let params = new URLSearchParams(location.search);
-    const productID = params.get('productID')
+    
 
 
     //get products
@@ -72,6 +85,13 @@ async function loadProducts(){
     })
     .then(res => res.json())
     .then(async data => {
+
+        if (data.status === 401) {
+            console.log("Unauthorized request");
+            // redirect to login
+            window.location = "/src/pages/auth/login.html"
+            return false;
+        }
 
         if(data.success===false){
             //log error on failed
@@ -203,7 +223,7 @@ async function loadProducts(){
                                 </span>
 
                                 <span class="badge bg-light text-dark" id="setLocation">
-                                     ${product.quantity || "1"}
+                                    <i class="bi bi-boxes"></i> ${product.quantity || "1"}
                                 </span>
                             </div>
 
@@ -254,6 +274,8 @@ async function loadProducts(){
 
                 </div>
             `;
+
+            document.getElementById("productSection").style.visibility = "visible"
 
 
             const mainImage = document.getElementById("mainImage");
@@ -309,10 +331,7 @@ async function loadProducts(){
                 
             })
 
-            //get similar products
-            await getSimilarProducts(product.category)
-
-            loadComments(productID, page=1)
+            
 
             
             if(!data.isOwner){
@@ -367,6 +386,8 @@ async function loadProducts(){
             loading = false;
         }
 
+        loading = false;
+
     }).catch(error =>{
         console.log(error)
         //show error message to client
@@ -412,7 +433,7 @@ async function getSimilarProducts(category){
 
         //load similar products
         if(data.success === true){
-            renderSimilarProducts(data.products)   
+            renderSimilarProducts(data.products)  
         }else{
             throw new Error(data.error || "No similar products found");
         }
@@ -486,6 +507,8 @@ function renderSimilarProducts(products) {
             </div>
         `;
     });
+
+    document.getElementById("similarSection").style.visibility = "visible"
 }
 
 
@@ -584,6 +607,8 @@ async function loadComments(productID, page=1){
                 </div>
             `
         })
+
+        document.getElementById("commentSection").style.visibility = "visible"
     } catch (error) {
         console.log(error);
     }

@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Easymarket-Product View</title>
 
-    <script type="module" src="/src/js/auth/isAuthed.js" ></script>
-
     <link rel="stylesheet" href="/src/css/styles.css">
     
     <script defer src="/src/js/NAV.js"></script>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css">
-    <script href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css">
     
     <script defer type="module" src="/src/js/products/getProductById.js"></script>
@@ -100,14 +98,14 @@
     
 
     <!-- product details comes here -->
-    <div class="container mt-4" >
+    <div class="container mt-4" style="visibility: hidden;" id="productSection">
         <div class="row justify-content-center gap-5" id="productview-container">
 
         </div>
     </div>
 
-
-    <div class="container my-4 ">
+    <!-- Similar products -->
+    <div class="container my-4" style="visibility: hidden;" id="similarSection">
 
         <div class="d-flex justify-content-between align-items-center mb-2 mx-3">
             <h3 class="mb-0 fw-bold">Similar Products</h3>
@@ -118,14 +116,14 @@
             </div>
         </div>
 
-        <div class="product-slider mx-auto " id="similarProductsContainer">
+        <div class="product-slider mx-auto " id="similarProductsContainer" style="visibility: hidden;">
             <!-- cards -->
         </div>
 
     </div>
 
     <!-- Comments -->
-     <div class="container my-4 ">
+     <div class="container my-4" style="visibility: hidden;" id="commentSection">
         <div class="row justify-content-center mx-1">
             <h3 class="fw-bold mb-2">Reviews</h3>
             <div class="col-12" id="commentsContainer">

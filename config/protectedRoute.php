@@ -5,6 +5,7 @@
         http_response_code(401);
         exit(json_encode([
             "success" => false,
+            "status" => 401,
             "error" => "Unauthorized"
         ]));
     }

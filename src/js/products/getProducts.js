@@ -138,6 +138,13 @@ async function loadProducts(min=0, max=50_000, lat, long, radius=60){
     .then(res => res.json())
     .then(data => {
         console.log(data);
+
+        if (data.status === 401) {
+            console.log("Unauthorized request");
+            // redirect to login
+            window.location = "/src/pages/auth/login.html"
+            return false;
+        }
         
         if(data.success===false){
             //log error on failed
