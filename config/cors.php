@@ -3,7 +3,8 @@
     $allowedOrigins = [
         "http://localhost",
         "http://127.0.0.1:8080",
-        "https://easymarket-727523185751.europe-west1.run.app"
+        "https://easymarket-727523185751.europe-west1.run.app",
+        "https://easymarket2-727523185751.africa-south1.run.app"
     ];
 
     $origin = $_SERVER['HTTP_ORIGIN'] ?? '';

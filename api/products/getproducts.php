@@ -20,12 +20,12 @@
     //check if data is set and not empty
     if (!isset($jsonData["min"], $jsonData["max"], $jsonData["lat"], $jsonData["long"], $jsonData["radius"])) {
         echo json_encode([
-                "status" => "failed",
-                "success" => false,
-                "error" => "Fill in all fields",
-                "fields" => $jsonData
-            ]);
-            exit;
+            "status" => "failed",
+            "success" => false,
+            "error" => "Fill in all fields",
+            "fields" => $jsonData
+        ]);
+        exit;
     }
 
     $minPrice = (int)$jsonData["min"];
@@ -52,7 +52,8 @@
         echo json_encode([
             "status" => "success",
             "success" => true,
-            "products" => json_decode(file_get_contents($cacheFile), true)
+            "products" => json_decode(file_get_contents($cacheFile), true),
+            "cached" => true
         ]);
         exit;
     }
@@ -96,18 +97,14 @@
             $products[] = $product;
         }
 
-        $end = microtime(true);
-
-        $executionTime = $end - $start;
-
         echo json_encode([
             "status" => "success",
             "success" => true,
-            "products" => $products,
-            "time" => $executionTime
+            "products" => $products
         ]);
 
         file_put_contents($cacheFile, json_encode($products));
+
     }else{
         echo json_encode([
             "status" => "failed",
