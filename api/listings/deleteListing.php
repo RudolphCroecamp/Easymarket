@@ -1,7 +1,5 @@
 
 <?php
-    header('Content-Type: application/json');
-
     require '../../config/cors.php';
     require '../../config/protectedRoute.php';
     $conn = require '../../config/dbconn.php';

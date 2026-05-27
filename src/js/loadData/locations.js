@@ -19,7 +19,7 @@ async function locationData_init(){
         await popMainContiner_loc(locationData)
 
         mainContainer.addEventListener("change", async () => {
-            popSubContainer_onselect_loc(locationData)
+            await popSubContainer_onselect_loc(locationData)
         })
     } catch (error) {
         console.log(error);
@@ -73,9 +73,7 @@ function popSubContainer_onselect_loc(locationData){
     selected.cities.forEach(city => {
         const option = document.createElement("option");
         option.value = city.name;
-        option.textContent = city.alt 
-        ? `${city.name} (${city.alt})` 
-        : city.name;
+        option.textContent = city.alt ? `${city.name} (${city.alt})` : city.name;
 
         subContainer.appendChild(option);
     });

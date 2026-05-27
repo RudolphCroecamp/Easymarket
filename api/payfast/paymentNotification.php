@@ -169,7 +169,7 @@
             require_once("./api/mail/sendMail.php");
 
             $email_message = "Your payment of R{$totalPrice} was received and your order is being processed.";
-            $recipient = "Rcroecamp@gmail.com";//$_SESSION["email"];
+            $recipient = $_SESSION["email"];//"Rcroecamp@gmail.com";
             $subject = "Payment received";
 
             SendMail($recipient, $subject, $email_message);

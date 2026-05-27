@@ -23,7 +23,7 @@ async function categoryData_init(){
 
 
         mainContainer.addEventListener("change", async () => {
-            popSubContiner_onselect__cat(categoryData)
+            await popSubContiner_onselect__cat(categoryData)
         })
 
 

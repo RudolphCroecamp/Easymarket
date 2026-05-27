@@ -28,10 +28,16 @@
         $_POST['category'],
         $_POST['subcategory'],
         $_POST['latitude'],
-        $_POST['longitude']
+        $_POST['longitude'],
+        $_POST['quantity']
     ))
     {
-        echo json_encode(["error" => "Fill in all fields"]);
+        echo json_encode([
+            "status" => "failed",
+            "success" => false,
+            "error" => "Fill in all fields",
+            "fields" => $_POST
+        ]);
         exit;
     }
 
@@ -47,6 +53,7 @@
     $subcategory = $_POST['subcategory'];
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
+    $quantity = $_POST['quantity'];
 
     require_once '../../config/generateGUID.php';//connect to DB
     $productID = generateGUID();// 2a38e78c-99be-4b32-a5f5-cac84f9efccf
@@ -155,8 +162,8 @@
      //add listing details to db
     $insertProductStmt = $conn->prepare("
         INSERT INTO products 
-        (productID, ownerID, name, description, price, sold, deleted, `condition`, delivery, category, subcategory, latitude, longitude, province, city, imageCount) 
-        VALUES (?,?,?,?,?, FALSE, FALSE, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (productID, ownerID, name, description, price, sold, deleted, `condition`, delivery, category, subcategory, latitude, longitude, province, city, imageCount, quantity) 
+        VALUES (?,?,?,?,?, FALSE, FALSE, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     // Prepare statements
@@ -178,8 +185,8 @@
         $ownerID = $_SESSION['userID'];
 
         $insertProductStmt->bind_param(
-            "ssssdssssddssi", 
-            $productID, $ownerID, $title, $description, $price, $condition, $delivery, $category, $subcategory, $latitude, $longitude, $province, $city, $image_count
+            "ssssdssssddssii", 
+            $productID, $ownerID, $title, $description, $price, $condition, $delivery, $category, $subcategory, $latitude, $longitude, $province, $city, $image_count, $quantity
         );
 
         $insertProductStmt->execute();
@@ -250,6 +257,5 @@
     if (isset($insertProductStmt)) $insertProductStmt->close();
     if (isset($insertTagStmt)) $insertTagStmt->close();
     if (isset($insertProductTagStmt)) $insertProductTagStmt->close();
-    if (isset($insertImageStmt)) $insertImageStmt->close();
     $conn->close();
     die();

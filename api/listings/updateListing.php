@@ -5,154 +5,234 @@
     require '../../config/protectedRoute.php';//user must be authorised
     $conn = require '../../config/dbconn.php';//connect to DB
 
+    $hasImages = false;
+    //check if whe have received images (optional)
+    if (isset($_FILES['images'])){
+        $hasImages = true;
+    }
 
+    if($hasImages){
+        if ($_FILES['images']['size'][0] > 5 * 1024 * 1024) {
+            echo json_encode(["error" => "Image too large (max 5MB)"]);
+            exit;
+        }
+    }
+    
 
     if (!isset(
         $_POST['productID'],
         $_POST['title'], 
         $_POST['price'],
-        $_POST['category'],
         $_POST['condition'],
         $_POST['description'],
-        $_POST['delivery']
+        $_POST['delivery'],
+        $_POST['province'],
+        $_POST['city'],
+        $_POST['category'],
+        $_POST['subcategory'],
+        $_POST['latitude'],
+        $_POST['longitude'],
+        $_POST['quantity'],
+        $_POST['numberOfCurrentImages'],
+        $_POST["filesToKeep"],
+        // $_POST["filesToDelete"]
     ))
     {
         echo json_encode(["error" => "Fill in all fields"]);
         exit;
     }
 
-    
     //get data from client
     $productID = $_POST['productID'];
     $title = $_POST['title'];
     $price = $_POST['price'];
-    $category = $_POST['category'];
     $condition = $_POST['condition'];
     $description = $_POST['description'];
     $delivery = $_POST['delivery'];
+    $province = $_POST['province'];
+    $city = $_POST['city'];
+    $category = $_POST['category'];
+    $subcategory = $_POST['subcategory'];
+    $latitude = $_POST['latitude'];
+    $longitude = $_POST['longitude'];
+    $quantity = $_POST['quantity'];
+    $numberOfCurrentImages = $_POST["numberOfCurrentImages"];
 
-    $tags = json_decode($_POST['tags'], true);
+    $filesToKeep = json_decode($_POST["filesToKeep"] ?? "[]", true);
+    // $filesToDelete = json_decode($_POST["filesToDelete"] ?? "[]", true);
 
-    //quantity defualts to 1 if not provided
-    if (!isset($_POST['quantity']) || $_POST['quantity'] == 0){
-        $quantity = 1;
-    }else{
-        $quantity = $_POST['quantity'];
+
+    $uploadDir = __DIR__ . "/uploads/";
+
+    if (!file_exists($uploadDir)){
+        mkdir($uploadDir, 0777, true);
+    }
+
+    require_once __DIR__ . '/uploadToOracleBucket.php';
+    require_once __DIR__ . '/deleteFromOracleBucket.php';
+
+ 
+    //save all the images from client to db
+    $uploadedFiles = [];
+    $image_count = 0;
+
+    $usedLetters = [];
+    foreach ($filesToKeep as $img) {
+        preg_match('/_([a-z])\.webp$/', $img, $m);
+        if (isset($m[1])) {
+            $usedLetters[] = $m[1];
+        }
     }
 
 
-    //check if whe have received images
-    if (isset($_FILES['images'])){
-
-    
-
-        //verify upload directory exist
-        $uploadDir = "uploads/";
-        if (!file_exists($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        $uploadedFiles = [];
-
-        $image_char = "a";
-
-        //save all the images from client to db
+    if($hasImages){
         foreach ($_FILES['images']['tmp_name'] as $index => $tmpName) {
+            if ($_FILES['images']['error'][$index] !== 0) continue;
 
-            $fileName = $_FILES['images']['name'][$index];
-            $fileType = $_FILES['images']['type'][$index];
-            $fileError = $_FILES['images']['error'][$index];
+            $imageInfo = getimagesize($tmpName);
+            if (!$imageInfo) continue;
 
-            if ($fileError !== 0) {
-                continue; //skip failed uploads
-            }
-
-            //validate type
+            $mime = $imageInfo['mime'];
             $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-            if (!in_array($fileType, $allowedTypes)) {
-                continue;
+
+            if (!in_array($mime, $allowedTypes)) continue;
+
+            switch ($mime) {
+                case 'image/jpeg':
+                    $image = imagecreatefromjpeg($tmpName);
+                    break;
+
+                case 'image/png':
+                    $image = imagecreatefrompng($tmpName);
+                    imagepalettetotruecolor($image);
+                    imagealphablending($image, true);
+                    imagesavealpha($image, true);
+                    break;
+
+                case 'image/webp':
+                    $image = imagecreatefromwebp($tmpName);
+                    break;
             }
 
+            // resize logic stays same...
 
-            //save image as /uploads/2a38e78c-99be-4b32-a5f5-cac84f9efccf_a.jpg
-            
-            //rename file
-            $filePath = $uploadDir . $productID . "_" . $image_char . ".jpg";//name of new image
+            // ✔ get next available letter
+            $image_char = nextLetter($usedLetters);
 
-            if (move_uploaded_file($tmpName, $filePath)) {
-                $uploadedFiles[] = $filePath;
-            }
+            // ✔ reserve it immediately
+            $usedLetters[] = $image_char;
 
-            $image_char++;
+            $fileName = $productID . "_" . $image_char . ".webp";
+            $filePath = $uploadDir . $fileName;
+
+            imagewebp($image, $filePath, 80);
+            imagedestroy($image);
+
+            $imageUrl = uploadToOracle($filePath, $fileName);
+
+            unlink($filePath);
+
+            $uploadedFiles[] = $imageUrl;
         }
-
-    }//end adding images
-
+    }
     
+    $image_count = count($usedLetters);
 
     //start a transaction so we can revert all inserts if one fails
     $conn->begin_transaction();
 
+     //add listing details to db
+    $updateProductStmt = $conn->prepare("
+        UPDATE products 
+        SET 
+            ownerID = ?,
+            name = ?,
+            description = ?,
+            price = ?,
+            `condition` = ?,
+            delivery = ?,
+            category = ?,
+            subcategory = ?,
+            latitude = ?,
+            longitude = ?,
+            province = ?,
+            city = ?,
+            imageCount = ?,
+            quantity = ?
+        WHERE productID = ?
+    ");
+
+    // Prepare statements
+    $insertTagStmt = $conn->prepare("
+        INSERT INTO tags (name)
+        VALUES (?)
+        ON DUPLICATE KEY UPDATE tagID = LAST_INSERT_ID(tagID)
+    ");
+
+    $insertProductTagStmt = $conn->prepare("
+        INSERT IGNORE INTO product_tags (productID, tagID)
+        VALUES (?, ?)
+    ");
 
 
     try {
-        //we get out product id above -> line 64
-
-        //add listing details to db
-        $insertProductStmt = $conn->prepare("
-            UPDATE products 
-            SET name = ?, description = ?, price = ?, category = ?, `condition` = ?, delivery = ?, quantity = ?
-            WHERE productID = ?
-        ");
-
-        // INSERT INTO products 
-        // (productID, ownerID, name, description, price, sold, deleted, `condition`, delivery, category, subcategory, latitude, longitude, province, city) 
-        // VALUES (?,?,?,?,?, FALSE, FALSE, ?, ?, ?, ?, ?, ?, ?, ?)
 
         //get userID from session
         $ownerID = $_SESSION['userID'];
 
-        $insertProductStmt->bind_param(
-            "ssdssssis", 
-            $title, $description, $price, $category, $condition, $delivery, $quantity, $productID
+        $updateProductStmt->bind_param(
+            "sssdssssddssiis",
+            $ownerID,
+            $title,
+            $description,
+            $price,
+            $condition,
+            $delivery,
+            $category,
+            $subcategory,
+            $latitude,
+            $longitude,
+            $province,
+            $city,
+            $image_count,
+            $quantity,
+            $productID
         );
 
-        $insertProductStmt->execute();
+        $updateProductStmt->execute();
+        
+        //check if we have tags - tags are optional
+        try {
+            if(isset($_POST['tags']) && !empty($_POST['tags'])){
 
-        // Prepare statements
-        $insertTagStmt = $conn->prepare("
-            INSERT INTO tags (name)
-            VALUES (?)
-            ON DUPLICATE KEY UPDATE tagID = LAST_INSERT_ID(tagID)
-        ");
+                //we have tags
+                $tags = json_decode($_POST['tags'], true);
+            
+                //add all tags to tags database
+                foreach ($tags as $tag) {
 
-        $insertProductTagStmt = $conn->prepare("
-            INSERT IGNORE INTO product_tags (productID, tagID)
-            VALUES (?, ?)
-        ");
+                    //Clean tag
+                    $cleanTag = strtolower(trim($tag));
+
+                    if ($cleanTag === '') continue;
+
+                    //Insert or reuse tag
+                    $insertTagStmt->bind_param("s", $cleanTag);
+                    $insertTagStmt->execute();
+
+                    //Get tag ID
+                    $tagID = $conn->insert_id;
+
+                    //Link product to tag
+                    $insertProductTagStmt->bind_param("si", $productID, $tagID);
+                    $insertProductTagStmt->execute();
+                    
+                }
+            }
 
 
-        //remove old tags
-        $conn->query("DELETE FROM product_tags WHERE productID = '$productID'");
-
-        //add all tags to tags database
-        foreach ($tags as $tag) {
-
-            //Clean tag
-            $cleanTag = strtolower(trim($tag));
-
-            if ($cleanTag === '') continue;
-
-            //Insert or reuse tag
-            $insertTagStmt->bind_param("s", $cleanTag);
-            $insertTagStmt->execute();
-
-            //Get tag ID
-            $tagID = $conn->insert_id;
-
-            //Link product to tag
-            $insertProductTagStmt->bind_param("si", $productID, $tagID);
-            $insertProductTagStmt->execute();
+        } catch (\Throwable $th) {
+            throw $th;
         }
 
         $conn->commit();
@@ -160,25 +240,42 @@
         echo json_encode([
             "status"=>"success",
             "success"=>true,
-            "message"=>"Listing updated"
+            "message"=>"Listing added"
         ]);
 
     } catch (\Throwable $th) {
         //Rollback if anything fails
         $conn->rollback();
+        
+        //delete files after it failed
+        foreach ($uploadedFiles as $file) {
+            if (file_exists($file)) unlink($file);
+        }
+
         //return products in json format
         echo json_encode([
             "status"=>"failed",
             "success"=>false,
-            "message"=>"Could not update listing",
+            "message"=>"Could not add listing",
             "error"=>$th->getMessage()
         ]);
+
+        
     }
 
     //Close statements and connection
     if (isset($insertProductStmt)) $insertProductStmt->close();
     if (isset($insertTagStmt)) $insertTagStmt->close();
     if (isset($insertProductTagStmt)) $insertProductTagStmt->close();
-
     $conn->close();
     die();
+
+
+
+function nextLetter($used) {
+    for ($i = 0; $i < 26; $i++) {
+        $l = chr(97 + $i);
+        if (!in_array($l, $used)) return $l;
+    }
+    throw new Exception("No available slots");
+}

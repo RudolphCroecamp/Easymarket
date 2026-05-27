@@ -12,10 +12,6 @@ const dropArea = document.getElementById('drop-area');
 const fileInput = document.getElementById('images');
 const preview = document.getElementById('preview');
 
-const categoryContainer = document.getElementById("category")
-const conditionContainer = document.getElementById("condition")
-const deliveryContainer = document.getElementById("delivery")
-
 
 categoryData_init()
 locationData_init()
@@ -97,9 +93,10 @@ form.addEventListener('submit', async(e) => {
     const city = document.getElementById("city")
     const category = document.getElementById("category")
     const subcategory = document.getElementById("subcategory")
+    const quantity = document.getElementById("quantity")
 
     if(
-        validateInput(title, price, condition, description, delivery, province, city, category, subcategory)
+        validateInput(title, price, condition, description, delivery, province, city, category, subcategory, quantity)
     ){
         //get coordinates of user from dropdown boxes
         const query = province.value + " " + city.value
@@ -118,16 +115,16 @@ form.addEventListener('submit', async(e) => {
         // append all other fields manually
         formData.append("title", title.value);
         formData.append("price", price.value);
-        formData.append("category", categoryContainer.value);//default other
-        formData.append("condition", conditionContainer.value);//default new
+        formData.append("category", category.value);
+        formData.append("condition", condition.value);
         formData.append("description", description.value);
-        formData.append("delivery", deliveryContainer.value);
+        formData.append("delivery", delivery.value);
         formData.append("province", province.value);
         formData.append("city", city.value);
-        formData.append("category", category.value);
         formData.append("subcategory", subcategory.value);
         formData.append("latitude", lat);
         formData.append("longitude", lon);
+        formData.append("quantity", quantity.value || 1);
 
         //get tags from tagsInput
         const tagsArray = tagify.value.map(tag => tag.value);

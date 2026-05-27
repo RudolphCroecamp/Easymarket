@@ -26,8 +26,8 @@
 
     <script defer type="module" src="/src/js/improved_messages/chatList.js"></script>
 
-    <script defer type="module" src="src/js/toast.js"></script>
-    <script defer type="module" src="src/js/handleErrorMessage.js"></script>
+    <script defer type="module" src="/src/js/toast.js"></script>
+    <script defer type="module" src="/src/js/handleErrorMessage.js"></script>
 
 </head>
 
@@ -40,7 +40,7 @@
 
     <div class="container d-flex justify-content-center my-5">
         <div class="w-auto d-flex flex-column gap-4">
-            <h1 class="h1 text-center">Create a new listing</h1>
+            <h1 class="h1 text-center">Update a new listing</h1>
             <form id="newLisitingForm">
 
                 <!-- listing images -->
@@ -51,7 +51,7 @@
                 </div>
 
                 <!-- listing deltails -->
-                 <h5>Listing details</h5>
+                <h5>Listing details</h5>
                 <div class="form-floating mb-3">
                     <input type="text" name="title" id="title" class="form-control">
                     <label class="form-label" for="title">title</label>
@@ -65,6 +65,11 @@
                 <div class="form-floating mb-3">
                     <textarea name="description" id="description" class="form-control" style="height: 100px; max-height: 200px; min-height: 100px"></textarea>
                     <label for="description">Description</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input type="number" name="quantity" id="quantity" min="1" max="1000" value="1" class="form-control">
+                    <label class="form-label" for="quantity">Amount</label>
                 </div>
 
                 <h5>Category</h5>
@@ -81,7 +86,7 @@
                         <option value="0" selected>Select a subcategory</option>
                         <!-- subcategory options are added here -->
                     </select>
-                    <label for="category">Subcategory</label>
+                    <label for="subcategory">Subcategory</label>
                 </div>
 
 

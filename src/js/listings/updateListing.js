@@ -1,28 +1,37 @@
-import {BACKEND_URL} from "../config.js"
+import {BACKEND_URL, IMAGES_URL} from "../config.js"
 
 //handle errors
 import {showToast} from "../toast.js"
 import {setErrorMessage, hideErrorMessage} from "../handleErrorMessage.js"
-import {categoryOptions} from "./listingOptions.js"
+
+import categoryData_init, {popSubContiner_onselect__cat} from "../loadData/categories.js";
+import locationData_init, {popSubContainer_onselect_loc} from "../loadData/locations.js";
+import { searchAddresses } from "../locationServices.js";
 
 const dropArea = document.getElementById('drop-area');
 const fileInput = document.getElementById('images');
 const preview = document.getElementById('preview');
 
-const categoryContainer = document.getElementById("category")
-const conditionContainer = document.getElementById("condition")
-const amountTypeContainer = document.getElementById("amountType")
-const deliveryContainer = document.getElementById("delivery")
+categoryData_init()
+locationData_init()
 
-const params = new URLSearchParams(location.search);
-const productID = params.get('productID')
 
 document.addEventListener("DOMContentLoaded", ()=>{
-    loadProduct()
+
+    //get productID
+    const params = new URLSearchParams(location.search);
+    const productID = params.get('productID')
+
+    loadProduct(productID)
 })
 
 
 let filesToUpload = [];
+let existingImages = [];
+// let deletedImages = [];
+
+//global
+let numberOfCurrentImages = 0;
 
 //Click drop area to open file selector
 dropArea.addEventListener('click', () => fileInput.click());
@@ -85,59 +94,71 @@ function addFiles(files) {
 //handle listing details upload
 const form = document.getElementById('newLisitingForm');
 
-form.addEventListener('submit', async e => {
+form.addEventListener('submit', async(e) => {
     e.preventDefault();
     hideErrorMessage()
 
-
-    console.log("requesting");
     const title = document.getElementById("title")
     const price = document.getElementById("price")
-    const category = document.getElementById("category")
     const condition = document.getElementById("condition")
     const description = document.getElementById("description")
-    const amountType = document.getElementById("amountType")
-    const quantity = document.getElementById("quantity")//optional defaults to 1
     const delivery = document.getElementById("delivery")//delivery method
-
-    // console.log(validateInput(title, price, category, condition, description, amountAvailable, delivery));
+    const province = document.getElementById("province")
+    const city = document.getElementById("city")
+    const category = document.getElementById("category")
+    const subcategory = document.getElementById("subcategory")
+    const quantity = document.getElementById("quantity")
 
     if(
-        validateInput(title, price, category, condition, description, amountType, delivery)
+        validateInput(title, price, condition, description, delivery, province, city, category, subcategory, quantity)
     ){
+        //get coordinates of user from dropdown boxes
+        const query = province.value + " " + city.value
+        const data = await searchAddresses(query)
+        const {lat, lon} = data[0]
+
+        if(!lat || !lon){
+            throw new Error("Could not get coordinates");
+        }
+
         const formData = new FormData();
 
         // append only dragged/selected files manually
         filesToUpload.forEach(file => formData.append('images[]', file));
 
-        //set select elements value
-        const categoryText = categoryContainer.options[categoryContainer.selectedIndex].text
-        const conditionText = conditionContainer.options[conditionContainer.selectedIndex].text
-        const amountTypeText = amountTypeContainer.options[amountTypeContainer.selectedIndex].text
-        const deliveryText = deliveryContainer.options[deliveryContainer.selectedIndex].text
 
         // append all other fields manually
-        formData.append("productID", productID);
         formData.append("title", title.value);
         formData.append("price", price.value);
-        formData.append("category", categoryText);//default other
-        formData.append("condition", conditionText);//default new
+        formData.append("category", category.value);//default other
+        formData.append("condition", condition.value);//default new
         formData.append("description", description.value);
-        formData.append("amountType", amountTypeText);//default single item
-        formData.append("quantity", quantity.value || 1);//default 1
-        formData.append("location", location.value);
-        formData.append("delivery", deliveryText);
+        formData.append("delivery", delivery.value);
+        formData.append("province", province.value);
+        formData.append("city", city.value);
+        formData.append("subcategory", subcategory.value);
+        formData.append("latitude", lat);
+        formData.append("longitude", lon);
+        formData.append("quantity", quantity.value || 1);
+        formData.append("numberOfCurrentImages", numberOfCurrentImages)
 
-        const coords = await getUserLocation()
-        console.log(coords);
-        formData.append("latitude", coords.latitude);
-        formData.append("longitude", coords.longitude);
+        formData.append("filesToKeep", JSON.stringify(existingImages))
+        // formData.append("filesToDelete",JSON.stringify(deletedImages));
+
 
         //get tags from tagsInput
         const tagsArray = tagify.value.map(tag => tag.value);
 
-        //tags array
-        formData.append("tags", JSON.stringify(tagsArray));
+
+        //tags could be empty becasue it is optional
+        if(tagsArray.length > 0) formData.append("tags", JSON.stringify(tagsArray));
+
+        //get productID
+        const params = new URLSearchParams(location.search);
+        const productID = params.get('productID')
+
+        formData.append("productID", productID)
+        
 
         try {
             fetch(`${BACKEND_URL}/listings/updateListing.php`, {
@@ -151,10 +172,12 @@ form.addEventListener('submit', async e => {
 
                 //redirect back to home screen or show error
                 if(data.success === true){
-                    // window.location = "/"
-                    // document.getElementById("newLisitingForm").reset()
+                    showToast(data.message, "success")
+                    window.location = "/"
+                    form.reset()
                 }else{
                     setErrorMessage(data.error)
+                    showToast(data.message || data.error, "warning")
                 }
             })
 
@@ -195,50 +218,12 @@ function getUserLocation() {
 }
 
 
-
-
-
-
-
 //reset page and redirect back to home screen
 form.addEventListener("reset", ()=>{
     window.location = "/"
 })
 
-//show preview of page
-document.getElementById("btnPreviewListing")
-.addEventListener("click", ()=>{
-    window.location = "/preview-listing"
-})
 
-
-
-
-
-//add or remove quantity input from client screen
-document.getElementById("amountType")
-.addEventListener("click", (elm)=>{
-
-    if(elm.target.value == 1){
-        document.getElementById("quantityContainer").classList.add("visually-hidden");
-    }else if(elm.target.value == 2){
-        document.getElementById("quantityContainer").classList.remove("visually-hidden");
-    }
-})
-
-
-
-//show error message to client
-function setErrorMessage(error){
-    document.getElementById("error-box").classList.remove("visually-hidden");
-    document.getElementById("error-message").innerText = error;
-}
-
-//hide error message from client
-function hideErrorMessage(){
-    document.getElementById("error-box").classList.add("visually-hidden");
-    document.getElementById("error-message").innerText = "";
-}
 
 //validate an array of inputs
 //valid if it has a value 
@@ -284,21 +269,11 @@ const tagify = new Tagify(input, {
 });
 
 
-//append categories to category dropdown container / select element
-categoryOptions.forEach((cat, index) =>{
-    categoryContainer.innerHTML +=`<option value="${index+1}">${cat}</option>` 
-})
-
-
-
-
-
-
 
 //load product data
-async function loadProduct() {
+async function loadProduct(productID) {
     //get products
-    fetch(`http://localhost:80/easymarket-api/endpoints/products/getProductById.php?productID=${productID}`, {
+    fetch(`${BACKEND_URL}/products/getProductById.php?productID=${productID}`, {
         method : "POST",
         credentials : "include"
     })
@@ -306,7 +281,6 @@ async function loadProduct() {
     .then(data => {
 
         const product = data.product
-        const tags = data.tags
         console.log(data);
 
         title.value = product.name 
@@ -314,16 +288,20 @@ async function loadProduct() {
         description.value = product.description
         quantity.value = product.quantity
 
-        setSelectByText(category, product.category);
         setSelectByText(condition, product.condition);
-        setSelectByText(amountType, product.amountType);
         setSelectByText(delivery, product.delivery);
+        setSelectByText(category, product.category);
+        setSelectByText(subcategory, product.subcategory);
+        setSelectByText(province, product.province);
+        setSelectByText(city, product.city);
 
-        //add tags
-        tags.forEach(tag =>{
-            tagify.addTags(tag.name)
-        })
-    
+        numberOfCurrentImages = product.imageCount;
+        let imagePath = "";
+        for (let i = 0; i < numberOfCurrentImages; i++) {
+            imagePath = `${IMAGES_URL}/${productID}_${String.fromCharCode(97 + i)}.webp`
+            addExistingImage(imagePath)
+        }
+
     })
     .catch(error =>{
         console.log(error.message);
@@ -334,13 +312,55 @@ async function loadProduct() {
 
 
 function setSelectByText(select, text) {
+    console.log("ini", select, text);
     for (let i = 0; i < select.options.length; i++) {
-        if (select.options[i].text === text) {
+        if (select.options[i].value === text) {
             select.selectedIndex = i;
-            break;
+
+            // trigger change
+            select.dispatchEvent(new Event('change', {
+                bubbles: true
+            }));
+            return true;
         }
     }
+    return false;
 }
+
+
+function addExistingImage(imageUrl) {
+
+    existingImages.push(imageUrl);
+
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('preview-item');
+
+    const img = document.createElement('img');
+    img.src = imageUrl;
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.classList.add('remove-btn');
+    removeBtn.innerHTML = '&times;';
+
+    removeBtn.addEventListener('click', () => {
+        //remove from existingImages
+        existingImages = existingImages.filter(
+            image => image !== imageUrl
+        );
+
+        //delete tracking
+        // deletedImages.push(imageUrl);
+
+        wrapper.remove();
+    });
+
+    wrapper.appendChild(img);
+    wrapper.appendChild(removeBtn);
+
+    preview.appendChild(wrapper);
+}
+
 
 
 
