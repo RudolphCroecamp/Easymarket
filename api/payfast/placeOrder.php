@@ -60,7 +60,7 @@ $orders = $jsonData["orders"];
 $platFormTakePerc = 5;
 
 //order stmt
-$CreateOrderStmt = $conn->prepare("INSERT INTO orders (sellerID, buyerID, totalPrice, platform_fee, seller_fee, delivery_fee, status) VALUES (?,?,?,?,?,?,?)");
+$CreateOrderStmt = $conn->prepare("INSERT INTO orders (paymentID, sellerID, buyerID, totalPrice, platform_fee, seller_fee, delivery_fee, status) VALUES (?,?,?,?,?,?,?,?)");
 $UpdateOrderStmt = $conn->prepare("UPDATE orders SET totalPrice = ?, status = ?, platform_fee = ?, seller_fee = ? WHERE orderID = ?");
 
 //orders stmt
@@ -69,7 +69,7 @@ $addOrderStmt = $conn->prepare("INSERT INTO order_items (orderID, productID, pri
 $getProductInfo = $conn->prepare("SELECT ownerID, productID, price, quantity, 'name' FROM products where productID = ?");
 
 //payment
-$paymantStmt = $conn->prepare("INSERT INTO payments (orderID, status) VALUES (?,?)");
+$paymantStmt = $conn->prepare("INSERT INTO payments (status) VALUES (?)");
 
 
 $status = "Awaiting Payment";
@@ -81,6 +81,16 @@ $cartTotal = 0;
 
 try {
     $ordersBySeller = [];
+
+    //create payment
+    $payment_status = "Awaiting Payment";
+    $paymantStmt->bind_param("s", $payment_status);
+    $paymantStmt->execute();
+
+    $paymentID = $conn->insert_id;
+    if ($paymentID <= 0) {
+        throw new Exception("Payment creation failed");
+    }
 
     //group cart by seller
     foreach ($orders as $order) {
@@ -125,7 +135,7 @@ try {
 
         $temp = 0;//we cannot add 0 inside the bind_param, we need to add a variable
 
-        $CreateOrderStmt->bind_param("ssdddds", $sellerID, $userID, $temp, $temp, $temp, $deliveryFee, $status);
+        $CreateOrderStmt->bind_param("issdddds", $paymentID, $sellerID, $userID, $temp, $temp, $temp, $deliveryFee, $status);
         $CreateOrderStmt->execute();
 
         $orderID = $conn->insert_id;
@@ -178,15 +188,7 @@ try {
     }
 
 
-    //create payment
-    $payment_status = "Awaiting Payment";
-    $paymantStmt->bind_param("ss", $orderID, $payment_status);
-    $paymantStmt->execute();
-
-    $paymentID = $conn->insert_id;
-    if ($paymentID <= 0) {
-        throw new Exception("Payment creation failed");
-    }
+    
 
 
 
@@ -198,9 +200,9 @@ try {
         // Merchant details
         'merchant_id' => '10046638',
         'merchant_key' => 'ntk5urzc2lda3',
-        'return_url' => 'https://easymarket-727523185751.europe-west1.run.app/',
-        'cancel_url' => 'https://easymarket-727523185751.europe-west1.run.app/',
-        'notify_url' => 'https://easymarket-727523185751.europe-west1.run.app/api/payfast/paymentNotification.php',
+        'return_url' => 'https://easymarket2-727523185751.africa-south1.run.app/',
+        'cancel_url' => 'https://easymarket2-727523185751.africa-south1.run.app/',
+        'notify_url' => 'https://easymarket2-727523185751.africa-south1.run.app/api/payfast/paymentNotification.php',
         // Buyer details
         'name_first' => $buyerInfo["fName"],
         'name_last'  => $buyerInfo["lName"],

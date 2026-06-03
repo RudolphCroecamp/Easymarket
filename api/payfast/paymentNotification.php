@@ -156,9 +156,9 @@
                 throw new Exception("Could not update status.");
             }
 
-            // if (!$UpdateOrder_itemsStmt->execute()){
-            //     throw new Exception("Could not update status.");
-            // }
+            if (!$UpdatePaymentStmt->execute()){
+                throw new Exception("Could not update status.");
+            }
 
         } else {
             // Some checks have failed, check payment manually and log for investigation
