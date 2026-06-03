@@ -32,9 +32,18 @@ let LONG = 0
 let RADIUS = 60//default of 60
 
 document.addEventListener("DOMContentLoaded", async ()=>{
-    await address_init()
+    
 
-    await loadProducts(MIN, MAX, LAT, LONG, RADIUS)
+    if (await address_init() === true) {
+        await loadProducts(MIN, MAX, LAT, LONG, RADIUS)
+    }else{
+        //no address found due to location permissions denied - manualy set location to Port Elizabeth
+        LAT = -34 
+        LONG = 26
+        await loadProducts(MIN, MAX, LAT, LONG, RADIUS)
+    }
+
+    
 
     let debounceTimer;
 
@@ -53,6 +62,7 @@ document.addEventListener("DOMContentLoaded", async ()=>{
     const radiusInput = document.getElementById("radiusInput")
     const submitLocationBtn = document.getElementById("submitLocation")
     
+    //handele manual location changes
     submitLocationBtn.addEventListener("click", async ()=>{
         console.log(radiusInput.value);
         RADIUS = radiusInput.value
@@ -66,7 +76,9 @@ document.addEventListener("DOMContentLoaded", async ()=>{
         console.log("done filtering");
         
     })
+    
 
+    //handle manual price filtering changes
     document.getElementById("applyFilter").addEventListener("click", async ()=>{
 
         const max = document.getElementById("maxPriceInput").value
@@ -89,17 +101,25 @@ window.addEventListener("scroll", async () => {
 });
 
 async function address_init(){
-    const userLocationData = await getLocationFromGPS();
+    try {
+        const userLocationData = await getLocationFromGPS();
 
-    if(userLocationData.success === false){
-        throw new Error("Could not find address");
+        if(userLocationData.success === false){
+            throw new Error("Could not find address");
+        }
+
+        const {province, city, lat, long} = userLocationData
+        LAT = lat
+        LONG = long
+
+        addressInput.value = `${city}, ${province}`
+        return true
+    } catch (error) {
+        return false
     }
 
-    const {province, city, lat, long} = userLocationData
-    LAT = lat
-    LONG = long
-
-    addressInput.value = `${city}, ${province}`
+    return false
+    
 }
 
 

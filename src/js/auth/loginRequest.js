@@ -1,12 +1,4 @@
 import {BACKEND_URL} from "../config.js"
-// import isAuthed from "./isAuthed.js"
-
-//load more products as you reach the end
-window.addEventListener("load", async () => {
-    // await isAuthed(window.location.pathname)
-
-    console.log(window.location.origin)
-});
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -34,11 +26,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
             console.log(formData);
 
 
-            //check if user
-
-
-
-
             //submit inputs to backend after fields have been validated
             fetch(`${BACKEND_URL}/Auth/login.php`,
                 {
@@ -53,6 +40,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
                 if(data.success === true){
                     //valid user credentials
+
+                    //clear form data
+                    loginForm.reset()
 
                     //check if user is an ADMIN
                     if(data.publicUserInfo && data.publicUserInfo.role === "admin"){

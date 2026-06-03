@@ -12,7 +12,6 @@ const IMAGES_URL = "https://objectstorage.af-johannesburg-1.oraclecloud.com/p/3k
 
 //load table
 document.addEventListener("DOMContentLoaded", ()=>{
-
     const listingsTable = document.getElementById("listingsTable")
     GenerateListingsTable()
 })

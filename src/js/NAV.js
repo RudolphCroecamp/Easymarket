@@ -64,6 +64,10 @@ function NAV(){
                     <li><a class="dropdown-item" href="/src/pages/payments/payment.html">Checkout</a></li>
                     <li><hr class="dropdown-divider"></li>
 
+                    <li><a class="dropdown-item" href="/src/pages/orders/buyerOrders.html?page=1">Orders Placed</a></li>
+                    <li><a class="dropdown-item" href="/src/pages/orders/sellerOrders.html?page=1">Orders Recieved</a></li>
+                    <li><hr class="dropdown-divider"></li>
+
                     <li><a class="dropdown-item text-danger" href="/src/pages/auth/logout.html">Logout</a></li>
                 </ul>
             </div>
