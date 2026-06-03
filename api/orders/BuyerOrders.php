@@ -35,7 +35,7 @@ $getOrdersStmt = $conn->prepare("
     FROM orders o
     INNER JOIN users u
         ON o.sellerID = u.userID
-    WHERE o.buyerID= ?
+    WHERE o.buyerID = ?
     ORDER BY o.created_at DESC
     LIMIT ? OFFSET ?
 ");

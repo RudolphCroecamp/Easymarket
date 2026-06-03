@@ -52,6 +52,7 @@ document.addEventListener("DOMContentLoaded", async ()=>{
             await AddFormDetails(data.form)
             //submit form
             document.getElementById("paymentForm").requestSubmit();
+
         })
 
 
@@ -123,11 +124,7 @@ async function placeOrder(){
         console.log(validateInput(fName, lName, email, cell, streetAddress, province, city, postal));
 
         try {
-            if(validateInput(fName, lName, email, cell, streetAddress, province, city, postal)){
-
-
-
-
+            if(10 > 0){//validateInput(fName, lName, email, cell, streetAddress, province, city, postal)
                 const response = fetch("/api/payfast/placeOrder.php", {
                     method: "POST",
                     credentials: "include",

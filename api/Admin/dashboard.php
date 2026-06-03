@@ -7,20 +7,17 @@ require '../../config/adminOnly.php';//user must be authorised
 
 $conn = require '../../config/dbconn.php';//connect to DB
 
-// ----------------------
-// 1. TOTAL GMV
-// ----------------------
+
+//TOTAL GMV
 $gmvQuery = $conn->query("
-    SELECT SUM(price) as gmv 
+    SELECT SUM(totalPrice) as gmv 
     FROM orders 
     WHERE status = 'Awaiting Payment'
 ");
 $gmv = $gmvQuery->fetch_assoc()['gmv'] ?? 0;
 
 
-// ----------------------
-// 2. TOTAL ORDERS
-// ----------------------
+//TOTAL ORDERS
 $orderQuery = $conn->query("
     SELECT COUNT(*) as orders 
     FROM orders
@@ -28,9 +25,9 @@ $orderQuery = $conn->query("
 $orders = $orderQuery->fetch_assoc()['orders'];
 
 
-// ----------------------
-// 3. ACTIVE USERS (last 30 days)
-// ----------------------
+
+//ACTIVE USERS - last 30 days only
+
 $userQuery = $conn->query("
     SELECT COUNT(DISTINCT buyerID) as active_users 
     FROM orders 
@@ -39,13 +36,11 @@ $userQuery = $conn->query("
 $activeUsers = $userQuery->fetch_assoc()['active_users'];
 
 
-// ----------------------
 // 4. GMV TREND (last 7 days)
-// ----------------------
 $trendQuery = $conn->query("
     SELECT 
         DATE(created_at) as day,
-        SUM(price) as total
+        SUM(totalPrice) as total
     FROM orders
     WHERE status = 'Awaiting Payment'
     AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
@@ -63,9 +58,7 @@ while ($row = $trendQuery->fetch_assoc()) {
 
 
 
-// ----------------------
-// 5. Retention
-// ----------------------
+//Retention
 $sellerRetentionQuery = $conn->query("
     SELECT COUNT(*) AS repeat_sellers
     FROM (
@@ -99,9 +92,8 @@ $buyerRetention = $buyerRetentionQuery->fetch_assoc()['repeat_buyers'] ?? 0;
 
 
 
-// ----------------------
-// OUTPUT JSON
-// ----------------------
+
+//OUTPUT JSON
 echo json_encode([
     "gmv" => (float)$gmv,
     "orders" => (int)$orders,

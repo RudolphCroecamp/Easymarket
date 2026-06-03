@@ -120,10 +120,11 @@
         $check2 = pfValidIP();
 
         //get total Price from db
-        $orderID = (int)$pfData["m_payment_id"];//get orderID from payfast
+        $paymentID = (int)$pfData["m_payment_id"];//get orderID from payfast
+        $payment_ref = $pfData["pf_payment_id"];//get payfast payment ref
 
-        $totalPriceStmt = $conn->prepare("SELECT totalPrice FROM orders WHERE orderID = ?");
-        $totalPriceStmt->bind_param("i", $orderID);
+        $totalPriceStmt = $conn->prepare("SELECT SUM(totalPrice) AS totalPrice FROM orders where paymentID = ?");
+        $totalPriceStmt->bind_param("i", $paymentID);
 
         $totalPriceStmt->execute();
 
@@ -139,24 +140,25 @@
         $check3 = pfValidPaymentData($totalPrice, $pfData);
         $check4 = pfValidServerConfirmation($pfParamString, $pfHost);
 
-        $UpdateOrderStmt = $conn->prepare("UPDATE orders SET status = ? WHERE orderID = ?");
-        $UpdateOrder_itemsStmt = $conn->prepare("UPDATE order_items SET status = ? WHERE orderID = ?");
+        $UpdateOrderStmt = $conn->prepare("UPDATE orders SET status = ? WHERE paymentID = ?");
+        $UpdatePaymentStmt = $conn->prepare("UPDATE payments SET status = ?, payfastRef = ? WHERE paymentID = ?");
+
 
         if(10 > 2) {//$check1 && $check2 && $check3 && $check4
             // All checks have passed, the payment is successful
 
             //update order status
             $status = "Payment Received";
-            $UpdateOrderStmt->bind_param("si", $status, $orderID);
-            $UpdateOrder_itemsStmt->bind_param("si", $status, $orderID);
+            $UpdateOrderStmt->bind_param("si", $status, $paymentID);
+            $UpdatePaymentStmt->bind_param("ssi", $status, $payment_ref, $paymentID);
 
             if (!$UpdateOrderStmt->execute()){
                 throw new Exception("Could not update status.");
             }
 
-            if (!$UpdateOrder_itemsStmt->execute()){
-                throw new Exception("Could not update status.");
-            }
+            // if (!$UpdateOrder_itemsStmt->execute()){
+            //     throw new Exception("Could not update status.");
+            // }
 
         } else {
             // Some checks have failed, check payment manually and log for investigation
