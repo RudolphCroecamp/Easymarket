@@ -1,11 +1,11 @@
 <?php
     require '../../config/cors.php';//allow access from webserver
 
-    try {
-        session_start();
-    } catch (\Throwable $th) {
-        //throw $th;
-    }
+    // try {
+    //     session_start();
+    // } catch (\Throwable $th) {
+    //     //throw $th;
+    // }
 
 
     //check if user is logged in or not
