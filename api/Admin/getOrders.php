@@ -51,7 +51,21 @@
     }
 
 
-    $sql = "SELECT o.paymentID, o.price, o.status, o.created_at, u.fName, u.lName FROM orders o INNER JOIN users u WHERE o.buyerID = u.userID LIMIT ? OFFSET ?";
+    $sql = "SELECT 
+        o.orderID,
+        o.totalPrice,
+        o.status,
+        o.created_at,
+        u.fName,
+        u.lName,
+        p.paymentID,
+        p.payfastRef
+    FROM orders o
+    INNER JOIN users u
+        ON o.buyerID = u.userID
+    INNER JOIN payments p
+        ON o.paymentID = p.paymentID
+    LIMIT ? OFFSET ?";
 
     $getOrdersStmt = $conn->prepare($sql);
 

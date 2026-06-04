@@ -202,11 +202,7 @@ async function loadProducts(min=0, max=50_000, lat, long, radius=60){
 
                                     <h6 class="fw-semibold mb-1 text-truncate">
                                         ${product.name}
-                                    </h6>
-
-                                    <p class="text-muted small mb-1 text-truncate">
-                                        Sold by ${product.ownerName}
-                                    </p>
+                                    </h6>                         
 
                                     <p class="text-muted small mb-2">
                                         ${product.city}, ${product.province}

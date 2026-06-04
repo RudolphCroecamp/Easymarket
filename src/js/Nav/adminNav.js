@@ -12,14 +12,14 @@ function NAV(){
             <!-- LEFT SIDE -->
             <a class="navbar-brand d-flex align-items-center gap-2 m-0" href="/">
                 <img 
-                    src="/src/assets/logo.png"
+                    src="/src/images/logo.png"
                     alt="Logo"
                     width="42"
                     height="42"
                     class="rounded-circle border border-light object-fit-cover"
                 >
 
-                <span class="fw-bold text-white fs-5">
+                <span class="fw-bold text-black fs-5">
                     EasyMarket
                 </span>
             </a>

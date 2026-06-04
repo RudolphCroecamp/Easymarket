@@ -110,7 +110,7 @@ try {
         $productID = $product["productID"];
         $price     = $product["price"];
 
-        $quantity = min($order["quantity"], $product["quantity"]);
+        $quantity = min($order["quantity"], $product["quantity"]);//takes the value of available amount in database
 
         $ordersBySeller[$sellerID][] = [
             "productID" => $productID,

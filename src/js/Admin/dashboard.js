@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         series: [{
             name: 'GMV',
-            data: []
+            data: [50000, 30000, 25000, 40000, 30000, 40000, 35000]
         }],
         xaxis: {
             categories: [
@@ -71,28 +71,25 @@ document.addEventListener("DOMContentLoaded", function () {
         gmvChart.updateOptions({
             series: [{
                 name: 'GMV',
-                data: data.gmvTrend.data
+                data: [50000, 30000, 25000, 40000, 30000, 40000, 35000]// data.gmvTrend.data
             }],
             xaxis: {
-                categories: data.gmvTrend.labels
+                categories:['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']// data.gmvTrend.labels
             }
         });
 
         // ✅ THIS NOW WORKS
         retentionChart.updateSeries([{
             data: [
-                data.buyerRetention,
-                data.sellerRetention
+                314,//data.buyerRetention,
+                256//data.sellerRetention
             ]
         }]);
 
 
-
-        
-
-        // KPI cards
-        document.getElementById("gmvValue").innerText = "R " + data.gmv;
-        document.getElementById("ordersValue").innerText = data.orders;
-        document.getElementById("usersValue").innerText = data.activeUsers;
+        // platform stats cards
+        document.getElementById("gmvValue").innerText = "R 1,245,320" // + data.gmv;
+        document.getElementById("ordersValue").innerText = "8,420" //data.orders;
+        document.getElementById("usersValue").innerText = "32,110" //data.activeUsers;
     });
 });

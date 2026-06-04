@@ -176,10 +176,7 @@ async function AddFormDetails(form) {
 
 
 async function createPaymentRequest(productID) {
-    
-    
     return new Promise((res, rej)=>{
-
         const response = fetch("/api/payfast/paymentRequest.php", {
             method: "POST",
             credentials: "include",
@@ -199,8 +196,6 @@ async function createPaymentRequest(productID) {
             })
         })
     })
-
-
 }
 
 

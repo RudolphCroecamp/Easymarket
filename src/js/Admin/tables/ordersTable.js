@@ -130,7 +130,8 @@ async function populateOrdersTable(orders){
             htmlElements += 
             `
             <tr>
-                <td>#${order.paymentID}</td>
+                <td>#${order.orderID}</td>
+                <td>#${order.paymentID}-${order.payfastRef}</td>
 
                 <td>
                     <div class="d-flex align-items-center gap-2">
@@ -142,7 +143,7 @@ async function populateOrdersTable(orders){
                 </td>
 
                 <td>
-                    ${order.price}
+                    R ${order.totalPrice}
                 </td>
 
                 <td>

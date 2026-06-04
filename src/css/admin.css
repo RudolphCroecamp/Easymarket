@@ -2,12 +2,14 @@
 
 
 #btnPrevPage:hover{
-    background: #000;
+    /* background: #000; */
+    background: hsl(215, 28%, 68%);
     color: white;
 }
 
 #btnNextPage:hover{
-    background: #000;
+    /* background: #000; */
+    background: hsl(215, 28%, 68%);
     color: white;
 }
 
@@ -23,24 +25,19 @@
 #btnNextPage:disabled {
   background-color: #cccccc;
   color: #666666;
-  cursor: not-allowed; /* Shows a "no" sign on hover */
-  opacity: 0.6;         /* Makes it look faded */
+  cursor: not-allowed;
+  opacity: 0.6;      
 }
 
 #btnPrevPage:disabled {
   background-color: #cccccc;
   color: #666666;
-  cursor: not-allowed; /* Shows a "no" sign on hover */
-  opacity: 0.6;         /* Makes it look faded */
+  cursor: not-allowed; 
+  opacity: 0.6;     
 }
-
-
-
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f3f4f6;
     overflow-x: hidden;
 }
 
@@ -48,22 +45,31 @@ body {
 
 .app {
     display: flex;
-    min-height: 100vh;
+    min-height: calc(100vh - 5.2em);
+}
+
+#NAV {
+    height: 70px;
 }
 
 /* SIDEBAR */
 
 .sidebar {
-    width: 240px;
-    min-width: 240px;
-    background: #111827;
-    color: white;
+    width: 12.5em;
+    min-width: 160px;
+    color: black;
+    background-color: #ffffff;
     transition: all 0.25s ease;
     display: flex;
     flex-direction: column;
     padding-top: 10px;
     overflow: hidden;
-    z-index: 1000;
+    z-index: 1010;
+
+    position: fixed;
+    top: 70px;
+    left : 0px;
+    height: calc(100vh - 70px);
 }
 
 /* COLLAPSED */
@@ -90,7 +96,7 @@ body {
     align-items: center;
     gap: 12px;
     padding: 14px 16px;
-    color: rgba(255,255,255,0.9);
+    color: rgba(0, 0, 0, 0.9);
     text-decoration: none;
     transition: 0.2s ease;
     white-space: nowrap;
@@ -98,13 +104,13 @@ body {
 }
 
 .nav-item:hover {
-    background: #1f2937;
+    background: hsl(215, 28%, 64%);
     color: white;
 }
 
 .nav-item.active {
-    background: white;
-    color: #111827;
+    background: hsl(215, 28%, 34%);
+    color: #ffffff;
 }
 
 .nav-item i {
@@ -131,6 +137,16 @@ body {
     padding: 20px;
     background: #f3f4f6;
     overflow-x: hidden;
+
+    margin-left: 12.5em; /* same as sidebar width */
+}
+
+.sidebar.collapsed ~ .content {
+    margin-left: 70px;
+}
+
+.content {
+    transition: margin-left 0.25s ease;
 }
 
 /* TOGGLE BUTTON */
@@ -207,13 +223,11 @@ body {
 
 }
 
-
-
-body{
-    background: #f4f7fb;
-    font-family: Inter, Arial, sans-serif;
-    color: #111827;
+.card-metric {
+    height: 100%;
+    border-radius: 16px;
 }
+
 
 /* HEADER */
 
@@ -261,11 +275,6 @@ body{
 /* SEARCH */
 
 .search-box{
-    /* background: white;
-    border-radius: 18px;
-    padding: 8px;
-    box-shadow: 0 6px 25px rgba(0,0,0,0.05); */
-
     background: #f9fafb;
     border: 1px solid #e5e7eb;
     border-radius: 14px;
@@ -273,10 +282,6 @@ body{
 }
 
 .search-box .form-control{
-    /* border: none;
-    box-shadow: none;
-    padding: 14px; */
-
     border: none;
     background: transparent;
     padding: 14px;
@@ -284,22 +289,15 @@ body{
 }
 
 .search-btn{
-    /* border: none;
-    background: #111827;
-    color: white;
-    border-radius: 14px;
-    padding: 0 22px;
-    transition: 0.2s ease; */
-
     border: none;
     padding-inline: 22px;
-    background: #111827;
+    background: hsl(215, 28%, 51%);
     color: white;
     transition: 0.2s ease;
 }
 
 .search-btn:hover{
-    background: black;
+    background: hsl(215, 28%, 34%);
 }
 
 .filter-btn{
