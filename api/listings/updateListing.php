@@ -114,12 +114,11 @@
                     break;
             }
 
-            // resize logic stays same...
 
-            // ✔ get next available letter
+            // get next available letter
             $image_char = nextLetter($usedLetters);
 
-            // ✔ reserve it immediately
+            //reserve it immediately
             $usedLetters[] = $image_char;
 
             $fileName = $productID . "_" . $image_char . ".webp";
