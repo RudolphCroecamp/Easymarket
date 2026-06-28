@@ -105,7 +105,7 @@ async function openChatModal(productID, groupID, name) {
 
     const modal = new bootstrap.Modal(modalElement);
 
-    await loadModalMessages(productID)
+    await loadModalMessages(groupID)
 
     modal.show();
     

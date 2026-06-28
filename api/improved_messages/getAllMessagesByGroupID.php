@@ -31,7 +31,7 @@
         $userID = $_SESSION['userID'];
 
         //check for groupID
-        $getGroupChatIdStmt = $conn->prepare("SELECT groupID, buyerID, productID FROM group_chats WHERE productID = ? AND (buyerID = ? OR ownerID = ?)");
+        $getGroupChatIdStmt = $conn->prepare("SELECT groupID, buyerID, productID FROM group_chats WHERE groupID = ? AND (buyerID = ? OR ownerID = ?)");
         $getGroupChatIdStmt->bind_param("sss", $productID, $userID, $userID);
         $getGroupChatIdStmt->execute();
         

@@ -5,6 +5,7 @@ export {getMessagesForChat, renderChatMessages}
 
 
 async function getMessagesForChat(productID) {
+    console.log(productID);
     if (!productID) {
         throw new Error("Could not get messages. No productID passed as parameter.");
     }

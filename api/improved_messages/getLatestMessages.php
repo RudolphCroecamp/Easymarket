@@ -74,6 +74,7 @@
             $userResult = $userStmt->get_result();
             $userRow = $userResult->fetch_assoc();
 
+
             //add messages to inbox
             $inbox[] = [
                 "groupID" => $groupID,
