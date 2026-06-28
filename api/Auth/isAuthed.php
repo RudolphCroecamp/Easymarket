@@ -1,10 +1,9 @@
 <?php
     require '../../config/cors.php';//allow access from webserver
 
-    // if (session_status() === PHP_SESSION_NONE) {
-    //     session_start();
-    // }
-
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
 
     //check if user is logged in or not
     if(isset($_SESSION["logged_in"]) && $_SESSION["logged_in"]===true){
