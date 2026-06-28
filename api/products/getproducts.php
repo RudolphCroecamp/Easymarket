@@ -7,7 +7,6 @@
     require '../../config/protectedRoute.php';//user must be authorised
     $conn = require '../../config/dbconn.php';//connect to DB
 
-    
 
     $jsonData = json_decode(file_get_contents('php://input'),true);
 
