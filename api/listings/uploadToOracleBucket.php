@@ -7,14 +7,25 @@ function uploadToOracle($filePath, $fileName)
 
     $fileData = file_get_contents($filePath);
 
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime = finfo_file($finfo, $filePath);
+    finfo_close($finfo);
+
+
     $ch = curl_init($uploadUrl);
 
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $fileData);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Content-Type: image/webp",
+        "Content-Type: " . $mime,
         "Content-Length: " . strlen($fileData)
     ]);
+
     curl_setopt($ch, CURLOPT_POSTFIELDS, $fileData);
 
     $response = curl_exec($ch);
