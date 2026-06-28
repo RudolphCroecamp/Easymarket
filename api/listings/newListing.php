@@ -124,7 +124,7 @@
 
         //Save as WebP instead of JPG
         $fileName = $productID . "_" . $image_char . ".webp";
-        $filePath = $filePath = $uploadDir . $fileName; //$uploadDir . $productID . "_" . $image_char . ".webp";
+        $filePath = $uploadDir . $fileName; //$uploadDir . $productID . "_" . $image_char . ".webp";
 
         if (!imagewebp($image, $filePath, 80)) {
             imagedestroy($image);
