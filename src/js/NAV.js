@@ -55,7 +55,7 @@ function NAV(){
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-3">
                     <li><a class="dropdown-item" href="/src/pages/listings/new-lisiting.html">New Listings</a></li>
                     <li><a class="dropdown-item" href="/src/pages/listings/view-listings.html">View Listings</a></li>
-                    <li><a class="dropdown-item" href="/src/pages/settings/settings.html">Settings</a></li>
+                    <li><a class="dropdown-item disabled"  href="/src/pages/settings/settings.html">Settings</a></li>
                     <li><hr class="dropdown-divider"></li>
                     
                     <li><a class="dropdown-item" href="/src/pages/payments/cart.html">Cart</a></li>
