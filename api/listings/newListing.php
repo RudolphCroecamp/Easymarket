@@ -1,5 +1,5 @@
 <?php
-    header('Content-Type: application/json');//return data in json format
+    // header('Content-Type: application/json');//return data in json format
 
     require '../../config/cors.php';//allow access from webserver
     require '../../config/protectedRoute.php';//user must be authorised

@@ -23,6 +23,10 @@ export default class Cart {
         
     }
 
+    clearCart(){
+        
+    }
+
     isItemInCart(newItem){
         try {
             return this.cart.some(
