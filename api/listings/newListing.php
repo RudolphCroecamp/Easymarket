@@ -109,18 +109,18 @@
         }
 
         //Resize (max width 1200px)
-        $maxWidth = 1200;
-        $width = imagesx($image);
-        $height = imagesy($image);
+        // $maxWidth = 1200;
+        // $width = imagesx($image);
+        // $height = imagesy($image);
 
-        if ($width > $maxWidth) {
-            $newHeight = max(1, (int)(($height / $width) * $maxWidth));
-            $resized = imagecreatetruecolor($maxWidth, $newHeight);
+        // if ($width > $maxWidth) {
+        //     $newHeight = max(1, (int)(($height / $width) * $maxWidth));
+        //     $resized = imagecreatetruecolor($maxWidth, $newHeight);
 
-            imagecopyresampled($resized, $image, 0, 0, 0, 0, $maxWidth, $newHeight, $width, $height);
-            imagedestroy($image);
-            $image = $resized;
-        }
+        //     imagecopyresampled($resized, $image, 0, 0, 0, 0, $maxWidth, $newHeight, $width, $height);
+        //     imagedestroy($image);
+        //     $image = $resized;
+        // }
 
         //Save as WebP instead of JPG
         $fileName = $productID . "_" . $image_char . ".webp";
