@@ -15,6 +15,7 @@ export default class Cart {
                 // Item exists, safe to use
                 this.cart = JSON.parse(localStorage.getItem('cart'));
             } else {
+                localStorage.setItem("cart", JSON.stringify([]))
                 this.cart = []
             }   
         } catch (error) {
@@ -24,7 +25,8 @@ export default class Cart {
     }
 
     clearCart(){
-        
+        localStorage.setItem("cart", JSON.stringify([]))
+        this.cart = [];
     }
 
     isItemInCart(newItem){
@@ -103,5 +105,24 @@ export default class Cart {
         localStorage.setItem('cart', JSON.stringify(newCart));
     }
 
+
+    getCartTotalValue(){
+        let total = 0;
+        this.cart.forEach(item=>{
+            const price = parseFloat(item.price) || 0;
+            const amount = parseInt(item.quantity) || 0;
+            total += (price * amount)
+        })
+
+        return total
+    }
+
+    calcTotal(){
+        const subTotal = this.getCartTotalValue()
+        const shipping = this.cart.length * 100//R100 per item
+        const total = subTotal + shipping
+
+        return [subTotal, shipping, total]
+    }
 
 }//end

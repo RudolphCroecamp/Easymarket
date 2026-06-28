@@ -351,9 +351,9 @@
 
 						</div>
 						<div class="card-footer">
-							<div class="summary-row"><span>Subtotal</span><span>R 1,095</span></div>
-							<div class="summary-row"><span>Shipping</span><span>R 80</span></div>
-							<div class="summary-total"><span>Total</span><span>R 1,175</span></div>
+							<div class="summary-row"><span>Subtotal</span><span id="summary-subTotal">R 1,095</span></div>
+							<div class="summary-row"><span>Shipping</span><span id="summary-shipping">R 80</span></div>
+							<div class="summary-total"><span>Total</span><span id="summary-total-price">R 1,175</span></div>
 
 							<button class="btn-checkout mt-4" id="confirmCheckout"
 								onclick="this.textContent='Processing…';setTimeout(()=>this.textContent='Place order →',2000)">

@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", async ()=>{
 async function getUserInfo(){
     return new Promise((res, rej)=>{
 
-        const response = fetch("/api/user/getUserInfo.php", {
+        const response = fetch("/api/users/getUserInfo.php", {
             method: "POST",
             credentials: "include",
         })
@@ -304,6 +304,12 @@ async function renderCartItems(){
     const userCart = new Cart();
     await userCart.init();
     const cartItems = await userCart.getCartItems()
+    
+    const [subTotal, shipping, total] = userCart.calcTotal()
+
+    document.getElementById("summary-subTotal").textContent = `R ${subTotal}`
+    document.getElementById("summary-shipping").textContent = `R ${shipping}`
+    document.getElementById("summary-total-price").textContent = `R ${total}`
 
 
     const orderContainer = document.getElementById("orderContainer")
