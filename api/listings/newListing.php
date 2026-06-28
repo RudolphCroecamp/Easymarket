@@ -133,8 +133,6 @@
 
         imagedestroy($image);
 
-        
-
         // Upload to Oracle
         $imageUrl = uploadToOracle($filePath, $fileName);
 
