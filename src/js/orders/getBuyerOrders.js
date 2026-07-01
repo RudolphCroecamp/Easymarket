@@ -171,4 +171,70 @@ btnPrev.addEventListener("click", () => {
 
 
 
+//show order details off canvas
+function openOrder(orderID) {
+    fetch(`/api/orders/orderDetails.php`, {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({
+            orderID,
+        })
+    })
+        .then(res => res.json())
+        .then(data => {
+
+            console.log("Response:");
+            console.log(data);
+            console.log("Orders:");
+            console.log(data.orders);
+            console.log("Total:");
+            console.log(data.orders.Total);
+            // Order info
+            document.getElementById("orderID").innerText = `#${orderID}`;
+            document.getElementById("orderStatus").innerText = data.orders.status;
+            document.getElementById("orderDate").innerText = data.orders.Date;
+            document.getElementById("orderTotal").innerText = data.orders.Total;
+            document.getElementById("orderItemsCount").innerText = data.orders.order.length;
+            document.getElementById("shippingFee").innerText = data.orders.delivery_fee <= 0 ? "100.00" : data.orders.delivery_fee  ;
+            
+
+            // Items
+            let html = "";
+
+            data.orders.order.forEach(item => {
+                html += `
+                    <div class="card border-0 shadow-sm mb-2">
+                        <div class="card-body d-flex align-items-center gap-3">
+
+                            <!-- IMAGE -->
+                            <img src="${IMAGES_URL}/${item.productID}_a.webp"
+                                class="rounded"
+                                width="60"
+                                height="60">
+
+                            <!-- DETAILS -->
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold">${item.product_name}</div>
+                                <small class="text-muted">Qty: ${item.quantity}</small>
+                            </div>
+
+                            <!-- PRICE -->
+                            <div class="text-end">
+                                <div class="fw-bold text-primary">R${item.price}</div>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById("orderItems").innerHTML = html;
+
+            // open offcanvas
+            const canvas = new bootstrap.Offcanvas(document.getElementById("orderCanvas"));
+            canvas.show();
+        });
+}
+
+
 

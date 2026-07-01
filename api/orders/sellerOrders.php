@@ -67,7 +67,7 @@ if ($orders_result && $orders_result->num_rows > 0) {
     echo json_encode([
         "status" => "failed",
         "success" => false,
-        "error" => "No orders found",
+        "error" => "No seller orders found",
     ]);
 }
 
