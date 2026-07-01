@@ -21,7 +21,7 @@ const IMAGES_URL = "https://objectstorage.af-johannesburg-1.oraclecloud.com/p/3k
 
 async function loadData(PAGE) {
 
-    fetch(`/api/orders/SellerOrders.php`, {
+    fetch(`/api/orders/sellerOrders.php`, {
         method: "POST",
         credentials: "include",
         body: JSON.stringify({
