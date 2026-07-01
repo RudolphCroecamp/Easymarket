@@ -25,7 +25,7 @@ export default class Cart {
     }
 
     clearCart(){
-        localStorage.setItem("cart", JSON.stringify([]))
+        localStorage.removeItem("cart");
         this.cart = [];
     }
 

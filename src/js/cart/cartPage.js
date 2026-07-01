@@ -138,7 +138,7 @@ async function renderCartItems(cartItems) {
             </div>
 
             <!-- REMOVE -->
-            <button class="remove-btn" onclick="removeCard('${item.productID}')" aria-label="Remove item" >
+            <button class="remove-btn" onclick="removeCard('${item.productID}')" aria-label="Remove item" data-id="${item.productID}" >
                 <i class="bi bi-trash3" data-id="${item.productID}"></i>
             </button>
 
