@@ -1,11 +1,11 @@
 <?php
 require '../../config/cors.php'; //allow access from webserver
-require './session_config.php';//set session details
+require './session_config.php'; //set session details
 try {
 
     // Start/loading the session
     if (session_status() === PHP_SESSION_NONE) {
-        session_start();
+        throw new Exception("No login session created");
     }
 
     // Check if session cookie exists
@@ -19,14 +19,12 @@ try {
         echo json_encode([
             "logged_in" => true,
         ]);
-
     } else {
 
         echo json_encode([
             "logged_in" => false,
         ]);
     }
-
 } catch (\Throwable $th) {
 
     echo json_encode([
