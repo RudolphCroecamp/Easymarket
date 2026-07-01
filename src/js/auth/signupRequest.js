@@ -1,5 +1,5 @@
 import {BACKEND_URL} from "../config.js"
-
+import {showToast} from "../toast.js"
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -42,9 +42,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
                 console.log(data);
 
                 if(data.success === true){
+                    showToast("You have successfully Registered")
+
                     window.location = "/src/pages/auth/login.html"
                 }else{
-                    setErrorMessage(data.error)
+                    setErrorMessage(data.error || "Registration Error")
+                    showToast(data.error || "Registration Error")
                 }
             })
 

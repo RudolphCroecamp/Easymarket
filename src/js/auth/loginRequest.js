@@ -1,4 +1,5 @@
 import {BACKEND_URL} from "../config.js"
+import {showToast} from "../toast.js"
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -53,14 +54,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
                     }
 
                     
-
-                    
                 }else{
                     //invalid user credentials
-                    setErrorMessage(data.error)
+                    showToast(data.error || "Invalid credentials", "warning")
+                    setErrorMessage(data.error || "Invalid credentials")
                 }
             }).catch(error=>{
                 console.log(error);
+                showToast(error)
             })
         }
     });
