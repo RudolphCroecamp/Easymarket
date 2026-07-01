@@ -12,10 +12,7 @@
         exit;
     }
 
-    if ($_FILES['images']['size'][0] > 5 * 1024 * 1024) {
-        echo json_encode(["error" => "Image too large (max 5MB)"]);
-        exit;
-    }
+    
 
     if (!isset(
         $_POST['title'], 
@@ -84,6 +81,11 @@
         $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
         if (!in_array($mime, $allowedTypes)) continue;
+
+        if ($_FILES['images']['size'][$index] > 5 * 1024 * 1024) {
+            echo json_encode(["error" => "Image too large (max 5MB)"]);
+            continue;//skip large images
+        }
 
         //Create image resource
         switch ($mime) {

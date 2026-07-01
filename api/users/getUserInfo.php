@@ -1,5 +1,5 @@
 <?php
-    header('Content-Type: application/json');
+    header("Content-Type: application/json");
 
     require '../../config/cors.php';//allow access from webserver
     require '../../config/protectedRoute.php';//user must be authorised

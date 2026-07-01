@@ -302,12 +302,14 @@ async function loadProducts(productID){
             // create thumbnails
             images.forEach((imgPath) => {
                 const col = document.createElement("div");
-                col.className = "col-3";
+                col.className = "col-1 p-1";
+
+                const wrapper = document.createElement("div");
+                wrapper.className = "ratio ratio-1x1 rounded border overflow-hidden";
 
                 const img = document.createElement("img");
                 img.src = imgPath;
-                img.className = "img-fluid rounded border";
-                img.style.height = "80px";
+                img.className = "w-100 h-100";
                 img.style.objectFit = "cover";
                 img.style.cursor = "pointer";
 
@@ -315,7 +317,8 @@ async function loadProducts(productID){
                     mainImage.src = img.src;
                 });
 
-                col.appendChild(img);
+                wrapper.appendChild(img);
+                col.appendChild(wrapper);
                 imgcontainer.appendChild(col);
             });
 

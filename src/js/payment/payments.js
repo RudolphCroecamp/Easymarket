@@ -144,6 +144,11 @@ async function placeOrder(){
                 .then(res => res.json())
                 .then(data =>{
                     console.log(data);
+
+                    if (data.success === true) {
+                        userCart.clearCart()
+                    }
+
                     res(data)
                 })
                 .catch(error =>{

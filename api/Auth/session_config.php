@@ -18,6 +18,9 @@ session_set_cookie_params([
 ]);
 
 
-session_start();
+// Start/loading the session
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 

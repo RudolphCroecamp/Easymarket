@@ -1,5 +1,8 @@
 <?php
-    session_start();
+    // Start/loading the session
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
 
     if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
         http_response_code(401);
