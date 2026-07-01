@@ -1,8 +1,12 @@
 <?php
 require '../../config/cors.php'; //allow access from webserver
 require './session_config.php';//set session details
-
 try {
+
+    // Start/loading the session
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
 
     // Check if session cookie exists
     if (!isset($_COOKIE[session_name()])) {
