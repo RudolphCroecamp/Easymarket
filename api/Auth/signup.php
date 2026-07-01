@@ -5,6 +5,7 @@
 
     $conn = require '../../config/dbconn.php';//connect to DB
 
+    //random change
 
     //check if all params has a value
     if(!isset($_POST["fname"], $_POST["lname"], $_POST["email"], $_POST["password"])){
