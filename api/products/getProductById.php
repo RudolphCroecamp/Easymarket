@@ -1,8 +1,5 @@
 <?php
     header('Content-Type: application/json');//return data in json format
-
-    $start = microtime(true);
-
     require '../../config/cors.php';//allow access from webserver
     require '../../config/protectedRoute.php';//user must be authorised
     $conn = require '../../config/dbconn.php';//connect to DB
@@ -47,17 +44,12 @@
         $product = $product_result->fetch_assoc();
         $ownerID = $product["ownerID"];
 
-        $end = microtime(true);
-
-        $executionTime = $end - $start;
-
         //return products in json format
         echo json_encode([
             "status"=>"success",
             "success"=>true,
             "product"=>$product,
             "isOwner" => $userID == $ownerID ? true : false,
-            "time" => $executionTime
         ]);
 
     }else{

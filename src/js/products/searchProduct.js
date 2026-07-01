@@ -87,7 +87,7 @@ function searchProduct(query){
                                 </h6>
 
                                 <p class="text-muted small mb-1 text-truncate">
-                                    Sold by ${product.ownerName}
+                                    Sold by ${product.fName} ${product.lName}
                                 </p>
 
                                 <p class="text-muted small mb-2">

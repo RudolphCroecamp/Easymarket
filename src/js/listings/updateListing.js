@@ -159,7 +159,7 @@ form.addEventListener('submit', async(e) => {
 
         formData.append("productID", productID)
         
-
+        document.getElementById("loadingOverlay").classList.remove("d-none")//show loader
         try {
             fetch(`${BACKEND_URL}/listings/updateListing.php`, {
                 method: 'POST',
@@ -178,11 +178,13 @@ form.addEventListener('submit', async(e) => {
                 }else{
                     setErrorMessage(data.error)
                     showToast(data.message || data.error, "warning")
+                    document.getElementById("loadingOverlay").classList.add("d-none")//remove loader
                 }
             })
 
         } catch (err) {
             console.error(err);
+            document.getElementById("loadingOverlay").classList.add("d-none")//remove loader
         }
 
     }

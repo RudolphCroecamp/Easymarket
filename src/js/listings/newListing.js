@@ -8,6 +8,8 @@ import categoryData_init from "../loadData/categories.js";
 import locationData_init from "../loadData/locations.js";
 import { searchAddresses } from "../locationServices.js";
 
+
+
 const dropArea = document.getElementById('drop-area');
 const fileInput = document.getElementById('images');
 const preview = document.getElementById('preview');
@@ -133,7 +135,7 @@ form.addEventListener('submit', async(e) => {
         //tags could be empty becasue it is optional
         if(tagsArray.length > 0) formData.append("tags", JSON.stringify(tagsArray));
         
-
+        document.getElementById("loadingOverlay").classList.remove("d-none")//show loader
         try {
             fetch(`${BACKEND_URL}/listings/newListing.php`, {
                 method: 'POST',
@@ -152,11 +154,13 @@ form.addEventListener('submit', async(e) => {
                 }else{
                     setErrorMessage(data.error)
                     showToast(data.message || data.error, "warning")
+                    document.getElementById("loadingOverlay").classList.add("d-none")//remove loader
                 }
             })
 
         } catch (err) {
             console.error(err);
+            document.getElementById("loadingOverlay").classList.add("d-none")//remove loader
         }
 
     }

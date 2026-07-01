@@ -47,8 +47,9 @@
 
     // SQL to match name, category, or any tag
     $sql = "
-        SELECT DISTINCT p.*
+        SELECT DISTINCT p.*, u.fName, u.lName
         FROM products p
+        LEFT JOIN users u ON p.ownerID = u.userID
         LEFT JOIN product_tags pt ON p.productID = pt.productID
         LEFT JOIN tags t ON pt.tagID = t.tagID
         WHERE p.name LIKE ?
