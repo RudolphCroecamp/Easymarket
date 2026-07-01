@@ -1,6 +1,5 @@
 <?php //login.php
     require '../../config/cors.php';//allow access to webserver
-
     require './session_config.php';//set session details
 
     $conn = require '../../config/dbconn.php';//connect to DB
