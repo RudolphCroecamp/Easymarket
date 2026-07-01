@@ -59,6 +59,11 @@
         //verify password
         if(password_verify($password, $hashedPassword)){
             //valid password
+            // session_start();
+            // session_regenerate_id(true);
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
             session_regenerate_id(true);
 
             // Store user data in session
@@ -90,16 +95,3 @@
             "error" => "Invalid credentials"
         ]));
     }
-
-
-
-
-    //close and end connection and return login sucessfully
-    exit(json_encode([
-        "status"=>"failed",
-        "success"=>false,
-        "message" => "Login failed"
-    ]));
-    
-    //close and end connection
-    exit;
